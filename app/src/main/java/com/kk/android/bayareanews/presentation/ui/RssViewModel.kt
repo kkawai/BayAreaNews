@@ -1,4 +1,4 @@
-package com.kk.android.bayareanews.presentation
+package com.kk.android.bayareanews.presentation.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,6 +6,7 @@ import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.common.Resource
 import com.kk.android.bayareanews.domain.use_case.get_rss.GetRssUseCase
 import com.kk.android.bayareanews.domain.use_case.get_rss.RssListState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.plus
 import javax.inject.Inject
 
+@HiltViewModel
 class RssViewModel @Inject constructor(private val getRssUseCase: GetRssUseCase) : ViewModel() {
 
     private val _rssListState = MutableStateFlow(RssListState())

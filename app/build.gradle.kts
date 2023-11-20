@@ -135,6 +135,15 @@ dependencies {
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
+    //material3
+    implementation("androidx.compose.material3:material3-android:1.2.0-alpha11")
+    implementation("androidx.compose.material3:material3-window-size-class:1.2.0-alpha11")
+    implementation("com.google.accompanist:accompanist-flowlayout:0.33.2-alpha")
+
+    implementation("io.coil-kt:coil:2.5.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+
 }
 
 // Allow references to generated code

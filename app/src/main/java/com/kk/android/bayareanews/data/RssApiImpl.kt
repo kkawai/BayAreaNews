@@ -23,11 +23,20 @@ class RssApiImpl: RssApi {
          if previous fetch timestamp is older than 12 hours, fetch anew from internet
          */
 
-        val list = RssDb.getInstance(NewsReaderApp.app).getRss(category)
+        val list = getRssFromLocalDb(category)
         if (list.isNotEmpty()) {
             return list
         }
 
+        val remoteList = getRssFromInternet(category, rssUrl)
+        return remoteList
+    }
+
+    private suspend fun getRssFromLocalDb(category: String): List<Rss> {
+        return RssDb.getInstance(NewsReaderApp.app).getRss(category)
+    }
+
+    private suspend fun getRssFromInternet(category: String, rssUrl: String): List<Rss> {
         val remoteList = RssReader().getRss(rssUrl)
         if (remoteList.isNotEmpty()) {
             RssDb.getInstance(NewsReaderApp.app).insertRss(category, remoteList)

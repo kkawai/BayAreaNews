@@ -10,6 +10,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class RssReader {
    private static final String TAG = "RssReader";
 
    public List<Rss> getRss(final String urlToRssFeed) throws XmlPullParserException, MalformedURLException, IOException, Exception{
-      final ArrayList<Rss> rssList = new ArrayList<>();
+      final List<Rss> rssList = new ArrayList<>();
       InputStream is=null;
 
       try {
@@ -152,6 +153,7 @@ public class RssReader {
       try {
          return url.openConnection().getInputStream();
       } catch (IOException e) {
+         MLog.e(TAG,"",e);
          return null;
       }
    }
