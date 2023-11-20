@@ -1,5 +1,6 @@
 package com.kk.android.bayareanews.di
 
+import com.kk.android.bayareanews.data.RssApiImpl
 import com.kk.android.bayareanews.data.remote.RssApi
 import com.kk.android.bayareanews.data.repository.RssRepositoryImpl
 import com.kk.android.bayareanews.domain.repository.RssRepository
@@ -16,7 +17,7 @@ object AppModule {
     @Provides
     @Singleton
     fun providesRssApi(): RssApi {
-        TODO()
+        return RssApiImpl()
     }
 
     @Provides
