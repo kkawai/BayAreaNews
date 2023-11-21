@@ -7,7 +7,7 @@ import android.webkit.WebViewClient
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import com.kk.android.bayareanews.common.Util
+import com.kk.android.bayareanews.common.EncodingUtil
 
 @Composable
 fun WebViewScreen(url: String) {
@@ -24,7 +24,7 @@ fun WebViewScreen(url: String) {
                 }
             }
             settings.builtInZoomControls = true
-            loadUrl(if (url.startsWith("http")) url else Util.decodeUrlSafe(url))
+            loadUrl(if (url.startsWith("http")) url else EncodingUtil.decodeUrlSafe(url))
         }
     })
 }

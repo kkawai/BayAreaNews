@@ -22,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.kk.android.bayareanews.common.Util
+import com.kk.android.bayareanews.common.EncodingUtil
 import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
 import com.kk.android.bayareanews.presentation.ui.common.LoadingScreen
 
@@ -68,7 +68,7 @@ fun RssListScreen(
                         description = rss.descr ?: "",
                         modifier = Modifier
                             .padding(16.dp)
-                            .clickable { onArticleClicked(Util.encodeUrlSafe(rss.link)) }
+                            .clickable { onArticleClicked(EncodingUtil.encodeUrlSafe(rss.link)) }
                     )
                 }
             }

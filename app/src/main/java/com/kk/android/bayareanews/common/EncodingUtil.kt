@@ -2,7 +2,7 @@ package com.kk.android.bayareanews.common
 
 import android.util.Base64
 
-object Util {
+object EncodingUtil {
     fun encodeUrlSafe(str: String): String {
         return Base64.encodeToString(str.toByteArray(),Base64.URL_SAFE)
     }
