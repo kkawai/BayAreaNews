@@ -21,22 +21,22 @@ import java.util.List;
 /**
  * @author kkawai
  */
-public final class RssDb {
+public final class RssLocalDbHelper {
 
     private static final String TAG = "RssDb";
     private static final int DB_VERSION = 2;
-    private static RssDb instance;
+    private static RssLocalDbHelper instance;
     private static final String TABLE_NAME = "rss";
 
     private final DbOpenHelper sqlHelper;
 
-    private RssDb(final Context context) {
+    private RssLocalDbHelper(final Context context) {
         sqlHelper = new DbOpenHelper(context, null, null, DB_VERSION);
     }
 
-    public synchronized static RssDb getInstance(Context context) {
+    public synchronized static RssLocalDbHelper getInstance(Context context) {
         if (instance == null)
-            instance = new RssDb(context);
+            instance = new RssLocalDbHelper(context);
         return instance;
     }
 
@@ -72,7 +72,7 @@ public final class RssDb {
 
     }
 
-    public static final String getDbName() {
+    public static String getDbName() {
         return "rss.db";
     }
 

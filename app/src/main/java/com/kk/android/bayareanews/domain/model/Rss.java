@@ -5,7 +5,7 @@ import android.database.DatabaseUtils;
 
 import com.kk.android.bayareanews.common.StringUtil;
 import com.kk.android.bayareanews.common.TimeUtil;
-import com.kk.android.bayareanews.data.local.RssDb;
+import com.kk.android.bayareanews.data.local.RssLocalDbHelper;
 
 import java.util.Date;
 
@@ -27,35 +27,35 @@ public class Rss {
     }
 
     public Rss(final ContentValues contentValues) {
-        final Integer id = contentValues.getAsInteger(RssDb.RssColumns.COL_ID);
+        final Integer id = contentValues.getAsInteger(RssLocalDbHelper.RssColumns.COL_ID);
         if (id != null) {
             setId(id);
         }
-        setTitle(StringUtil.unescapeQuotes(contentValues.getAsString(RssDb.RssColumns.COL_TITLE)));
-        setLink(contentValues.getAsString(RssDb.RssColumns.COL_LINK));
-        setDescr(StringUtil.unescapeQuotes(contentValues.getAsString(RssDb.RssColumns.COL_DESCR)));
-        setImageUrl(contentValues.getAsString(RssDb.RssColumns.COL_IMAGE_URL));
-        setVideoUrl(contentValues.getAsString(RssDb.RssColumns.COL_VIDEO_URL));
-        setCategory(StringUtil.unescapeQuotes(contentValues.getAsString(RssDb.RssColumns.COL_CATEGORY)));
-        setOriginalCategory(StringUtil.unescapeQuotes(contentValues.getAsString(RssDb.RssColumns.COL_ORIGINAL_CATEGORY)));
-        setAuthor(StringUtil.unescapeQuotes(contentValues.getAsString(RssDb.RssColumns.COL_AUTHOR)));
-        setPubDate(contentValues.getAsLong(RssDb.RssColumns.COL_PUB_DATE));
+        setTitle(StringUtil.unescapeQuotes(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_TITLE)));
+        setLink(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_LINK));
+        setDescr(StringUtil.unescapeQuotes(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_DESCR)));
+        setImageUrl(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_IMAGE_URL));
+        setVideoUrl(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_VIDEO_URL));
+        setCategory(StringUtil.unescapeQuotes(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_CATEGORY)));
+        setOriginalCategory(StringUtil.unescapeQuotes(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_ORIGINAL_CATEGORY)));
+        setAuthor(StringUtil.unescapeQuotes(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_AUTHOR)));
+        setPubDate(contentValues.getAsLong(RssLocalDbHelper.RssColumns.COL_PUB_DATE));
     }
 
     public ContentValues getContentValues() {
         final ContentValues values = new ContentValues();
         if (id != 0) {
-            values.put(RssDb.RssColumns.COL_ID, id);
+            values.put(RssLocalDbHelper.RssColumns.COL_ID, id);
         }
-        values.put(RssDb.RssColumns.COL_TITLE, DatabaseUtils.sqlEscapeString(getTitle()));
-        values.put(RssDb.RssColumns.COL_LINK, getLink());
-        values.put(RssDb.RssColumns.COL_DESCR, DatabaseUtils.sqlEscapeString(getDescr()));
-        values.put(RssDb.RssColumns.COL_IMAGE_URL, getImageUrl());
-        values.put(RssDb.RssColumns.COL_VIDEO_URL, getVideoUrl());
-        values.put(RssDb.RssColumns.COL_CATEGORY, DatabaseUtils.sqlEscapeString(getCategory()));
-        values.put(RssDb.RssColumns.COL_ORIGINAL_CATEGORY, DatabaseUtils.sqlEscapeString(getOriginalCategory()));
-        values.put(RssDb.RssColumns.COL_AUTHOR, DatabaseUtils.sqlEscapeString(getAuthor()));
-        values.put(RssDb.RssColumns.COL_PUB_DATE, getPubDate());
+        values.put(RssLocalDbHelper.RssColumns.COL_TITLE, DatabaseUtils.sqlEscapeString(getTitle()));
+        values.put(RssLocalDbHelper.RssColumns.COL_LINK, getLink());
+        values.put(RssLocalDbHelper.RssColumns.COL_DESCR, DatabaseUtils.sqlEscapeString(getDescr()));
+        values.put(RssLocalDbHelper.RssColumns.COL_IMAGE_URL, getImageUrl());
+        values.put(RssLocalDbHelper.RssColumns.COL_VIDEO_URL, getVideoUrl());
+        values.put(RssLocalDbHelper.RssColumns.COL_CATEGORY, DatabaseUtils.sqlEscapeString(getCategory()));
+        values.put(RssLocalDbHelper.RssColumns.COL_ORIGINAL_CATEGORY, DatabaseUtils.sqlEscapeString(getOriginalCategory()));
+        values.put(RssLocalDbHelper.RssColumns.COL_AUTHOR, DatabaseUtils.sqlEscapeString(getAuthor()));
+        values.put(RssLocalDbHelper.RssColumns.COL_PUB_DATE, getPubDate());
         return values;
     }
 

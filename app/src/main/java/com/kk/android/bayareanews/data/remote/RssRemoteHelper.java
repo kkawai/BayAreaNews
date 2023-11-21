@@ -10,7 +10,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.List;
 /**
  * Created by kevin on 1/10/2016.
  */
-public class RssReader {
+public class RssRemoteHelper {
 
    private static final String TAG = "RssReader";
 
