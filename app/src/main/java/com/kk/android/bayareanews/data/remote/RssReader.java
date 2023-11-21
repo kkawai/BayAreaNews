@@ -99,7 +99,13 @@ public class RssReader {
                   }
                } else if (xpp.getName().equalsIgnoreCase("media:content")) {
                   if (insideItem) {
-                     rss.setVideoUrl(xpp.getAttributeValue(null, "url"));
+                     String contentUrl = xpp.getAttributeValue("", "url");
+                     String medium = xpp.getAttributeValue("", "medium");
+                     if (medium.equalsIgnoreCase("image") && contentUrl.startsWith("http")) {
+                        rss.setImageUrl(contentUrl);
+                     } else if (medium.equalsIgnoreCase("video") && contentUrl.startsWith("http")) {
+                        rss.setVideoUrl(contentUrl);
+                     }
                   }
                } else if (xpp.getName().equalsIgnoreCase("description")) {
                   if (insideItem) {
@@ -120,7 +126,9 @@ public class RssReader {
 //                        s = s.substring(i, s.indexOf("\"",i));
 //                        rss.setImageUrl(s);
 //                     }
-                     rss.setImageUrl(xpp.getAttributeValue(null, "url"));
+                     String imageUrl = xpp.getAttributeValue(null, "url");
+                     if (imageUrl != null && rss.getImageUrl() == null)
+                        rss.setImageUrl(imageUrl);
                   }
                }
 

@@ -47,7 +47,6 @@ class MainActivity : ComponentActivity() {
                     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
                     Scaffold(
                         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-
                         /*
                         floatingActionButton = {
                             FloatingActionButton(onClick = {}) {
@@ -62,12 +61,13 @@ class MainActivity : ComponentActivity() {
 
                         topBar = {
                             TopAppBar(
+                                scrollBehavior = scrollBehavior,
                                 title = {
                                     Text(text = stringResource(id = R.string.app_name))
                                 },
                                 colors = topAppBarColors(
                                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
-//                                    scrolledContainerColor = MaterialTheme.colorScheme.applyTonalElevation(
+//                                    scrolledContainerColor = MaterialTheme.colorScheme.apply {  }(
 //                                        backgroundColor = containerColor,
 //                                        elevation = TopAppBarSmallTokens.OnScrollContainerElevation
 //                                    ),
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     ) { values ->
-                        RssList(contentPadding = values)
+                        RssList(modifier = Modifier,contentPadding = values)
                     }
 
                 }

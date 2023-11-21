@@ -7,7 +7,7 @@ import com.kk.android.bayareanews.data.remote.RssReader
 import com.kk.android.bayareanews.domain.model.Rss
 
 class RssApiImpl: RssApi {
-    override suspend fun getRssArticles(refresh: Boolean, rssUrl: String, category: String): List<Rss> {
+    override suspend fun getRssArticles(refresh: Boolean, rssUrl: String, category: String): List<Rss>{
 
         /*
          first will check local db if there are any rss for given category and will return that.

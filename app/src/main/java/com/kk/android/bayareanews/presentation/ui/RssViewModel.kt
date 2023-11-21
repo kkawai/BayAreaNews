@@ -7,10 +7,12 @@ import com.kk.android.bayareanews.common.Resource
 import com.kk.android.bayareanews.domain.use_case.get_rss.GetRssUseCase
 import com.kk.android.bayareanews.domain.use_case.get_rss.RssListState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.plus
@@ -50,6 +52,7 @@ class RssViewModel @Inject constructor(private val getRssUseCase: GetRssUseCase)
                         )
                     }
                 }
-            }.launchIn(viewModelScope + SupervisorJob())
+                //need 'flowOn' since RssReader does it own network I/O, but retrofit doesn't need flowOn for some reason
+            }.flowOn(Dispatchers.IO).launchIn(viewModelScope + SupervisorJob())
     }
 }
