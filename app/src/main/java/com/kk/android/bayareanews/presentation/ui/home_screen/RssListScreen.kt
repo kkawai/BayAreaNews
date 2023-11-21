@@ -63,6 +63,7 @@ fun RssListScreen(
             LazyColumn(modifier = modifier.fillMaxSize(), contentPadding = contentPadding) {
                 items(rssListState.value.rssList) { rss ->
                     ImageCard(
+                        timeAgo = rss.timeAgo,
                         imageUrl = rss.imageUrl ?: "",
                         title = rss.title ?: "",
                         description = rss.descr ?: "",

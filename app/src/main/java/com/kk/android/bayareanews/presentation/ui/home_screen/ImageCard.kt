@@ -32,6 +32,7 @@ import com.kk.android.bayareanews.R
 fun ImageCard(
     imageUrl: String,
     title: String,
+    timeAgo: String,
     description: String,
     modifier: Modifier = Modifier
 ) {
@@ -66,6 +67,10 @@ fun ImageCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            Text(
+                text = timeAgo,
+                style = MaterialTheme.typography.labelSmall
+            )
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     modifier = Modifier.weight(1f),
