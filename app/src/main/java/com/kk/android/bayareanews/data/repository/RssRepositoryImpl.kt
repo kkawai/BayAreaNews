@@ -29,13 +29,13 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
         if (remoteList.isNotEmpty()) {
             RssLocalDbHelper.getInstance(NewsReaderApp.app).deleteRss(originalCategory)
             RssLocalDbHelper.getInstance(NewsReaderApp.app).insertRss(originalCategory, remoteList)
-            sharedPrefs().edit().putLong(originalCategory, Date().time).apply()
+            sharedPrefs().edit().putLong(Constants.SHARED_PREFS_HOODLINE_KEY, Date().time).apply()
         }
         return remoteList
     }
 
     private fun needsRefresh(): Boolean {
-        val lastFetch = sharedPrefs().getLong(Constants.SHARED_PREFS_NAME, 0L)
+        val lastFetch = sharedPrefs().getLong(Constants.SHARED_PREFS_HOODLINE_KEY, 0L)
         return (Date().time - lastFetch > Constants.CONTENT_EXPIRE_TIME)
     }
 
