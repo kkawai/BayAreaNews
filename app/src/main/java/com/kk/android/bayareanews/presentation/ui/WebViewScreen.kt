@@ -23,6 +23,7 @@ fun WebViewScreen(url: String) {
                     loadErrorPage(view)
                 }
             }
+            settings.builtInZoomControls = true
             loadUrl(if (url.startsWith("http")) url else Util.decodeUrlSafe(url))
         }
     })
