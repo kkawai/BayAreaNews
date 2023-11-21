@@ -18,7 +18,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.kk.android.bayareanews.presentation.NewsNavHost
-import com.kk.android.bayareanews.presentation.ui.RssListScreen
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
 import dagger.hilt.android.AndroidEntryPoint
 

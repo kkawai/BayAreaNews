@@ -1,4 +1,4 @@
-package com.kk.android.bayareanews.presentation.ui
+package com.kk.android.bayareanews.presentation.ui.home_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

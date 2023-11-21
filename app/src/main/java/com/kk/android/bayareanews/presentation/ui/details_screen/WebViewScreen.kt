@@ -1,4 +1,4 @@
-package com.kk.android.bayareanews.presentation.ui
+package com.kk.android.bayareanews.presentation.ui.details_screen
 
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest

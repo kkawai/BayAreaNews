@@ -1,4 +1,4 @@
-package com.kk.android.bayareanews.presentation.ui
+package com.kk.android.bayareanews.presentation.ui.home_screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kk.android.bayareanews.common.Util
+import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
+import com.kk.android.bayareanews.presentation.ui.common.LoadingScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

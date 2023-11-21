@@ -1,4 +1,4 @@
-package com.kk.android.bayareanews.presentation.ui
+package com.kk.android.bayareanews.presentation.ui.home_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
