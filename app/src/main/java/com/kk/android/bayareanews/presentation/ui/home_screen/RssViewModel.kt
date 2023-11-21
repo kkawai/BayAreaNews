@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.plus
 import javax.inject.Inject
 
@@ -25,31 +26,38 @@ class RssViewModel @Inject constructor(private val getRssUseCase: GetRssUseCase)
     val rssListState = _rssListState.asStateFlow()
 
     init {
-        getRssList()
+        getRssList(false)
     }
 
-    fun getRssList() {
-        getRssUseCase(false, Constants.HOODLINE_RSS_URL, Constants.HOODLINE_CATEGORY)
+    fun getRssList(refresh: Boolean = false) {
+        getRssUseCase(refresh, Constants.HOODLINE_RSS_URL, Constants.HOODLINE_CATEGORY)
             .distinctUntilChanged()
-            .onEach {result ->
+            .onEach { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        _rssListState.value = RssListState(
-                            isLoading = true
-                        )
+                        _rssListState.update {
+                            it.copy(isLoading = true)
+                        }
                     }
+
                     is Resource.Success -> {
-                        _rssListState.value = RssListState(
-                            isLoading = false,
-                            rssList = result.data?: emptyList(),
-                            error = ""
-                        )
+                        _rssListState.update {
+                            it.copy(
+                                isLoading = false,
+                                rssList = result.data ?: emptyList(),
+                                error = ""
+                            )
+                        }
                     }
+
                     is Resource.Error -> {
-                        _rssListState.value = RssListState(
-                            isLoading = false,
-                            error = result.message?:"Unexpected Error Occurred. Please try again."
-                        )
+                        _rssListState.update {
+                            it.copy(
+                                isLoading = false,
+                                error = result.message
+                                    ?: "Unexpected Error Occurred. Please try again."
+                            )
+                        }
                     }
                 }
                 //need 'flowOn' since RssReader does it own network I/O, but retrofit doesn't need flowOn for some reason
