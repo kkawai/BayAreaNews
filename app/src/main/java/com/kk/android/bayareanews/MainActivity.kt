@@ -4,17 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults.containerColor
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -25,9 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.kk.android.bayareanews.presentation.ui.ImageCard
-import com.kk.android.bayareanews.presentation.ui.RssList
+import com.kk.android.bayareanews.presentation.NewsNavHost
+import com.kk.android.bayareanews.presentation.ui.RssListScreen
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -67,16 +58,12 @@ class MainActivity : ComponentActivity() {
                                 },
                                 colors = topAppBarColors(
                                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
-//                                    scrolledContainerColor = MaterialTheme.colorScheme.apply {  }(
-//                                        backgroundColor = containerColor,
-//                                        elevation = TopAppBarSmallTokens.OnScrollContainerElevation
-//                                    ),
                                     titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         }
                     ) { values ->
-                        RssList(modifier = Modifier,contentPadding = values)
+                        NewsNavHost(contentPadding = values)
                     }
 
                 }
