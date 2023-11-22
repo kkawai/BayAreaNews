@@ -1,5 +1,6 @@
 package com.kk.android.bayareanews.presentation.ui.home_screen
 
+import android.content.Intent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -35,6 +36,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -51,6 +53,16 @@ fun ImageCard(
     modifier: Modifier = Modifier,
     rssViewModel: RssViewModel = hiltViewModel()
 ) {
+
+    val context = LocalContext.current
+    val share = {
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        sendIntent.putExtra(Intent.EXTRA_TEXT, rss.link)
+        //sendIntent.putExtra(Intent.EXTRA_SUBJECT, rss.title) //not as many good share options besides email
+        sendIntent.type = "text/plain"
+        context.startActivity(Intent.createChooser(sendIntent, null))
+    }
 
     var isExpanded by rememberSaveable {
         mutableStateOf(false)
@@ -141,7 +153,7 @@ fun ImageCard(
                         }
                     )
                     AssistChip(
-                        onClick = { },
+                        onClick = { share() },
                         colors = AssistChipDefaults.assistChipColors(
                             leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
