@@ -9,6 +9,8 @@ import com.kk.android.bayareanews.data.local.RssLocalDbHelper;
 
 import java.util.Date;
 
+import androidx.annotation.Nullable;
+
 /**
  * Created by kevin on 1/10/2016.
  */
@@ -173,5 +175,19 @@ public class Rss {
 
     public void setArticleId(String articleId) {
         this.articleId = articleId;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        try {
+            return ((Rss) obj).articleId.equals(articleId);
+        }catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return articleId != null ? articleId.hashCode() : 0;
     }
 }

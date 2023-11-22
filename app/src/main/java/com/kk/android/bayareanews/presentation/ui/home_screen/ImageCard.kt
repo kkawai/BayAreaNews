@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.twotone.ExpandMore
@@ -26,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,23 +37,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
 import com.kk.android.bayareanews.R
+import com.kk.android.bayareanews.domain.model.Rss
 
 @ExperimentalMaterial3Api
 @Composable
 fun ImageCard(
-    imageUrl: String,
-    title: String,
-    timeAgo: String,
-    description: String,
-    modifier: Modifier = Modifier
+    rss: Rss,
+    modifier: Modifier = Modifier,
+    rssViewModel: RssViewModel = hiltViewModel()
 ) {
 
     var isExpanded by rememberSaveable {
         mutableStateOf(false)
+    }
+
+    var isFavorite by rememberSaveable {
+        mutableStateOf(rssViewModel.rssFavoritesState.value.rssFavoritesMap.containsKey(rss.articleId))
     }
 
     Card(
@@ -68,7 +75,7 @@ fun ImageCard(
         Image(
             painter = rememberAsyncImagePainter(
                 //model = "https://picsum.photos/seed/${Random.nextInt()}/300/200"
-                model = imageUrl
+                model = rss.imageUrl
             ),
             contentDescription = null,
             modifier = Modifier
@@ -80,13 +87,13 @@ fun ImageCard(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = timeAgo,
+                text = rss.timeAgo,
                 style = MaterialTheme.typography.labelSmall
             )
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     modifier = Modifier.weight(1f),
-                    text = title,
+                    text = rss.title,
                     style = MaterialTheme.typography.titleLarge
                 )
 
@@ -102,7 +109,7 @@ fun ImageCard(
             if (isExpanded) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = description,
+                    text = rss.descr,
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -112,13 +119,20 @@ fun ImageCard(
                     mainAxisSize = SizeMode.Wrap
                 ) {
                     AssistChip(
-                        onClick = { },
+                        onClick = {
+                            if (isFavorite)
+                                rssViewModel.deleteFavorite(rss)
+                            else
+                                rssViewModel.saveFavorite(rss)
+                            isFavorite = !isFavorite
+                        },
                         colors = AssistChipDefaults.assistChipColors(
                             leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         leadingIcon = {
                             Icon(
-                                imageVector = Icons.Outlined.FavoriteBorder,
+                                imageVector = if (isFavorite) Icons.Outlined.Favorite
+                                else Icons.Outlined.FavoriteBorder,
                                 contentDescription = null
                             )
                         },

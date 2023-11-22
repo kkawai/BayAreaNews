@@ -47,8 +47,8 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
         return rssApi.saveFavoriteArticle(rss)
     }
 
-    override suspend fun deleteFavoriteArticleByArticleId(articleId: String): Int {
-        return rssApi.deleteFavoriteArticleByArticleId(articleId)
+    override suspend fun deleteFavoriteArticleByArticleId(rss: Rss): Int {
+        return rssApi.deleteFavoriteArticleByArticleId(rss.articleId)
     }
 
     override suspend fun getFavoriteRssArticles(): List<Rss> {

@@ -7,7 +7,7 @@ interface RssRepository {
 
     suspend fun saveFavoriteArticle(rss: Rss): Long
 
-    suspend fun deleteFavoriteArticleByArticleId(articleId: String): Int
+    suspend fun deleteFavoriteArticleByArticleId(rss: Rss): Int
 
     suspend fun getFavoriteRssArticles(): List<Rss>
 }
