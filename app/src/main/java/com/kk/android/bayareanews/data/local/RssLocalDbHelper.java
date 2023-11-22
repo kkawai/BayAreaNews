@@ -24,9 +24,10 @@ import java.util.List;
 public final class RssLocalDbHelper {
 
     private static final String TAG = "RssDb";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
     private static RssLocalDbHelper instance;
-    private static final String TABLE_NAME = "rss";
+    private static final String TABLE_RSS = "rss";
+    private static final String TABLE_RSS_FAVORITES = "rss_favorites";
 
     private final DbOpenHelper sqlHelper;
 
@@ -55,6 +56,8 @@ public final class RssLocalDbHelper {
         }
 
         public static final String COL_ID = "id";
+
+        public static final String COL_ARTICLE_ID = "article_id"; //custom for favorites
         public static final String COL_AUTHOR = "author";
         public static final String COL_CATEGORY = "category";
         public static final String COL_ORIGINAL_CATEGORY = "original_category";
@@ -85,7 +88,7 @@ public final class RssLocalDbHelper {
         @Override
         public void onCreate(final SQLiteDatabase db) {
             try {
-                db.execSQL("CREATE TABLE " + TABLE_NAME + " (" + RssColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                db.execSQL("CREATE TABLE " + TABLE_RSS + " (" + RssColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                         + RssColumns.COL_AUTHOR + " TEXT, "
                         + RssColumns.COL_CATEGORY + " TEXT, "
                         + RssColumns.COL_ORIGINAL_CATEGORY + " TEXT, "
@@ -98,6 +101,8 @@ public final class RssLocalDbHelper {
                 MLog.e(TAG, "Error creating database.  Very bad: ", t);
             }
 
+
+
 //         try {
 //            db.execSQL(String.format("CREATE INDEX %s ON %s(%s);", TABLE_NAME + "_artist_name_index", TABLE_NAME, RssColumns.COL_ARTIST_NAME));
 //         } catch (final Throwable t) {
@@ -107,14 +112,40 @@ public final class RssLocalDbHelper {
 
         @Override
         public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
-            if (newVersion == DB_VERSION) {
+            if (newVersion == 2) {
                 try {
-                    db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD "
+                    db.execSQL("ALTER TABLE " + TABLE_RSS + " ADD "
                             + RssColumns.COL_ORIGINAL_CATEGORY + " TEXT");
-                    MLog.i(TAG, TABLE_NAME + " table upgraded. onUpgrade() oldVersion=" +
+                    MLog.i(TAG, TABLE_RSS + " table upgraded. onUpgrade() oldVersion=" +
                             oldVersion + " newVersion=" + newVersion);
                 } catch (final Exception e) {
                     MLog.e(TAG, "Error in altering users table: ", e);
+                }
+            } else if (newVersion == 3) {
+
+                try {
+                    db.execSQL("ALTER TABLE " + TABLE_RSS + " ADD "
+                            + RssColumns.COL_ARTICLE_ID + " TEXT");
+                    MLog.i(TAG, TABLE_RSS + " table upgraded. onUpgrade() oldVersion=" +
+                            oldVersion + " newVersion=" + newVersion);
+                } catch (final Exception e) {
+                    MLog.e(TAG, "Error in altering users table: ", e);
+                }
+
+                //exact copy of TABLE_RSS.  needed since daily articles don't last.
+                try {
+                    db.execSQL("CREATE TABLE " + TABLE_RSS_FAVORITES + " (" + RssColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                            + RssColumns.COL_ARTICLE_ID + " TEXT, "
+                            + RssColumns.COL_AUTHOR + " TEXT, "
+                            + RssColumns.COL_CATEGORY + " TEXT, "
+                            + RssColumns.COL_ORIGINAL_CATEGORY + " TEXT, "
+                            + RssColumns.COL_DESCR + " TEXT, " + RssColumns.COL_IMAGE_URL + " TEXT, "
+                            + RssColumns.COL_LINK + " TEXT, "
+                            + RssColumns.COL_PUB_DATE + " INTEGER DEFAULT 0, "
+                            + RssColumns.COL_TITLE + " TEXT, "
+                            + RssColumns.COL_VIDEO_URL + " TEXT);");
+                } catch (final Throwable t) {
+                    MLog.e(TAG, "Error creating database.  Very bad: ", t);
                 }
             }
         }
@@ -127,7 +158,7 @@ public final class RssLocalDbHelper {
 
         try {
             final SQLiteDatabase db = sqlHelper.getWritableDatabase();
-            final long rowId = db.replace(TABLE_NAME, null, rss.getContentValues());
+            final long rowId = db.replace(TABLE_RSS, null, rss.getContentValues());
             MLog.i(TAG, "rss: " + rss + " inserted at " + rowId + " [" + rss.getCategory() + "]");
         } catch (Throwable t) {
             Log.e(TAG, "Error in storing rss: ", t);
@@ -145,12 +176,84 @@ public final class RssLocalDbHelper {
     public synchronized int deleteAll() {
         try {
             final SQLiteDatabase db = sqlHelper.getWritableDatabase();
-            final int rowsDeleted = db.delete(TABLE_NAME, "1", null);
+            final int rowsDeleted = db.delete(TABLE_RSS, "1", null);
             return rowsDeleted;
         } catch (final Throwable t) {
             MLog.e(TAG, "Error in deleting all rss: ", t);
         }
         return 0;
+    }
+
+    /**
+     * @param rss
+     */
+    public synchronized void insertRssFavorite(final Rss rss) {
+
+        if (getRssFavoriteByArticleId(rss.getArticleId()) != null) {
+            return;
+        }
+        try {
+            final SQLiteDatabase db = sqlHelper.getWritableDatabase();
+            rss.setId(0);
+            final long rowId = db.replace(TABLE_RSS_FAVORITES, null, rss.getContentValues());
+            MLog.i(TAG, "rss: " + rss + " inserted at " + rowId + " [" + rss.getCategory() + "]");
+        } catch (Throwable t) {
+            Log.e(TAG, "Error in storing rss: ", t);
+        }
+    }
+
+    public synchronized int deleteRssFavorite(String articleId) {
+
+        if (getRssFavoriteByArticleId(articleId) == null) {
+            return 0;
+        }
+        int deleteCount = 0;
+        try {
+            final SQLiteDatabase db = sqlHelper.getWritableDatabase();
+            deleteCount += db.delete(TABLE_RSS_FAVORITES, RssColumns.COL_ARTICLE_ID + "='" + articleId + "'", null);
+        } catch (final Throwable t) {
+            MLog.e(TAG, "Error deleting rss: ", t);
+        }
+        return deleteCount;
+    }
+
+    public synchronized Rss getRssFavoriteByArticleId(final String articleId) {
+
+        Rss rss = null;
+        try {
+            final SQLiteDatabase db = sqlHelper.getReadableDatabase();
+            final String sql = String.format("select * from " + TABLE_RSS_FAVORITES
+                    + " where " + RssColumns.COL_ARTICLE_ID + " = '" + articleId + "'");
+            final Cursor c = db.rawQuery(sql, null);
+            final ContentValues contentValues = new ContentValues();
+            if (c.moveToNext()) {
+                DatabaseUtils.cursorRowToContentValues(c, contentValues);
+                rss = new Rss(contentValues);
+            }
+            c.close();
+        } catch (Throwable t) {
+            MLog.e(TAG, "Error in getting rss: ", t);
+        }
+        return rss;
+    }
+
+    public synchronized List<Rss> getRssFavorites() {
+
+        final List<Rss> rssList = new ArrayList<>();
+        try {
+            final SQLiteDatabase db = sqlHelper.getReadableDatabase();
+            final String sql = String.format("select * from " + TABLE_RSS_FAVORITES + " order by " + RssColumns.DEFAULT_SORT_ORDER);
+            final Cursor c = db.rawQuery(sql, null);
+            final ContentValues contentValues = new ContentValues();
+            while (c.moveToNext()) {
+                DatabaseUtils.cursorRowToContentValues(c, contentValues);
+                rssList.add(new Rss(contentValues));
+            }
+            c.close();
+        } catch (Throwable t) {
+            MLog.e(TAG, "Error in getting rss: ", t);
+        }
+        return rssList;
     }
 
     public synchronized List<Rss> getRss(final String originalCategory) {
@@ -160,7 +263,7 @@ public final class RssLocalDbHelper {
             final SQLiteDatabase db = sqlHelper.getReadableDatabase();
             //final SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
             //qb.setTables(TABLE_NAME);
-            final String sql = String.format("select * from " + TABLE_NAME + "  order by " + RssColumns.DEFAULT_SORT_ORDER);
+            final String sql = String.format("select * from " + TABLE_RSS + "  order by " + RssColumns.DEFAULT_SORT_ORDER);
             final Cursor c = db.rawQuery(sql, null);
             final ContentValues contentValues = new ContentValues();
             while (c.moveToNext()) {
@@ -184,7 +287,7 @@ public final class RssLocalDbHelper {
             final SQLiteDatabase db = sqlHelper.getWritableDatabase();
             for (int i = 0; i < rssList.size(); i++) {
                 final Rss rss = rssList.get(i);
-                deleteCount += db.delete(TABLE_NAME, RssColumns.COL_ID + "=" + rss.getId(), null);
+                deleteCount += db.delete(TABLE_RSS, RssColumns.COL_ID + "=" + rss.getId(), null);
             }
         } catch (final Throwable t) {
             MLog.e(TAG, "Error deleting rss: ", t);
@@ -198,9 +301,9 @@ public final class RssLocalDbHelper {
         try {
             final SQLiteDatabase db = sqlHelper.getReadableDatabase();
             final SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-            qb.setTables(TABLE_NAME);
+            qb.setTables(TABLE_RSS);
             final String sql = String.format("select distinct(%s) from %s",
-                    RssColumns.COL_ORIGINAL_CATEGORY, TABLE_NAME);
+                    RssColumns.COL_ORIGINAL_CATEGORY, TABLE_RSS);
             final Cursor c = db.rawQuery(sql, null);
             while (c.moveToNext()) {
                 categories.add(StringUtil.unescapeQuotes(c.getString(0)));

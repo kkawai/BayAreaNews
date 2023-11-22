@@ -15,7 +15,7 @@ import java.util.Date;
 public class Rss {
 
     private int id;
-    private String title, link, descr, imageUrl, videoUrl, category, author, originalCategory;
+    private String title, link, descr, imageUrl, videoUrl, category, author, originalCategory, articleId;
     private long pubDate;//Sat, 07 Sep 2002 00:00:01 GMT
 
     public static final String KEY_CATEGORY = "cat";
@@ -32,6 +32,7 @@ public class Rss {
             setId(id);
         }
         setTitle(StringUtil.unescapeQuotes(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_TITLE)));
+        setArticleId(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_ARTICLE_ID));
         setLink(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_LINK));
         setDescr(StringUtil.unescapeQuotes(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_DESCR)));
         setImageUrl(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_IMAGE_URL));
@@ -48,6 +49,7 @@ public class Rss {
             values.put(RssLocalDbHelper.RssColumns.COL_ID, id);
         }
         values.put(RssLocalDbHelper.RssColumns.COL_TITLE, DatabaseUtils.sqlEscapeString(getTitle()));
+        values.put(RssLocalDbHelper.RssColumns.COL_ARTICLE_ID, getArticleId());
         values.put(RssLocalDbHelper.RssColumns.COL_LINK, getLink());
         values.put(RssLocalDbHelper.RssColumns.COL_DESCR, DatabaseUtils.sqlEscapeString(getDescr()));
         values.put(RssLocalDbHelper.RssColumns.COL_IMAGE_URL, getImageUrl());
@@ -163,5 +165,13 @@ public class Rss {
 
     public void setOriginalCategory(String originalCategory) {
         this.originalCategory = originalCategory;
+    }
+
+    public String getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(String articleId) {
+        this.articleId = articleId;
     }
 }

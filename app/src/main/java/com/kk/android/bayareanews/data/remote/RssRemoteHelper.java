@@ -133,6 +133,7 @@ public class RssRemoteHelper {
 
             } else if(eventType== XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("item")){
                insideItem=false;
+               rss.setArticleId(rss.getTitle().hashCode() +"-"+ rss.getPubDate()); //generate article id
                rssList.add(rss);
                MLog.i(TAG,"rss: "+rss);
             }
