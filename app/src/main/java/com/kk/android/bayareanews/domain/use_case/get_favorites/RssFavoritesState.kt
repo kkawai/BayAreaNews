@@ -7,6 +7,5 @@ data class RssFavoritesState(
     val isLoading: Boolean = false,
     val rssFavorites: MutableList<Rss> = LinkedList<Rss>(),
     val rssFavoritesMap: MutableMap<String, Rss> = HashMap<String,Rss>(),
-    val isLocallyFetched: Boolean = false,
     val error: String = ""
 )

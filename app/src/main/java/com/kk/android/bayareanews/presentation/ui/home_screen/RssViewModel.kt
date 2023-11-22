@@ -26,10 +26,12 @@ import java.util.LinkedList
 import javax.inject.Inject
 
 @HiltViewModel
-class RssViewModel @Inject constructor(private val getRssUseCase: GetRssUseCase,
-                                       private val getFavoritesUseCase: GetFavoritesUseCase,
-                                       private val saveFavoriteUseCase: SaveFavoriteUseCase,
-                                       private val deleteFavoriteUseCase: DeleteFavoriteUseCase) : ViewModel() {
+class RssViewModel @Inject constructor(
+    private val getRssUseCase: GetRssUseCase,
+    private val getFavoritesUseCase: GetFavoritesUseCase,
+    private val saveFavoriteUseCase: SaveFavoriteUseCase,
+    private val deleteFavoriteUseCase: DeleteFavoriteUseCase
+) : ViewModel() {
 
     private val _rssListState = MutableStateFlow(RssListState())
     val rssListState = _rssListState.asStateFlow()
@@ -89,13 +91,18 @@ class RssViewModel @Inject constructor(private val getRssUseCase: GetRssUseCase,
                     }
 
                     is Resource.Success -> {
+
+                        //experimental: prevents bugs if user adds/removes favorites before master
+                        //list is pulled from the source (db or web)
+                        _rssFavoritesState.value.rssFavorites.addAll(result.data?.toMutableList() ?: LinkedList<Rss>())
+                        _rssFavoritesState.value.rssFavoritesMap.putAll(
+                            if (result.data != null) result.data.associateBy({ it.articleId },
+                                { it }).toMutableMap() else HashMap<String, Rss>()
+                        )
                         _rssFavoritesState.update {
                             it.copy(
                                 isLoading = false,
-                                rssFavorites = result.data?.toMutableList() ?: LinkedList<Rss>(),
-                                rssFavoritesMap = if (result.data != null) result.data.associateBy({it.articleId},{it}).toMutableMap() else HashMap<String,Rss>(),
                                 error = "",
-                                isLocallyFetched = true
                             )
                         }
                     }
@@ -122,14 +129,15 @@ class RssViewModel @Inject constructor(private val getRssUseCase: GetRssUseCase,
                     is Resource.Loading -> {
                         //todo
                     }
+
                     is Resource.Success -> {
-                        if (_rssFavoritesState.value.isLocallyFetched
-                            && !_rssFavoritesState.value.rssFavoritesMap.containsKey(rss.articleId)) {
+                        if (!_rssFavoritesState.value.rssFavoritesMap.containsKey(rss.articleId)) {
 
                             _rssFavoritesState.value.rssFavoritesMap.put(rss.articleId, rss)
                             _rssFavoritesState.value.rssFavorites.add(0, rss)
                         }
                     }
+
                     is Resource.Error -> {
                         //todo
                     }
@@ -145,14 +153,15 @@ class RssViewModel @Inject constructor(private val getRssUseCase: GetRssUseCase,
                     is Resource.Loading -> {
                         //todo
                     }
+
                     is Resource.Success -> {
-                        if (_rssFavoritesState.value.isLocallyFetched
-                            && _rssFavoritesState.value.rssFavoritesMap.containsKey(rss.articleId)) {
+                        if (_rssFavoritesState.value.rssFavoritesMap.containsKey(rss.articleId)) {
 
                             _rssFavoritesState.value.rssFavoritesMap.remove(rss.articleId)
                             _rssFavoritesState.value.rssFavorites.remove(rss)
                         }
                     }
+
                     is Resource.Error -> {
                         //todo
                     }
