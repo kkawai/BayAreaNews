@@ -1,26 +1,20 @@
-package com.kk.android.bayareanews.domain.use_case.get_rss
+package com.kk.android.bayareanews.domain.use_case.get_favorites
 
 import com.kk.android.bayareanews.common.Resource
 import com.kk.android.bayareanews.domain.model.Rss
 import com.kk.android.bayareanews.domain.repository.RssRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
-class GetRssUseCase @Inject constructor(private val rssRepository: RssRepository) {
+class GetFavoritesUseCase @Inject constructor(private val rssRepository: RssRepository) {
 
-    operator fun invoke(
-        refresh: Boolean,
-        rssUrl: String,
-        category: String
-    ): Flow<Resource<List<Rss>>> = flow {
+    operator fun invoke(): Flow<Resource<List<Rss>>> = flow {
 
         try {
             emit(Resource.Loading())
-            val list = rssRepository.getRssArticles(refresh, rssUrl, category)
+            val list = rssRepository.getFavoriteRssArticles()
             emit(Resource.Success(list))
         } catch (e: IOException) {
             emit(Resource.Error("Internet connection error.  Please try again: " + e))

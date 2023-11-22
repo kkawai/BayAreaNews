@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 import com.kk.android.bayareanews.common.MLog;
 import com.kk.android.bayareanews.common.StringUtil;
@@ -161,7 +160,7 @@ public final class RssLocalDbHelper {
             final long rowId = db.replace(TABLE_RSS, null, rss.getContentValues());
             MLog.i(TAG, "rss: " + rss + " inserted at " + rowId + " [" + rss.getCategory() + "]");
         } catch (Throwable t) {
-            Log.e(TAG, "Error in storing rss: ", t);
+            MLog.e(TAG, "Error in storing rss: ", t);
         }
     }
 
@@ -187,34 +186,35 @@ public final class RssLocalDbHelper {
     /**
      * @param rss
      */
-    public synchronized void insertRssFavorite(final Rss rss) {
+    public synchronized long insertRssFavorite(final Rss rss) {
 
         if (getRssFavoriteByArticleId(rss.getArticleId()) != null) {
-            return;
+            return 0;  //already exists
         }
+        long id = -1; //if returned, indicates error while inserting
         try {
             final SQLiteDatabase db = sqlHelper.getWritableDatabase();
             rss.setId(0);
-            final long rowId = db.replace(TABLE_RSS_FAVORITES, null, rss.getContentValues());
-            MLog.i(TAG, "rss: " + rss + " inserted at " + rowId + " [" + rss.getCategory() + "]");
+            id = db.replace(TABLE_RSS_FAVORITES, null, rss.getContentValues());
+            MLog.i(TAG, "rss favorite: " + rss + " inserted at " + id + " [" + rss.getCategory() + "]");
         } catch (Throwable t) {
-            Log.e(TAG, "Error in storing rss: ", t);
+            MLog.e(TAG, "Error in storing favorite rss: ", t);
         }
+        return id;
     }
 
     public synchronized int deleteRssFavorite(String articleId) {
 
         if (getRssFavoriteByArticleId(articleId) == null) {
-            return 0;
+            return 0;  //does not exist to begin with
         }
-        int deleteCount = 0;
         try {
             final SQLiteDatabase db = sqlHelper.getWritableDatabase();
-            deleteCount += db.delete(TABLE_RSS_FAVORITES, RssColumns.COL_ARTICLE_ID + "='" + articleId + "'", null);
+            return db.delete(TABLE_RSS_FAVORITES, RssColumns.COL_ARTICLE_ID + "='" + articleId + "'", null);
         } catch (final Throwable t) {
             MLog.e(TAG, "Error deleting rss: ", t);
         }
-        return deleteCount;
+        return -1;
     }
 
     public synchronized Rss getRssFavoriteByArticleId(final String articleId) {
@@ -232,7 +232,7 @@ public final class RssLocalDbHelper {
             }
             c.close();
         } catch (Throwable t) {
-            MLog.e(TAG, "Error in getting rss: ", t);
+            MLog.e(TAG, "Error in getting favorite rss: ", t);
         }
         return rss;
     }
@@ -251,7 +251,7 @@ public final class RssLocalDbHelper {
             }
             c.close();
         } catch (Throwable t) {
-            MLog.e(TAG, "Error in getting rss: ", t);
+            MLog.e(TAG, "Error in getting rss favorites: ", t);
         }
         return rssList;
     }

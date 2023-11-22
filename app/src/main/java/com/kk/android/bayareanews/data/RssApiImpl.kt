@@ -14,4 +14,16 @@ class RssApiImpl: RssApi {
         return RssRemoteHelper().getRss(rssUrl)
     }
 
+    override suspend fun saveFavoriteArticle(rss: Rss): Long {
+        return RssLocalDbHelper.getInstance(NewsReaderApp.app).insertRssFavorite(rss)
+    }
+
+    override suspend fun deleteFavoriteArticleByArticleId(articleId: String): Int {
+        return RssLocalDbHelper.getInstance(NewsReaderApp.app).deleteRssFavorite(articleId)
+    }
+
+    override suspend fun getFavoriteRssArticles(): List<Rss> {
+        return RssLocalDbHelper.getInstance(NewsReaderApp.app).rssFavorites
+    }
+
 }

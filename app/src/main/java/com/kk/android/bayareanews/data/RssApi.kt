@@ -6,4 +6,10 @@ interface RssApi {
     suspend fun getRssArticlesFromLocalDb(category: String): List<Rss>
 
     suspend fun getRssArticlesFromUrl(rssUrl: String): List<Rss>
+
+    suspend fun saveFavoriteArticle(rss: Rss): Long
+
+    suspend fun deleteFavoriteArticleByArticleId(articleId: String): Int
+
+    suspend fun getFavoriteRssArticles(): List<Rss>
 }
