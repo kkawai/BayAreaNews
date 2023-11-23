@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -42,10 +42,10 @@ import com.kk.android.bayareanews.presentation.ui.common.LoadingScreen
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-private fun _RssListScreen(
+private fun _FavoritesScreen(
     onArticleClicked: (articleLink: String) -> Unit, modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    rssViewModel: RssViewModel = hiltViewModel()
+    viewModel: FavoritesViewModel
 ) {
 
     var isRefreshing by remember { mutableStateOf(false) }
@@ -53,20 +53,20 @@ private fun _RssListScreen(
         refreshing = isRefreshing,
         onRefresh = {
             isRefreshing = true
-            rssViewModel.getRssList(true)
+            viewModel.getFavorites()
         }
     )
 
-    val rssListState = rssViewModel.rssListState.collectAsState()
+    val favoritesState = viewModel.favoritesState.collectAsState()
 
-    if (rssListState.value.isLoading) {
+    if (favoritesState.value.isLoading) {
         LoadingScreen()
-    } else if (rssListState.value.error.isNotBlank()) {
+    } else if (favoritesState.value.error.isNotBlank()) {
         isRefreshing = false
         ErrorScreen(
-            errorText = rssListState.value.error,
-            retryAction = { rssViewModel.getRssList() })
-    } else if (!rssListState.value.isLoading && rssListState.value.rssList.isNotEmpty()) {
+            errorText = favoritesState.value.error,
+            retryAction = { viewModel.getFavorites() })
+    } else if (!favoritesState.value.isLoading && favoritesState.value.favorites.isNotEmpty()) {
         isRefreshing = false
         Box(
             modifier = Modifier
@@ -75,14 +75,14 @@ private fun _RssListScreen(
         ) {
 
             LazyColumn(modifier = modifier.fillMaxSize(), contentPadding = contentPadding) {
-                items(rssListState.value.rssList) { rss ->
+                itemsIndexed(favoritesState.value.favorites) { index, rss ->
                     ImageCard(
-                        isFavorite = rssListState.value.favoritesMap.containsKey(rss.articleId),
-                        onDeleteFavorite = { rss ->
-                            rssViewModel.deleteFavorite(rss)
+                        isFavorite = true, //initially, everything in this screen is a favorite
+                        onDeleteFavorite = {rss ->
+                            viewModel.deleteFavorite(rss)
                         },
                         onSaveFavorite = { rss ->
-                            rssViewModel.saveFavorite(rss)
+                            viewModel.saveFavorite(rss)
                         },
                         rss = rss,
                         modifier = Modifier
@@ -103,11 +103,11 @@ private fun _RssListScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RssListScreen(
-    onFavoritesClicked: () -> Unit,
+fun FavoritesScreen(
+    onGoBackClicked: () -> Unit,
     onArticleClicked: (articleLink: String) -> Unit, modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    rssViewModel: RssViewModel = hiltViewModel()
+    viewModel: FavoritesViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -121,7 +121,7 @@ fun RssListScreen(
                 TopAppBar(
                     scrollBehavior = scrollBehavior,
                     title = {
-                        Text(text = stringResource(id = R.string.app_name))
+                        Text(text = stringResource(id = R.string.favorites))
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -129,21 +129,21 @@ fun RssListScreen(
                     ),
                     actions = {
                         IconButton(onClick = {
-                            onFavoritesClicked()
-                        }) {
+                                onGoBackClicked()
+                            }) {
                             Icon(
-                                imageVector = Icons.Filled.Favorite,
-                                contentDescription = stringResource(R.string.favorites)
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = stringResource(id = R.string.go_back)
                             )
                         }
                     }
                 )
             }
         ) { values ->
-            _RssListScreen(
+            _FavoritesScreen(
                 onArticleClicked = onArticleClicked,
                 contentPadding = values,
-                rssViewModel = rssViewModel
+                viewModel = viewModel
             )
         }
 

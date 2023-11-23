@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssListScreen
 import com.kk.android.bayareanews.presentation.ui.details_screen.WebViewScreen
+import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesScreen
 
 @Composable
 fun NewsNavHost(contentPadding: PaddingValues = PaddingValues(0.dp)) {
@@ -25,6 +26,18 @@ fun NewsNavHost(contentPadding: PaddingValues = PaddingValues(0.dp)) {
             Screen.HomeScreen.route
         ) {
             RssListScreen(
+                onFavoritesClicked = { navController.navigate(Screen.FavoritesScreen.route) },
+                contentPadding = contentPadding,
+                onArticleClicked = { link ->
+                    navController.navigate(Screen.DetailsScreen.route + "/${link}")
+                })
+        }
+
+        composable(
+            Screen.FavoritesScreen.route
+        ) {
+            FavoritesScreen(
+                onGoBackClicked = { navController.popBackStack() },
                 contentPadding = contentPadding,
                 onArticleClicked = { link ->
                     navController.navigate(Screen.DetailsScreen.route + "/${link}")

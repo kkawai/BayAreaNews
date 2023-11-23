@@ -1,4 +1,4 @@
-package com.kk.android.bayareanews.presentation.ui.home_screen
+package com.kk.android.bayareanews.presentation.ui.common
 
 import android.content.Intent
 import androidx.compose.animation.animateContentSize
@@ -43,15 +43,15 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.Constants
-import com.kk.android.bayareanews.common.TimeUtil
 import com.kk.android.bayareanews.domain.model.Rss
+import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
 
 @ExperimentalMaterial3Api
 @Composable
 fun ImageCard(
     rss: Rss,
+    isFavorite: Boolean,
     modifier: Modifier = Modifier,
-    rssViewModel: RssViewModel = hiltViewModel(),
     onSaveFavorite: (rss: Rss) -> Unit,
     onDeleteFavorite: (rss: Rss) -> Unit
 ) {
@@ -70,8 +70,8 @@ fun ImageCard(
         mutableStateOf(false)
     }
 
-    var isFavorite by rememberSaveable {
-        mutableStateOf(rssViewModel.rssListState.value.favoritesMap.containsKey(rss.articleId))
+    var isFavorited by rememberSaveable {
+        mutableStateOf(isFavorite)
     }
 
     Card(
@@ -131,18 +131,18 @@ fun ImageCard(
                 ) {
                     AssistChip(
                         onClick = {
-                            if (isFavorite)
+                            if (isFavorited)
                                 onDeleteFavorite(rss)
                             else
                                 onSaveFavorite(rss)
-                            isFavorite = !isFavorite
+                            isFavorited = !isFavorited
                         },
                         colors = AssistChipDefaults.assistChipColors(
                             leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         leadingIcon = {
                             Icon(
-                                imageVector = if (isFavorite) Icons.Outlined.Favorite
+                                imageVector = if (isFavorited) Icons.Outlined.Favorite
                                 else Icons.Outlined.FavoriteBorder,
                                 contentDescription = null
                             )
@@ -167,7 +167,8 @@ fun ImageCard(
                         }
                     )
                 }
-                Text(text = Constants.HOODLINE_CARD_MARKER + " · " + rss.timeAgo,
+                Text(
+                    text = Constants.HOODLINE_CARD_MARKER + " · " + rss.timeAgo,
                     style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier.padding(0.dp),
                 )
