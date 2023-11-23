@@ -20,6 +20,7 @@
 
     <string name="share_with_others">Share with others</string>
     <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="favorites">Favorites</string>
 
     <string name="video_not_available">Oops!  Sorry!  This video is not available.</string>
 </resources>

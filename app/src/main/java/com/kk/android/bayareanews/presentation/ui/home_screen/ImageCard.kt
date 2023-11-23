@@ -51,7 +51,9 @@ import com.kk.android.bayareanews.domain.model.Rss
 fun ImageCard(
     rss: Rss,
     modifier: Modifier = Modifier,
-    rssViewModel: RssViewModel = hiltViewModel()
+    rssViewModel: RssViewModel = hiltViewModel(),
+    onSaveFavorite: (rss: Rss) -> Unit,
+    onDeleteFavorite: (rss: Rss) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -130,9 +132,9 @@ fun ImageCard(
                     AssistChip(
                         onClick = {
                             if (isFavorite)
-                                rssViewModel.deleteFavorite(rss)
+                                onDeleteFavorite(rss)
                             else
-                                rssViewModel.saveFavorite(rss)
+                                onSaveFavorite(rss)
                             isFavorite = !isFavorite
                         },
                         colors = AssistChipDefaults.assistChipColors(

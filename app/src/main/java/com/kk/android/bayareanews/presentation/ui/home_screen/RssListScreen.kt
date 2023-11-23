@@ -8,10 +8,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -23,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.EncodingUtil
-import com.kk.android.bayareanews.presentation.NewsNavHost
 import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
 import com.kk.android.bayareanews.presentation.ui.common.LoadingScreen
 
@@ -73,7 +78,13 @@ private fun _RssListScreen(
             LazyColumn(modifier = modifier.fillMaxSize(), contentPadding = contentPadding) {
                 items(rssListState.value.rssList) { rss ->
                     ImageCard(
-                        rss,
+                        onDeleteFavorite = {rss ->
+                            rssViewModel.deleteFavorite(rss)
+                        },
+                        onSaveFavorite = { rss ->
+                            rssViewModel.saveFavorite(rss)
+                        },
+                        rss = rss,
                         modifier = Modifier
                             .padding(16.dp)
                             .clickable { onArticleClicked(EncodingUtil.encodeUrlSafe(rss.link)) }
@@ -102,6 +113,11 @@ fun RssListScreen(
         color = MaterialTheme.colorScheme.background
     ) {
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+        var isFavoritesToggled by rememberSaveable {
+            mutableStateOf(false)
+        }
+
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
@@ -113,7 +129,18 @@ fun RssListScreen(
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
                         titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    ),
+                    actions = {
+                        IconButton(onClick = {
+                            isFavoritesToggled = !isFavoritesToggled
+                            //go to the favorites screen
+                            }) {
+                            Icon(
+                                imageVector = if (isFavoritesToggled) Icons.Filled.ArrowBack else Icons.Filled.Favorite,
+                                contentDescription = stringResource(R.string.favorites)
+                            )
+                        }
+                    }
                 )
             }
         ) { values ->
