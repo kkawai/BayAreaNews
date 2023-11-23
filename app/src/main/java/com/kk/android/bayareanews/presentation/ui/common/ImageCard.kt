@@ -67,7 +67,7 @@ fun ImageCard(
     }
 
     var isExpanded by rememberSaveable {
-        mutableStateOf(false)
+        mutableStateOf(Constants.IS_CARD_EXPANDED_BY_DEFAULT)
     }
 
     var isFavorited by rememberSaveable {
@@ -101,6 +101,11 @@ fun ImageCard(
             modifier = Modifier.padding(16.dp)
         ) {
 
+            Text(
+                text = Constants.HOODLINE_CARD_MARKER + " · " + rss.timeAgo,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.padding(0.dp),
+            )
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     modifier = Modifier.weight(1f),
@@ -167,11 +172,6 @@ fun ImageCard(
                         }
                     )
                 }
-                Text(
-                    text = Constants.HOODLINE_CARD_MARKER + " · " + rss.timeAgo,
-                    style = MaterialTheme.typography.labelSmall,
-                    modifier = Modifier.padding(0.dp),
-                )
             } //isExpanded
         }
     }
