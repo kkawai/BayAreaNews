@@ -24,6 +24,7 @@ fun WebViewScreen(url: String) {
                 }
             }
             settings.builtInZoomControls = true
+            settings.displayZoomControls = false
             loadUrl(if (url.startsWith("http")) url else EncodingUtil.decodeUrlSafe(url))
         }
     })

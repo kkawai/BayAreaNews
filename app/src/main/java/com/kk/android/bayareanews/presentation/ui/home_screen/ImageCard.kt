@@ -42,6 +42,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
 import com.kk.android.bayareanews.R
+import com.kk.android.bayareanews.common.Constants
+import com.kk.android.bayareanews.common.TimeUtil
 import com.kk.android.bayareanews.domain.model.Rss
 
 @ExperimentalMaterial3Api
@@ -96,10 +98,7 @@ fun ImageCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(
-                text = rss.timeAgo,
-                style = MaterialTheme.typography.labelSmall
-            )
+
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     modifier = Modifier.weight(1f),
@@ -147,7 +146,7 @@ fun ImageCard(
                             )
                         },
                         label = {
-                            Text(text = "Mark as favorite")
+                            Text(text = stringResource(R.string.mark_as_favorite))
                         }
                     )
                     AssistChip(
@@ -162,11 +161,15 @@ fun ImageCard(
                             )
                         },
                         label = {
-                            Text(text = "Share with others")
+                            Text(text = stringResource(R.string.share_with_others))
                         }
                     )
                 }
-            }
+                Text(text = Constants.HOODLINE_CARD_MARKER + " · " + rss.timeAgo,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(0.dp),
+                )
+            } //isExpanded
         }
     }
 }
