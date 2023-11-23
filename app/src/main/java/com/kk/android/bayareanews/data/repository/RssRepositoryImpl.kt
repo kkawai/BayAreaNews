@@ -7,6 +7,7 @@ import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.data.RssApi
 import com.kk.android.bayareanews.data.local.RssLocalDbHelper
 import com.kk.android.bayareanews.domain.model.Rss
+import com.kk.android.bayareanews.domain.model.RssAndFavorites
 import com.kk.android.bayareanews.domain.repository.RssRepository
 import java.util.Date
 import javax.inject.Inject
@@ -16,12 +17,17 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
         refresh: Boolean,
         rssUrl: String,
         originalCategory: String
-    ): List<Rss> {
+    ): RssAndFavorites {
+
+        val favorites = rssApi.getFavoriteRssArticles()
+        val rssAndFavorites = RssAndFavorites()
+        rssAndFavorites.favorites = favorites
 
         if (!refresh && !needsRefresh()) {
             val localList = rssApi.getRssArticlesFromLocalDb(originalCategory)
             if (localList.isNotEmpty()) {
-                return localList
+                rssAndFavorites.rss = localList
+                return rssAndFavorites
             }
         }
 
@@ -31,7 +37,8 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
             RssLocalDbHelper.getInstance(NewsReaderApp.app).insertRss(originalCategory, remoteList)
             sharedPrefs().edit().putLong(Constants.SHARED_PREFS_HOODLINE_KEY, Date().time).apply()
         }
-        return remoteList
+        rssAndFavorites.rss = remoteList
+        return rssAndFavorites
     }
 
     private fun needsRefresh(): Boolean {
@@ -51,7 +58,7 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
         return rssApi.deleteFavoriteArticleByArticleId(rss.articleId)
     }
 
-    override suspend fun getFavoriteRssArticles(): List<Rss> {
-        return rssApi.getFavoriteRssArticles()
-    }
+//    override suspend fun getFavoriteRssArticles(): List<Rss> {
+//        return rssApi.getFavoriteRssArticles()
+//    }
 }

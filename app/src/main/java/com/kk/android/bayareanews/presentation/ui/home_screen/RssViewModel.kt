@@ -6,8 +6,6 @@ import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.common.Resource
 import com.kk.android.bayareanews.domain.model.Rss
 import com.kk.android.bayareanews.domain.use_case.get_favorites.DeleteFavoriteUseCase
-import com.kk.android.bayareanews.domain.use_case.get_favorites.GetFavoritesUseCase
-import com.kk.android.bayareanews.domain.use_case.get_favorites.RssFavoritesState
 import com.kk.android.bayareanews.domain.use_case.get_favorites.SaveFavoriteUseCase
 import com.kk.android.bayareanews.domain.use_case.get_rss.GetRssUseCase
 import com.kk.android.bayareanews.domain.use_case.get_rss.RssListState
@@ -28,7 +26,6 @@ import javax.inject.Inject
 @HiltViewModel
 class RssViewModel @Inject constructor(
     private val getRssUseCase: GetRssUseCase,
-    private val getFavoritesUseCase: GetFavoritesUseCase,
     private val saveFavoriteUseCase: SaveFavoriteUseCase,
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase
 ) : ViewModel() {
@@ -36,12 +33,8 @@ class RssViewModel @Inject constructor(
     private val _rssListState = MutableStateFlow(RssListState())
     val rssListState = _rssListState.asStateFlow()
 
-    private val _rssFavoritesState = MutableStateFlow(RssFavoritesState())
-    val rssFavoritesState = _rssFavoritesState.asStateFlow()
-
     init {
         getRssList(false)
-        getRssFavorites()
     }
 
     fun getRssList(refresh: Boolean = false) {
@@ -59,7 +52,9 @@ class RssViewModel @Inject constructor(
                         _rssListState.update {
                             it.copy(
                                 isLoading = false,
-                                rssList = result.data ?: emptyList(),
+                                rssList =  result.data?.rss ?: emptyList(),
+                                favorites =  result.data?.favorites?.toMutableList()?:LinkedList(),
+                                favoritesMap = result.data?.favorites?.associateBy({it.articleId},{it})?.toMutableMap()?:HashMap(),
                                 error = ""
                             )
                         }
@@ -79,67 +74,25 @@ class RssViewModel @Inject constructor(
             }.flowOn(Dispatchers.IO).launchIn(viewModelScope + SupervisorJob())
     }
 
-    fun getRssFavorites() {
-        getFavoritesUseCase()
-            .distinctUntilChanged()
-            .onEach { result ->
-                when (result) {
-                    is Resource.Loading -> {
-                        _rssFavoritesState.update {
-                            it.copy(isLoading = true)
-                        }
-                    }
-
-                    is Resource.Success -> {
-
-                        //experimental: prevents bugs if user adds/removes favorites before master
-                        //list is pulled from the source (db or web)
-                        _rssFavoritesState.value.rssFavorites.addAll(result.data?.toMutableList() ?: LinkedList<Rss>())
-                        _rssFavoritesState.value.rssFavoritesMap.putAll(
-                            if (result.data != null) result.data.associateBy({ it.articleId },
-                                { it }).toMutableMap() else HashMap<String, Rss>()
-                        )
-                        _rssFavoritesState.update {
-                            it.copy(
-                                isLoading = false,
-                                error = "",
-                            )
-                        }
-                    }
-
-                    is Resource.Error -> {
-                        _rssFavoritesState.update {
-                            it.copy(
-                                isLoading = false,
-                                error = result.message
-                                    ?: "Unexpected Error Occurred. Please try again."
-                            )
-                        }
-                    }
-                }
-                //need 'flowOn' since RssReader does it own network I/O, but retrofit doesn't need flowOn for some reason
-            }.flowOn(Dispatchers.IO).launchIn(viewModelScope + SupervisorJob())
-    }
-
     fun saveFavorite(rss: Rss) {
         saveFavoriteUseCase(rss)
             .distinctUntilChanged()
             .onEach { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        //todo
+                        //not implemented; not much to do
                     }
 
                     is Resource.Success -> {
-                        if (!_rssFavoritesState.value.rssFavoritesMap.containsKey(rss.articleId)) {
 
-                            _rssFavoritesState.value.rssFavoritesMap.put(rss.articleId, rss)
-                            _rssFavoritesState.value.rssFavorites.add(0, rss)
+                        if (!_rssListState.value.favoritesMap.containsKey(rss.articleId)) {
+                            _rssListState.value.favoritesMap.put(rss.articleId, rss)
+                            _rssListState.value.favorites.add(0, rss)
                         }
                     }
 
                     is Resource.Error -> {
-                        //todo
+                        //not implemented; not much to do
                     }
                 }
             }.flowOn(Dispatchers.IO).launchIn(viewModelScope + SupervisorJob())
@@ -151,19 +104,18 @@ class RssViewModel @Inject constructor(
             .onEach { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        //todo
+                        //not implemented; not much to do
                     }
 
                     is Resource.Success -> {
-                        if (_rssFavoritesState.value.rssFavoritesMap.containsKey(rss.articleId)) {
-
-                            _rssFavoritesState.value.rssFavoritesMap.remove(rss.articleId)
-                            _rssFavoritesState.value.rssFavorites.remove(rss)
+                        if (_rssListState.value.favoritesMap.containsKey(rss.articleId)) {
+                            _rssListState.value.favoritesMap.remove(rss.articleId)
+                            _rssListState.value.favorites.remove(rss)
                         }
                     }
 
                     is Resource.Error -> {
-                        //todo
+                        //not implemented; not much to do
                     }
                 }
             }.flowOn(Dispatchers.IO).launchIn(viewModelScope + SupervisorJob())

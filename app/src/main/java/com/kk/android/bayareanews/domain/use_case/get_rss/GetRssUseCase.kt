@@ -2,6 +2,7 @@ package com.kk.android.bayareanews.domain.use_case.get_rss
 
 import com.kk.android.bayareanews.common.Resource
 import com.kk.android.bayareanews.domain.model.Rss
+import com.kk.android.bayareanews.domain.model.RssAndFavorites
 import com.kk.android.bayareanews.domain.repository.RssRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -16,12 +17,12 @@ class GetRssUseCase @Inject constructor(private val rssRepository: RssRepository
         refresh: Boolean,
         rssUrl: String,
         category: String
-    ): Flow<Resource<List<Rss>>> = flow {
+    ): Flow<Resource<RssAndFavorites>> = flow {
 
         try {
             emit(Resource.Loading())
-            val list = rssRepository.getRssArticles(refresh, rssUrl, category)
-            emit(Resource.Success(list))
+            val rssAndFavorites = rssRepository.getRssArticles(refresh, rssUrl, category)
+            emit(Resource.Success(rssAndFavorites))
         } catch (e: IOException) {
             emit(Resource.Error("Internet connection error.  Please try again: " + e))
         } catch (e: Exception) {
