@@ -66,7 +66,11 @@ private fun _FavoritesScreen(
         ErrorScreen(
             errorText = favoritesState.value.error,
             retryAction = { viewModel.getFavorites() })
-    } else if (!favoritesState.value.isLoading && favoritesState.value.favorites.isNotEmpty()) {
+    } else if (!favoritesState.value.isLoading && favoritesState.value.favorites.isEmpty()) {
+        isRefreshing = false
+        ErrorScreen(errorText = stringResource(id = R.string.no_favorites),
+            retryAction = {})
+    } else {
         isRefreshing = false
         Box(
             modifier = Modifier
@@ -78,7 +82,7 @@ private fun _FavoritesScreen(
                 itemsIndexed(favoritesState.value.favorites) { index, rss ->
                     ImageCard(
                         isFavorite = true, //initially, everything in this screen is a favorite
-                        onDeleteFavorite = {rss ->
+                        onDeleteFavorite = { rss ->
                             viewModel.deleteFavorite(rss)
                         },
                         onSaveFavorite = { rss ->
@@ -129,8 +133,8 @@ fun FavoritesScreen(
                     ),
                     actions = {
                         IconButton(onClick = {
-                                onGoBackClicked()
-                            }) {
+                            onGoBackClicked()
+                        }) {
                             Icon(
                                 imageVector = Icons.Filled.ArrowBack,
                                 contentDescription = stringResource(id = R.string.go_back)

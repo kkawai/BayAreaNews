@@ -11,8 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.kk.android.bayareanews.R
 
 @Composable
 fun ErrorScreen(errorText: String, retryAction: () -> Unit) {
@@ -30,7 +32,7 @@ fun ErrorScreen(errorText: String, retryAction: () -> Unit) {
                 .padding(horizontal = 20.dp)
         )
         Button(onClick = retryAction) {
-            Text("Retry")
+            Text(stringResource(id = R.string.retry))
         }
     }
 }

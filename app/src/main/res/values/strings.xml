@@ -22,6 +22,9 @@
     <string name="mark_as_favorite">Mark as favorite</string>
     <string name="favorites">Favorites</string>
     <string name="go_back">Back to Breaking News</string>
+    <string name="no_favorites">No Favorites added yet.</string>
+
+    <string name="retry">Retry</string>
 
     <string name="video_not_available">Oops!  Sorry!  This video is not available.</string>
 </resources>

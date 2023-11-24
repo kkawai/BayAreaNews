@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.plus
-import java.util.LinkedList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,7 +52,6 @@ class RssViewModel @Inject constructor(
                             it.copy(
                                 isLoading = false,
                                 rssList =  result.data?.rss ?: emptyList(),
-                                favorites =  result.data?.favorites?.toMutableList()?:LinkedList(),
                                 favoritesMap = result.data?.favorites?.associateBy({it.articleId},{it})?.toMutableMap()?:HashMap(),
                                 error = ""
                             )
@@ -87,7 +85,6 @@ class RssViewModel @Inject constructor(
 
                         if (!_rssListState.value.favoritesMap.containsKey(rss.articleId)) {
                             _rssListState.value.favoritesMap.put(rss.articleId, rss)
-                            _rssListState.value.favorites.add(0, rss)
                         }
                     }
 
@@ -110,7 +107,6 @@ class RssViewModel @Inject constructor(
                     is Resource.Success -> {
                         if (_rssListState.value.favoritesMap.containsKey(rss.articleId)) {
                             _rssListState.value.favoritesMap.remove(rss.articleId)
-                            _rssListState.value.favorites.remove(rss)
                         }
                     }
 
