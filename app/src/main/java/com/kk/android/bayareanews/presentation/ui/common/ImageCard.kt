@@ -37,14 +37,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.domain.model.Rss
-import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
 
 @ExperimentalMaterial3Api
 @Composable
