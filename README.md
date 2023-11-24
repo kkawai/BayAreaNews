@@ -2,7 +2,8 @@
 
 ## Breaking Bay Area news feed, no ads, just the news.  Also can mark articles as Favorites so you can read later.
 
-### Bay Area News app -- Written in Kotlin, Jetpack Compose, mvvm, flow coroutines, sqlite, RSS reader
+### Bay Area News app -- Written in Kotlin using Jetpack Compose, mvvm, flow coroutines, sqlite,
+dagger/hilt dependency injection, RSS reader
 
 <img src="external/screenshot_rss_1.png"/>
 

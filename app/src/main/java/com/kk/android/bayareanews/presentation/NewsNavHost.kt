@@ -10,7 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssListScreen
-import com.kk.android.bayareanews.presentation.ui.details_screen.WebViewScreen
+import com.kk.android.bayareanews.presentation.ui.common.WebViewScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesScreen
 
 @Composable
@@ -26,6 +26,9 @@ fun NewsNavHost(contentPadding: PaddingValues = PaddingValues(0.dp)) {
             Screen.HomeScreen.route
         ) {
             RssListScreen(
+                onPrivacyPolicyClicked = { link ->
+                    navController.navigate(Screen.PrivacyPolicyScreen.route + "/${link}")
+                },
                 onFavoritesClicked = { navController.navigate(Screen.FavoritesScreen.route) },
                 contentPadding = contentPadding,
                 onArticleClicked = { link ->
@@ -46,6 +49,16 @@ fun NewsNavHost(contentPadding: PaddingValues = PaddingValues(0.dp)) {
 
         composable(
             Screen.DetailsScreen.route + "/{link}",
+            arguments = listOf(
+                navArgument("link") {
+                    type = NavType.StringType
+                })
+        ) { backStackEntry ->
+            WebViewScreen(backStackEntry.arguments?.getString("link") ?: "")
+        }
+
+        composable(
+            Screen.PrivacyPolicyScreen.route + "/{link}",
             arguments = listOf(
                 navArgument("link") {
                     type = NavType.StringType

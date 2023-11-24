@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -35,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kk.android.bayareanews.R
+import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.common.EncodingUtil
 import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
 import com.kk.android.bayareanews.presentation.ui.common.ImageCard
@@ -104,6 +106,7 @@ private fun _RssListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RssListScreen(
+    onPrivacyPolicyClicked: (privacyPolicyUrl: String) -> Unit,
     onFavoritesClicked: () -> Unit,
     onArticleClicked: (articleLink: String) -> Unit, modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -133,6 +136,14 @@ fun RssListScreen(
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.Favorite,
+                                contentDescription = stringResource(R.string.favorites)
+                            )
+                        }
+                        IconButton(onClick = {
+                            onPrivacyPolicyClicked(EncodingUtil.encodeUrlSafe(Constants.PRIVACY_POLICY_URL))
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.PrivacyTip,
                                 contentDescription = stringResource(R.string.favorites)
                             )
                         }
