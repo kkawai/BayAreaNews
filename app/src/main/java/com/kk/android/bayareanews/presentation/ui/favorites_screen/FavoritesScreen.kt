@@ -33,19 +33,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.EncodingUtil
+import com.kk.android.bayareanews.domain.model.Rss
+import com.kk.android.bayareanews.domain.use_case.get_rss.RssFavoritesState
 import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
 import com.kk.android.bayareanews.presentation.ui.common.ImageCard
 import com.kk.android.bayareanews.presentation.ui.common.LoadingScreen
+import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 private fun _FavoritesScreen(
+    onGetFavorites: ()->Unit,
+    onSaveFav: (rss: Rss) -> Unit,
+    onDeleteFav: (rss: Rss) -> Unit,
+    state: StateFlow<RssFavoritesState>,
     onArticleClicked: (articleLink: String) -> Unit, modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    viewModel: FavoritesViewModel
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
 
     var isRefreshing by remember { mutableStateOf(false) }
@@ -53,11 +58,11 @@ private fun _FavoritesScreen(
         refreshing = isRefreshing,
         onRefresh = {
             isRefreshing = true
-            viewModel.getFavorites()
+            onGetFavorites()
         }
     )
 
-    val favoritesState = viewModel.favoritesState.collectAsState()
+    val favoritesState = state.collectAsState()
 
     if (favoritesState.value.isLoading) {
         LoadingScreen()
@@ -65,7 +70,7 @@ private fun _FavoritesScreen(
         isRefreshing = false
         ErrorScreen(
             errorText = favoritesState.value.error,
-            retryAction = { viewModel.getFavorites() })
+            retryAction = { onGetFavorites() })
     } else if (!favoritesState.value.isLoading && favoritesState.value.favorites.isEmpty()) {
         isRefreshing = false
         ErrorScreen(errorText = stringResource(id = R.string.no_favorites),
@@ -83,10 +88,10 @@ private fun _FavoritesScreen(
                     ImageCard(
                         isFavorite = true, //initially, everything in this screen is a favorite
                         onDeleteFavorite = { rss ->
-                            viewModel.deleteFavorite(rss)
+                            onDeleteFav(rss)
                         },
                         onSaveFavorite = { rss ->
-                            viewModel.saveFavorite(rss)
+                            onSaveFav(rss)
                         },
                         rss = rss,
                         modifier = Modifier
@@ -111,7 +116,10 @@ fun FavoritesScreen(
     onGoBackClicked: () -> Unit,
     onArticleClicked: (articleLink: String) -> Unit, modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    viewModel: FavoritesViewModel = hiltViewModel()
+    onGetFavorites: ()->Unit,
+    onSaveFav: (rss: Rss) -> Unit,
+    onDeleteFav: (rss: Rss) -> Unit,
+    state: StateFlow<RssFavoritesState>,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -147,7 +155,10 @@ fun FavoritesScreen(
             _FavoritesScreen(
                 onArticleClicked = onArticleClicked,
                 contentPadding = values,
-                viewModel = viewModel
+                onGetFavorites = onGetFavorites,
+                onSaveFav = onSaveFav,
+                onDeleteFav = onDeleteFav,
+                state = state
             )
         }
 

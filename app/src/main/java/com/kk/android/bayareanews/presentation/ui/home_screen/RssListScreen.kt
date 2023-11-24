@@ -34,19 +34,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.EncodingUtil
+import com.kk.android.bayareanews.domain.model.Rss
+import com.kk.android.bayareanews.domain.use_case.get_rss.RssListState
 import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
 import com.kk.android.bayareanews.presentation.ui.common.ImageCard
 import com.kk.android.bayareanews.presentation.ui.common.LoadingScreen
+import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 private fun _RssListScreen(
-    onArticleClicked: (articleLink: String) -> Unit, modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    rssViewModel: RssViewModel = hiltViewModel()
+    onGetRss: () -> Unit,
+    onRefresh: () -> Unit,
+    onSaveFav: (rss: Rss) -> Unit,
+    onDeleteFav: (rss: Rss) -> Unit,
+    stateFlow: StateFlow<RssListState>,
+    onArticleClicked: (articleLink: String) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
 
     var isRefreshing by remember { mutableStateOf(false) }
@@ -54,11 +61,11 @@ private fun _RssListScreen(
         refreshing = isRefreshing,
         onRefresh = {
             isRefreshing = true
-            rssViewModel.getRssList(true)
+            onRefresh()
         }
     )
 
-    val rssListState = rssViewModel.rssListState.collectAsState()
+    val rssListState = stateFlow.collectAsState()
 
     if (rssListState.value.isLoading) {
         LoadingScreen()
@@ -66,7 +73,7 @@ private fun _RssListScreen(
         isRefreshing = false
         ErrorScreen(
             errorText = rssListState.value.error,
-            retryAction = { rssViewModel.getRssList() })
+            retryAction = { onGetRss() })
     } else if (!rssListState.value.isLoading && rssListState.value.rssList.isNotEmpty()) {
         isRefreshing = false
         Box(
@@ -76,20 +83,21 @@ private fun _RssListScreen(
         ) {
 
             LazyColumn(modifier = modifier.fillMaxSize(), contentPadding = contentPadding) {
-                items(rssListState.value.rssList) { rss ->
+                items(stateFlow.value.rssList) { rss ->
                     ImageCard(
                         isFavorite = rssListState.value.favoritesMap.containsKey(rss.articleId),
                         onDeleteFavorite = { rss ->
-                            rssViewModel.deleteFavorite(rss)
+                            onDeleteFav(rss)
                         },
                         onSaveFavorite = { rss ->
-                            rssViewModel.saveFavorite(rss)
+                            onSaveFav(rss)
                         },
                         rss = rss,
                         modifier = Modifier
                             .padding(16.dp)
                             .clickable { onArticleClicked(EncodingUtil.encodeUrlSafe(rss.link)) }
                     )
+
                 }
             }
 
@@ -105,11 +113,16 @@ private fun _RssListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RssListScreen(
+    onGetRss: () -> Unit,
+    onRefresh: () -> Unit,
+    onSaveFav: (rss: Rss) -> Unit,
+    onDeleteFav: (rss: Rss) -> Unit,
+    stateFlow: StateFlow<RssListState>,
     onPrivacyPolicyClicked: () -> Unit,
     onFavoritesClicked: () -> Unit,
-    onArticleClicked: (articleLink: String) -> Unit, modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    rssViewModel: RssViewModel = hiltViewModel()
+    onArticleClicked: (articleLink: String) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -153,7 +166,11 @@ fun RssListScreen(
             _RssListScreen(
                 onArticleClicked = onArticleClicked,
                 contentPadding = values,
-                rssViewModel = rssViewModel
+                onGetRss = onGetRss,
+                onRefresh = onRefresh,
+                onSaveFav = onSaveFav,
+                onDeleteFav = onDeleteFav,
+                stateFlow = stateFlow
             )
         }
 
