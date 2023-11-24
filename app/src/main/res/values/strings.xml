@@ -23,8 +23,7 @@
     <string name="favorites">Favorites</string>
     <string name="go_back">Back to Breaking News</string>
     <string name="no_favorites">No Favorites added yet.</string>
-
-    <string name="retry">Retry</string>
-
+    <string name="retry_op">Retry</string>
+    <string name="privacy_policy_title">Privacy Policy</string>
     <string name="video_not_available">Oops!  Sorry!  This video is not available.</string>
 </resources>

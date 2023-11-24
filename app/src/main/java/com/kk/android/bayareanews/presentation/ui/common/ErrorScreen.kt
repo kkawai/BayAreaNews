@@ -32,7 +32,7 @@ fun ErrorScreen(errorText: String, retryAction: () -> Unit) {
                 .padding(horizontal = 20.dp)
         )
         Button(onClick = retryAction) {
-            Text(stringResource(id = R.string.retry))
+            Text(stringResource(id = R.string.retry_op))
         }
     }
 }

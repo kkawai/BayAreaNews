@@ -4,13 +4,15 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.kk.android.bayareanews.common.EncodingUtil
 
 @Composable
-fun WebViewScreen(url: String) {
+fun WebViewScreen(url: String, contentPadding: PaddingValues = PaddingValues(0.dp)) {
     val context = LocalContext.current
     AndroidView(factory = {
         WebView(context).apply {

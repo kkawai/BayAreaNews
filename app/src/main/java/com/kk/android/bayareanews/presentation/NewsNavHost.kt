@@ -12,6 +12,7 @@ import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssListScreen
 import com.kk.android.bayareanews.presentation.ui.common.WebViewScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesScreen
+import com.kk.android.bayareanews.presentation.ui.home_screen.PrivacyPolicyScreen
 
 @Composable
 fun NewsNavHost(contentPadding: PaddingValues = PaddingValues(0.dp)) {
@@ -26,8 +27,8 @@ fun NewsNavHost(contentPadding: PaddingValues = PaddingValues(0.dp)) {
             Screen.HomeScreen.route
         ) {
             RssListScreen(
-                onPrivacyPolicyClicked = { link ->
-                    navController.navigate(Screen.PrivacyPolicyScreen.route + "/${link}")
+                onPrivacyPolicyClicked = {
+                    navController.navigate(Screen.PrivacyPolicyScreen.route)
                 },
                 onFavoritesClicked = { navController.navigate(Screen.FavoritesScreen.route) },
                 contentPadding = contentPadding,
@@ -58,13 +59,9 @@ fun NewsNavHost(contentPadding: PaddingValues = PaddingValues(0.dp)) {
         }
 
         composable(
-            Screen.PrivacyPolicyScreen.route + "/{link}",
-            arguments = listOf(
-                navArgument("link") {
-                    type = NavType.StringType
-                })
-        ) { backStackEntry ->
-            WebViewScreen(backStackEntry.arguments?.getString("link") ?: "")
+            Screen.PrivacyPolicyScreen.route
+        ) {
+            PrivacyPolicyScreen(onGoBackClicked = { navController.popBackStack() })
         }
 
     }

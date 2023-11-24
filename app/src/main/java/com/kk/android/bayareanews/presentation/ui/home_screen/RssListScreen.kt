@@ -106,7 +106,7 @@ private fun _RssListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RssListScreen(
-    onPrivacyPolicyClicked: (privacyPolicyUrl: String) -> Unit,
+    onPrivacyPolicyClicked: () -> Unit,
     onFavoritesClicked: () -> Unit,
     onArticleClicked: (articleLink: String) -> Unit, modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -140,7 +140,7 @@ fun RssListScreen(
                             )
                         }
                         IconButton(onClick = {
-                            onPrivacyPolicyClicked(EncodingUtil.encodeUrlSafe(Constants.PRIVACY_POLICY_URL))
+                            onPrivacyPolicyClicked()
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.PrivacyTip,
