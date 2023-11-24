@@ -43,6 +43,9 @@
 -keep class com.github.bumptech.** { *; }
 -keep interface com.github.bumptech.** { *; }
 
+-keep class org.joda.** { *; }
+-keep interface org.joda.** { *; }
+
 # Helps crash reports point to the code
 -keepattributes LineNumberTable,SourceFile
 -renamesourcefileattribute SourceFile
@@ -97,3 +100,6 @@
 
 # With R8 full mode generic signatures are stripped for classes that are not kept.
 -keep,allowobfuscation,allowshrinking class retrofit2.Response
+
+-dontwarn org.joda.convert.FromString
+-dontwarn org.joda.convert.ToString
