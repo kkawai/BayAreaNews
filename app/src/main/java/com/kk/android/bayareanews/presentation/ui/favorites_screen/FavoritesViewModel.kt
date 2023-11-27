@@ -51,7 +51,7 @@ class FavoritesViewModel @Inject constructor(
                         _favoritesState.update {
                             it.copy(
                                 isLoading = false,
-                                favorites =  result.data?.toMutableList()?: LinkedList(),
+                                favorites =  result.data?: emptyList(),
                                 error = ""
                             )
                         }
