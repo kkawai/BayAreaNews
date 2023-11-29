@@ -1,4 +1,4 @@
-package com.kk.android.bayareanews
+package com.kk.android.bayareanews.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
