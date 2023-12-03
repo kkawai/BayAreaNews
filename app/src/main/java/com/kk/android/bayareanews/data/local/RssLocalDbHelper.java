@@ -153,7 +153,7 @@ public final class RssLocalDbHelper {
     /**
      * @param rss
      */
-    public synchronized void insertRss(final Rss rss) {
+    private synchronized void insertRss(final Rss rss) {
 
         try {
             final SQLiteDatabase db = sqlHelper.getWritableDatabase();

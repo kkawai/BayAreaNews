@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "148844713207",
+    "project_id": "covid19chatbot-xdke",
+    "storage_bucket": "covid19chatbot-xdke.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148844713207:android:9454a9254fc387a128aff2",
+        "android_client_info": {
+          "package_name": "com.kk.android.bayareanews"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDU2x1xmu71b7rXMWM3TsdhMpcKgkGmjU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

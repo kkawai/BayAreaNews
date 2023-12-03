@@ -99,7 +99,9 @@ public class RssRemoteHelper {
                } else if (xpp.getName().equalsIgnoreCase("media:content")) {
                   if (insideItem) {
                      String contentUrl = xpp.getAttributeValue("", "url");
+                     contentUrl = contentUrl != null ? contentUrl : "";
                      String medium = xpp.getAttributeValue("", "medium");
+                     medium = medium != null ? medium : "";
                      if (medium.equalsIgnoreCase("image") && contentUrl.startsWith("http")) {
                         rss.setImageUrl(contentUrl);
                      } else if (medium.equalsIgnoreCase("video") && contentUrl.startsWith("http")) {

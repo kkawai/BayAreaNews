@@ -3,7 +3,10 @@ package com.kk.android.bayareanews.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.kk.android.bayareanews.presentation.NewsNavHost
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.kk.android.bayareanews.NewsReaderApp
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,5 +19,10 @@ class MainActivity : ComponentActivity() {
                 NewsNavHost()
             }
         }
+        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+        remoteConfig.fetchAndActivate()
+            .addOnCompleteListener(this) { task ->
+                NewsReaderApp.app.remoteConfigResponse.complete(task.isSuccessful)
+            }
     }
 }

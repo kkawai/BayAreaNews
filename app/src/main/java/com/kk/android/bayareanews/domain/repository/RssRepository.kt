@@ -12,4 +12,6 @@ interface RssRepository {
 
     suspend fun getFavoriteArticles(): List<Rss>
 
+    suspend fun getFeaturedRssArticles(): List<Rss>
+
 }
