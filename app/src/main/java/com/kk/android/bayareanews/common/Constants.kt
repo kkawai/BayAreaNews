@@ -8,7 +8,7 @@ object Constants {
     const val SHARED_PREFS_NAME = "com.kk.android.bayareanews.SHARED_PREFS"
     const val HOODLINE_CARD_MARKER = "hoodline"
     const val CONTENT_EXPIRE_TIME = 1000*60*60 * 6L  //6 hours
-    const val IS_CARD_EXPANDED_BY_DEFAULT = true
+    const val IS_CARD_EXPANDED_BY_DEFAULT = false
     const val PRIVACY_POLICY_URL =
         "https://raw.githack.com/kkawai/BayAreaNews/main/external/privacy_policy.html"
     const val FEATURED_CATEGORIES = "featured_categories";

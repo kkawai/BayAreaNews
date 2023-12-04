@@ -87,7 +87,7 @@ fun BayAreaNewsTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        typography = Typography,
+        typography = Typography2,
         content = content,
         shapes = Shapes
     )

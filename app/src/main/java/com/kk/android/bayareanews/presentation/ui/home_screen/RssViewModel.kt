@@ -36,6 +36,14 @@ class RssViewModel @Inject constructor(
         getRssList(false)
     }
 
+    private fun getTopStory(rss: List<Rss>): Rss {
+        return if (rss.isNotEmpty()) rss.get(0) else Rss()
+    }
+
+    private fun getRemainingStories(rss: List<Rss>): List<Rss> {
+        return if (rss.size > 1) rss.subList(1,rss.size-1) else emptyList()
+    }
+
     fun getRssList(refresh: Boolean = false) {
         getRssUseCase(refresh, Constants.HOODLINE_RSS_URL, Constants.HOODLINE_CATEGORY)
             .distinctUntilChanged()
@@ -51,7 +59,8 @@ class RssViewModel @Inject constructor(
                         _rssListState.update {
                             it.copy(
                                 isLoading = false,
-                                rssList =  result.data?.rss ?: emptyList(),
+                                rssList =  getRemainingStories(result.data?.rss ?: emptyList()),
+                                topRss = getTopStory(result.data?.rss ?: emptyList()),
                                 favoritesMap = result.data?.favorites?.associateBy({it.articleId},{it})?.toMutableMap()?:HashMap(),
                                 error = ""
                             )

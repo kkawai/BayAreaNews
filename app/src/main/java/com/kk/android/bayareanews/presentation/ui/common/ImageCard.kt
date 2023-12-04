@@ -100,7 +100,7 @@ fun ImageCard(
         ) {
 
             Text(
-                text = Constants.HOODLINE_CARD_MARKER + " · " + rss.timeAgo,
+                text = "${Constants.HOODLINE_CARD_MARKER} · ${rss.timeAgo} · ${rss.author}",
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.padding(0.dp),
             )
