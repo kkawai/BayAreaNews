@@ -56,7 +56,6 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
     ): RssFeedHolder {
 
         val rssFeedHolder = RssFeedHolder()
-        //val featuredRss = getFeaturedRssArticles()
         val favorites = rssApi.getFavoriteRssArticles()
         rssFeedHolder.favorites = favorites
         rssFeedHolder.featuredRss = getFeaturedRssArticles()
