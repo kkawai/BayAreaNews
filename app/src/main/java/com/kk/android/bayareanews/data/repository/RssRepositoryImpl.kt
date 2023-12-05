@@ -11,16 +11,18 @@ import com.kk.android.bayareanews.common.MLog
 import com.kk.android.bayareanews.data.RssApi
 import com.kk.android.bayareanews.data.local.RssLocalDbHelper
 import com.kk.android.bayareanews.domain.model.Rss
-import com.kk.android.bayareanews.domain.model.RssAndFavorites
+import com.kk.android.bayareanews.domain.model.RssFeedHolder
 import com.kk.android.bayareanews.domain.repository.RssRepository
 import java.util.Date
 import javax.inject.Inject
 
 class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRepository {
 
-    override suspend fun getFeaturedRssArticles(): List<Rss> {
+    private suspend fun getFeaturedRssArticles(): List<Rss> {
 
+        MLog.i("nnnnn","RssRepositoryImpl waiting for remote config")
         val remoteConfigResponse = NewsReaderApp.app.remoteConfigResponse.await()
+        MLog.i("nnnnn","RssRepositoryImpl received remote config")
         if (!remoteConfigResponse) {
             return emptyList()
         }
@@ -32,21 +34,18 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
         if (rssUrl.isBlank()) {
             return emptyList()
         }
-
         if (featuredNeedsRefresh(originalCategory)) {
             val localList = rssApi.getRssArticlesFromLocalDb(originalCategory)
             if (localList.isNotEmpty()) {
                 return localList
             }
         }
-
         val remoteList = rssApi.getRssArticlesFromUrl(rssUrl)
         if (remoteList.isNotEmpty()) {
             RssLocalDbHelper.getInstance(NewsReaderApp.app).deleteRss(originalCategory)
             RssLocalDbHelper.getInstance(NewsReaderApp.app).insertRss(originalCategory, remoteList)
             sharedPrefs().edit().putLong(originalCategory, Date().time).apply()
         }
-        MLog.i("aaaaa", "rss $originalCategory -> $rssUrl")
         return remoteList
     }
 
@@ -54,17 +53,19 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
         refresh: Boolean,
         rssUrl: String,
         originalCategory: String
-    ): RssAndFavorites {
+    ): RssFeedHolder {
 
+        val rssFeedHolder = RssFeedHolder()
+        //val featuredRss = getFeaturedRssArticles()
         val favorites = rssApi.getFavoriteRssArticles()
-        val rssAndFavorites = RssAndFavorites()
-        rssAndFavorites.favorites = favorites
+        rssFeedHolder.favorites = favorites
+        rssFeedHolder.featuredRss = getFeaturedRssArticles()
 
         if (!refresh && !needsRefresh()) {
             val localList = rssApi.getRssArticlesFromLocalDb(originalCategory)
             if (localList.isNotEmpty()) {
-                rssAndFavorites.rss = localList
-                return rssAndFavorites
+                rssFeedHolder.rss = localList
+                return rssFeedHolder
             }
         }
 
@@ -74,8 +75,8 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
             RssLocalDbHelper.getInstance(NewsReaderApp.app).insertRss(originalCategory, remoteList)
             sharedPrefs().edit().putLong(Constants.SHARED_PREFS_HOODLINE_KEY, Date().time).apply()
         }
-        rssAndFavorites.rss = remoteList
-        return rssAndFavorites
+        rssFeedHolder.rss = remoteList
+        return rssFeedHolder
     }
 
     private fun featuredNeedsRefresh(category: String): Boolean {

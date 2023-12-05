@@ -6,6 +6,7 @@ data class RssListState(
     val isLoading: Boolean = false,
     val rssList: List<Rss> = emptyList(),
     var topRss: Rss = Rss(),
+    var featuredRss: List<Rss> = emptyList(),
     val favoritesMap: MutableMap<String, Rss> = HashMap(),
     val error: String = ""
 )

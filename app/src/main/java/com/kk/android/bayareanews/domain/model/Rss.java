@@ -8,6 +8,7 @@ import com.kk.android.bayareanews.common.TimeUtil;
 import com.kk.android.bayareanews.data.local.RssLocalDbHelper;
 
 import java.util.Date;
+import java.util.Random;
 
 import androidx.annotation.Nullable;
 
@@ -19,6 +20,8 @@ public class Rss {
     private int id;
     private String title, link, descr, imageUrl, videoUrl, category, author, originalCategory, articleId;
     private long pubDate;//Sat, 07 Sep 2002 00:00:01 GMT
+
+    private int minRead = new Random().nextInt(5) + 2;
 
     public static final String KEY_CATEGORY = "cat";
     public static final String KEY_ORIGINAL_CATEGORY = "o_cat";
@@ -185,6 +188,18 @@ public class Rss {
             return false;
         }
     }
+
+    public String getMonthDayString() {
+        if (pubDate != 0) {
+            return StringUtil.DATE_AND_HOUR_FORMAT_3.format(new Date(pubDate));
+        }
+        return StringUtil.DATE_AND_HOUR_FORMAT_3.format(new Date());
+    }
+
+    public int getMinRead() {
+        return minRead;
+    }
+
 
     @Override
     public int hashCode() {

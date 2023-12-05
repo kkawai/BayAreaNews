@@ -1,6 +1,5 @@
 package com.kk.android.bayareanews.presentation.ui.common
 
-import android.content.Intent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -34,7 +33,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -50,19 +48,10 @@ fun ImageCard(
     rss: Rss,
     isFavorite: Boolean,
     modifier: Modifier = Modifier,
-    onSaveFavorite: (rss: Rss) -> Unit,
-    onDeleteFavorite: (rss: Rss) -> Unit
+    onArticleShared: () -> Unit,
+    onSaveFavorite: () -> Unit,
+    onDeleteFavorite: () -> Unit
 ) {
-
-    val context = LocalContext.current
-    val share = {
-        val sendIntent = Intent()
-        sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, rss.link)
-        //sendIntent.putExtra(Intent.EXTRA_SUBJECT, rss.title) //not as many good share options besides email
-        sendIntent.type = "text/plain"
-        context.startActivity(Intent.createChooser(sendIntent, null))
-    }
 
     var isExpanded by rememberSaveable {
         mutableStateOf(Constants.IS_CARD_EXPANDED_BY_DEFAULT)
@@ -135,9 +124,9 @@ fun ImageCard(
                     AssistChip(
                         onClick = {
                             if (isFavorited)
-                                onDeleteFavorite(rss)
+                                onDeleteFavorite()
                             else
-                                onSaveFavorite(rss)
+                                onSaveFavorite()
                             isFavorited = !isFavorited
                         },
                         colors = AssistChipDefaults.assistChipColors(
@@ -155,7 +144,7 @@ fun ImageCard(
                         }
                     )
                     AssistChip(
-                        onClick = { share() },
+                        onClick = {onArticleShared()},
                         colors = AssistChipDefaults.assistChipColors(
                             leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                         ),

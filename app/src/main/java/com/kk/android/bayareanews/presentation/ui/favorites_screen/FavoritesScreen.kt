@@ -31,10 +31,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.EncodingUtil
+import com.kk.android.bayareanews.common.ShareUtil
 import com.kk.android.bayareanews.domain.model.Rss
 import com.kk.android.bayareanews.domain.use_case.get_rss.RssFavoritesState
 import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
@@ -46,10 +48,11 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 private fun _FavoritesScreen(
     onGetFavorites: ()->Unit,
-    onSaveFav: (rss: Rss) -> Unit,
-    onDeleteFav: (rss: Rss) -> Unit,
+    onSaveFavorite: (rss: Rss) -> Unit,
+    onDeleteFavorite: (rss: Rss) -> Unit,
     state: StateFlow<RssFavoritesState>,
-    onArticleClicked: (articleLink: String) -> Unit, modifier: Modifier = Modifier,
+    onArticleClicked: (articleLink: String) -> Unit,
+    modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
 
@@ -82,21 +85,18 @@ private fun _FavoritesScreen(
                 //.padding(padding)
                 .pullRefresh(pullRefreshState)
         ) {
-
+            val context = LocalContext.current
             LazyColumn(modifier = modifier.fillMaxSize(), contentPadding = contentPadding) {
                 itemsIndexed(favoritesState.value.favorites) { index, rss ->
                     ImageCard(
                         isFavorite = true, //initially, everything in this screen is a favorite
-                        onDeleteFavorite = { rss ->
-                            onDeleteFav(rss)
-                        },
-                        onSaveFavorite = { rss ->
-                            onSaveFav(rss)
-                        },
+                        onDeleteFavorite = {onDeleteFavorite(rss)},
+                        onSaveFavorite = {onSaveFavorite(rss)},
+                        onArticleShared = {ShareUtil.shareUrl(context, rss.link)},
                         rss = rss,
                         modifier = Modifier
                             .padding(16.dp)
-                            .clickable { onArticleClicked(EncodingUtil.encodeUrlSafe(rss.link)) }
+                            .clickable {onArticleClicked(EncodingUtil.encodeUrlSafe(rss.link))}
                     )
                 }
             }
@@ -156,8 +156,8 @@ fun FavoritesScreen(
                 onArticleClicked = onArticleClicked,
                 contentPadding = values,
                 onGetFavorites = onGetFavorites,
-                onSaveFav = onSaveFav,
-                onDeleteFav = onDeleteFav,
+                onSaveFavorite = onSaveFav,
+                onDeleteFavorite = onDeleteFav,
                 state = state
             )
         }

@@ -3,6 +3,7 @@ package com.kk.android.bayareanews.presentation.ui.home_screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kk.android.bayareanews.common.Constants
+import com.kk.android.bayareanews.common.MLog
 import com.kk.android.bayareanews.common.Resource
 import com.kk.android.bayareanews.domain.model.Rss
 import com.kk.android.bayareanews.domain.use_case.get_favorites.DeleteFavoriteUseCase
@@ -61,6 +62,7 @@ class RssViewModel @Inject constructor(
                                 isLoading = false,
                                 rssList =  getRemainingStories(result.data?.rss ?: emptyList()),
                                 topRss = getTopStory(result.data?.rss ?: emptyList()),
+                                featuredRss = result.data?.featuredRss ?: emptyList(),
                                 favoritesMap = result.data?.favorites?.associateBy({it.articleId},{it})?.toMutableMap()?:HashMap(),
                                 error = ""
                             )

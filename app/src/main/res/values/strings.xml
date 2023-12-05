@@ -27,4 +27,7 @@
     <string name="retry_op">Retry</string>
     <string name="privacy_policy_title">Privacy Policy</string>
     <string name="video_not_available">Oops!  Sorry!  This video is not available.</string>
+    <string name="home_post_min_read">%1$s - %2$d min read</string>
+    <string name="home_popular_section_title">Popular reads</string>
+    <string name="top_stories_continued">Top stories continued</string>
 </resources>

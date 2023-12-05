@@ -20,6 +20,8 @@ public class StringUtil {
 	 * SimpleDateFormat HOUR_FORMAT = new SimpleDateFormat("hh:mm:ss");
 	 */
 	public static final SimpleDateFormat DATE_AND_HOUR_FORMAT_2 = new SimpleDateFormat("EEE, d MMM hh:mm:ss a");
+
+	public static final SimpleDateFormat DATE_AND_HOUR_FORMAT_3 = new SimpleDateFormat("MM/dd");
 	public static final SimpleDateFormat HOUR_FORMAT = new SimpleDateFormat("hh:mm aa");	
 
 	public static String getCleanText(final CharSequence var0) {
