@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private var job: Job? = null
+    private var remoteConfigTimeout: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +31,11 @@ class MainActivity : ComponentActivity() {
         val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener(this) { task ->
+                remoteConfigTimeout?.cancel()
+                MLog.i("nnnnn","MainActivity received remote from firebase")
                 NewsReaderApp.app.remoteConfigResponse.complete(task.isSuccessful)
             }
-        job = CoroutineScope(Dispatchers.IO).launch {
+        remoteConfigTimeout = CoroutineScope(Dispatchers.IO).launch {
             try {
                 if (!NewsReaderApp.app.remoteConfigResponse.isCompleted) {
                     MLog.i("nnnnn","MainActivity about to delay 3 seconds")
@@ -43,10 +45,11 @@ class MainActivity : ComponentActivity() {
                 }
             }catch (ignored: Throwable){}
         }
+        remoteConfigTimeout?.start()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        job?.cancel()
+        remoteConfigTimeout?.cancel()
     }
 }
