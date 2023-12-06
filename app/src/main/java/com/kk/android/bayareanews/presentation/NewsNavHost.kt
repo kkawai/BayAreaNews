@@ -35,7 +35,8 @@ fun NewsNavHost(contentPadding: PaddingValues = PaddingValues(0.dp)) {
                 onRefresh = { viewModel.getRssList(true) },
                 onSaveFav = { rss -> viewModel.saveFavorite(rss) },
                 onDeleteFav = { rss -> viewModel.deleteFavorite(rss) },
-                stateFlow = viewModel.rssListState,
+                rssListState = viewModel.rssListState,
+                featuredState = viewModel.featuredState,
                 onPrivacyPolicyClicked = {
                     navController.navigate(Screen.PrivacyPolicyScreen.route)
                 },

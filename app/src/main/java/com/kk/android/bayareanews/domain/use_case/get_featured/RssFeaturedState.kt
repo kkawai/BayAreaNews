@@ -2,10 +2,8 @@ package com.kk.android.bayareanews.domain.use_case.get_rss
 
 import com.kk.android.bayareanews.domain.model.Rss
 
-data class RssListState(
+data class RssFeaturedState(
     val isLoading: Boolean = false,
-    val rssList: List<Rss> = emptyList(),
-    var topRss: Rss = Rss(),
-    val favoritesMap: MutableMap<String, Rss> = HashMap(),
+    var featuredRss: List<Rss> = emptyList(),
     val error: String = ""
 )

@@ -114,7 +114,8 @@ private fun _FavoritesScreen(
 @Composable
 fun FavoritesScreen(
     onGoBackClicked: () -> Unit,
-    onArticleClicked: (articleLink: String) -> Unit, modifier: Modifier = Modifier,
+    onArticleClicked: (articleLink: String) -> Unit,
+    modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     onGetFavorites: ()->Unit,
     onSaveFav: (rss: Rss) -> Unit,

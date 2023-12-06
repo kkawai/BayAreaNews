@@ -12,11 +12,15 @@ import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private var job: Job? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -29,7 +33,7 @@ class MainActivity : ComponentActivity() {
             .addOnCompleteListener(this) { task ->
                 NewsReaderApp.app.remoteConfigResponse.complete(task.isSuccessful)
             }
-        CoroutineScope(Dispatchers.IO).launch {
+        job = CoroutineScope(Dispatchers.IO).launch {
             try {
                 if (!NewsReaderApp.app.remoteConfigResponse.isCompleted) {
                     MLog.i("nnnnn","MainActivity about to delay 3 seconds")
@@ -38,6 +42,11 @@ class MainActivity : ComponentActivity() {
                     MLog.i("nnnnn","MainActivity finished delay of 3 seconds")
                 }
             }catch (ignored: Throwable){}
-        }.start()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job?.cancel()
     }
 }

@@ -64,6 +64,7 @@ import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.common.EncodingUtil
 import com.kk.android.bayareanews.common.ShareUtil
 import com.kk.android.bayareanews.domain.model.Rss
+import com.kk.android.bayareanews.domain.use_case.get_rss.RssFeaturedState
 import com.kk.android.bayareanews.domain.use_case.get_rss.RssListState
 import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
 import com.kk.android.bayareanews.presentation.ui.common.ImageCard
@@ -90,7 +91,8 @@ private fun _RssListScreen(
     onRefresh: () -> Unit,
     onSaveFavorite: (rss: Rss) -> Unit,
     onDeleteFavorite: (rss: Rss) -> Unit,
-    stateFlow: StateFlow<RssListState>,
+    rssListState: StateFlow<RssListState>,
+    featuredState: StateFlow<RssFeaturedState>,
     onArticleClicked: (articleLink: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
@@ -107,16 +109,17 @@ private fun _RssListScreen(
 
     val context = LocalContext.current
 
-    val rssListState = stateFlow.collectAsState()
+    val listState = rssListState.collectAsState()
+    val featuredListState = featuredState.collectAsState()
 
-    if (rssListState.value.isLoading) {
+    if (listState.value.isLoading) {
         LoadingScreen()
-    } else if (rssListState.value.error.isNotBlank()) {
+    } else if (listState.value.error.isNotBlank()) {
         isRefreshing = false
         ErrorScreen(
-            errorText = rssListState.value.error,
+            errorText = listState.value.error,
             retryAction = { onGetRss() })
-    } else if (!rssListState.value.isLoading && rssListState.value.topRss.title != null && rssListState.value.rssList.isNotEmpty()) {
+    } else if (!listState.value.isLoading && listState.value.topRss.title != null && listState.value.rssList.isNotEmpty()) {
         isRefreshing = false
         Box(
             modifier = Modifier
@@ -126,38 +129,38 @@ private fun _RssListScreen(
 
             LazyColumn(modifier = modifier.fillMaxSize(), contentPadding = contentPadding) {
 
-                if (rssListState.value.topRss.title?.isNotBlank() ?: false) {
+                if (listState.value.topRss.title?.isNotBlank() ?: false) {
                     item {
                         TopStorySection(
-                            rssListState.value.topRss,
-                            isFavorited = rssListState.value.favoritesMap.containsKey(rssListState.value.topRss.articleId),
-                            onArticleShared = {shareArticle(context, rssListState.value.topRss.link)},
-                            onSaveFavorite = {onSaveFavorite(rssListState.value.topRss)},
-                            onDeleteFavorite = {onDeleteFavorite(rssListState.value.topRss)},
+                            listState.value.topRss,
+                            isFavorited = listState.value.favoritesMap.containsKey(listState.value.topRss.articleId),
+                            onArticleShared = {shareArticle(context, listState.value.topRss.link)},
+                            onSaveFavorite = {onSaveFavorite(listState.value.topRss)},
+                            onDeleteFavorite = {onDeleteFavorite(listState.value.topRss)},
                             modifier = Modifier
                                 .clickable {
                                     onArticleClicked(
                                         EncodingUtil.encodeUrlSafe(
-                                            rssListState.value.topRss.link
+                                            listState.value.topRss.link
                                         )
                                     )
                                 })
                     }
                 }
 
-                if (rssListState.value.featuredRss.isNotEmpty()) {
+                if (featuredState.value.featuredRss.isNotEmpty()) {
                     item {
                         FeaturedRssSection(
-                            rssListState.value.featuredRss,
+                            featuredListState.value.featuredRss,
                             onArticleClicked,
-                            rssListState.value.favoritesMap,
+                            listState.value.favoritesMap,
                             onSaveFavorite,
                             onDeleteFavorite
                         )
                     }
                 }
 
-                if (rssListState.value.rssList.isNotEmpty()) {
+                if (listState.value.rssList.isNotEmpty()) {
                     item {
                         Text(
                             modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
@@ -167,10 +170,10 @@ private fun _RssListScreen(
                     }
                 }
 
-                items(rssListState.value.rssList) { rss ->
+                items(listState.value.rssList) { rss ->
                     ImageCard(
                         rss = rss,
-                        isFavorite = rssListState.value.favoritesMap.containsKey(rss.articleId),
+                        isFavorite = listState.value.favoritesMap.containsKey(rss.articleId),
                         onArticleShared = { shareArticle(context,rss.link) },
                         onDeleteFavorite = { onDeleteFavorite(rss) },
                         onSaveFavorite = { onSaveFavorite(rss) },
@@ -340,7 +343,8 @@ fun RssListScreen(
     onRefresh: () -> Unit,
     onSaveFav: (rss: Rss) -> Unit,
     onDeleteFav: (rss: Rss) -> Unit,
-    stateFlow: StateFlow<RssListState>,
+    rssListState: StateFlow<RssListState>,
+    featuredState: StateFlow<RssFeaturedState>,
     onPrivacyPolicyClicked: () -> Unit,
     onFavoritesClicked: () -> Unit,
     onArticleClicked: (articleLink: String) -> Unit,
@@ -393,7 +397,8 @@ fun RssListScreen(
                 onRefresh = onRefresh,
                 onSaveFavorite = onSaveFav,
                 onDeleteFavorite = onDeleteFav,
-                stateFlow = stateFlow
+                rssListState = rssListState,
+                featuredState = featuredState
             )
         }
 
