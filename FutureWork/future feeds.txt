@@ -1,17 +1,17 @@
-            final ArrayList<Rss> business = new RssReader().getRss("http://www.wired.com/category/business/feed/");
+            final ArrayList<Rss> business = new RssReader().getRss("https://www.wired.com/category/business/feed/");
             RssDb.getInstance().insertRss("Business", business);
 
-            final ArrayList<Rss> design = new RssReader().getRss("http://www.wired.com/category/design/feed/");
+            final ArrayList<Rss> design = new RssReader().getRss("https://www.wired.com/category/design/feed/");
             RssDb.getInstance().insertRss("Design", design);
 
-            final ArrayList<Rss> tech = new RssReader().getRss("http://www.wired.com/category/gear/feed/");
+            final ArrayList<Rss> tech = new RssReader().getRss("https://www.wired.com/category/gear/feed/");
             RssDb.getInstance().insertRss("Technology", tech);
 
-            final ArrayList<Rss> science = new RssReader().getRss("http://www.wired.com/category/science/feed/");
+            final ArrayList<Rss> science = new RssReader().getRss("https://www.wired.com/category/science/feed/");
             RssDb.getInstance().insertRss("Science",science);
 
-            final ArrayList<Rss> videos = new RssReader().getRss("http://feeds.cnevids.com/brand/wired.mrss");
+            final ArrayList<Rss> videos = new RssReader().getRss("https://feeds.cnevids.com/brand/wired.mrss");
             RssDb.getInstance().insertRss("Videos", videos);
 
-            final ArrayList<Rss> photos = new RssReader().getRss("http://www.wired.com/category/photo/feed/");
+            final ArrayList<Rss> photos = new RssReader().getRss("https://www.wired.com/category/photo/feed/");
             RssDb.getInstance().insertRss("Photos", photos);

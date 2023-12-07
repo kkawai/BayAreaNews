@@ -40,7 +40,6 @@ class RssViewModel @Inject constructor(
 
     init {
         getRssList(false)
-        getFeaturedRss(false)
     }
 
     private fun getTopStory(rss: List<Rss>): Rss {
@@ -52,6 +51,11 @@ class RssViewModel @Inject constructor(
     }
 
     fun getRssList(refresh: Boolean = false) {
+        getMainStories(refresh)
+        getFeaturedStories(refresh)
+    }
+
+    private fun getMainStories(refresh: Boolean = false) {
         getRssUseCase(refresh, Constants.HOODLINE_RSS_URL, Constants.HOODLINE_CATEGORY)
             .distinctUntilChanged()
             .onEach { result ->
@@ -88,7 +92,7 @@ class RssViewModel @Inject constructor(
             }.flowOn(Dispatchers.IO).launchIn(viewModelScope + SupervisorJob())
     }
 
-    fun getFeaturedRss(refresh: Boolean = false) {
+    private fun getFeaturedStories(refresh: Boolean = false) {
         getFeaturedUseCase(refresh)
             .distinctUntilChanged()
             .onEach { result ->

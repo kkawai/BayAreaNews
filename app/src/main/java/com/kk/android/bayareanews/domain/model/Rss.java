@@ -18,10 +18,10 @@ import androidx.annotation.Nullable;
 public class Rss {
 
     private int id;
-    private String title, link, descr, imageUrl, videoUrl, category, author, originalCategory, articleId;
+    private String title, link, descr, imageUrl, videoUrl, category, author, originalCategory, articleId, publisher;
     private long pubDate;//Sat, 07 Sep 2002 00:00:01 GMT
 
-    private int minRead = new Random().nextInt(5) + 2;
+    private final int minRead = new Random().nextInt(5) + 2;
 
     public static final String KEY_CATEGORY = "cat";
     public static final String KEY_ORIGINAL_CATEGORY = "o_cat";
@@ -46,6 +46,7 @@ public class Rss {
         setOriginalCategory(StringUtil.unescapeQuotes(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_ORIGINAL_CATEGORY)));
         setAuthor(StringUtil.unescapeQuotes(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_AUTHOR)));
         setPubDate(contentValues.getAsLong(RssLocalDbHelper.RssColumns.COL_PUB_DATE));
+        setPublisher(contentValues.getAsString(RssLocalDbHelper.RssColumns.COL_PUBLISHER));
     }
 
     public ContentValues getContentValues() {
@@ -63,6 +64,7 @@ public class Rss {
         values.put(RssLocalDbHelper.RssColumns.COL_ORIGINAL_CATEGORY, DatabaseUtils.sqlEscapeString(getOriginalCategory()));
         values.put(RssLocalDbHelper.RssColumns.COL_AUTHOR, DatabaseUtils.sqlEscapeString(getAuthor()));
         values.put(RssLocalDbHelper.RssColumns.COL_PUB_DATE, getPubDate());
+        values.put(RssLocalDbHelper.RssColumns.COL_PUBLISHER, getPublisher());
         return values;
     }
 
@@ -153,7 +155,10 @@ public class Rss {
 
     @Override
     public String toString() {
-        return "RSS. time ago: [" + getTimeAgo() + "] author: [" + author + "] title: [" + title + "] link: [" + link + "] descr: [" + descr + "] imageUrl: [" + imageUrl + "] videoUrl: [" + videoUrl + "] category: [" + category + "] pubDate: [" + pubDate + "]";
+        return "RSS. time ago: [" + getTimeAgo() + "] author: [" + author + "] title: [" + title + "] " +
+                "link: [" + link + "] descr: [" + descr + "] imageUrl: [" + imageUrl + "] " +
+                "videoUrl: [" + videoUrl + "] category: [" + category + "] " +
+                "pubDate: [" + pubDate + "] + publisher: [" + publisher +"]";
     }
 
     public void setId(final int id) {
@@ -200,6 +205,13 @@ public class Rss {
         return minRead;
     }
 
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 
     @Override
     public int hashCode() {

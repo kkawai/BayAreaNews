@@ -267,7 +267,7 @@ private fun TopStorySection(
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
                 Text(
-                    text = "${Constants.HOODLINE_CARD_MARKER} · ${rss.timeAgo}",
+                    text = "${rss.publisher} · ${rss.timeAgo}",
                     style = typography.bodySmall
                 )
             }
@@ -447,7 +447,7 @@ fun FeaturedRssCard(
                 Row {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = rss.author,
+                            text = "${rss.publisher} · ${rss.author}",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.bodyMedium

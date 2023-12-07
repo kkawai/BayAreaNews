@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
             try {
                 if (!NewsReaderApp.app.remoteConfigResponse.isCompleted) {
                     MLog.i("nnnnn","MainActivity about to delay 3 seconds")
-                    delay(3000)
+                    delay(3000) //wait max 3 seconds for config response
                     NewsReaderApp.app.remoteConfigResponse.complete(false)
                     MLog.i("nnnnn","MainActivity finished delay of 3 seconds")
                 }

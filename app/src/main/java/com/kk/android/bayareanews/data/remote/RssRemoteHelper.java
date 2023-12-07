@@ -1,6 +1,7 @@
 package com.kk.android.bayareanews.data.remote;
 
 import com.kk.android.bayareanews.common.MLog;
+import com.kk.android.bayareanews.common.StringUtil2;
 import com.kk.android.bayareanews.common.TimeUtil;
 import com.kk.android.bayareanews.domain.model.Rss;
 
@@ -48,6 +49,7 @@ public class RssRemoteHelper {
          Rss rss=null;
          // Returns the type of current event: START_TAG, END_TAG, etc..
          int eventType = xpp.getEventType();
+         String publisher = "";
          while (eventType != XmlPullParser.END_DOCUMENT) {
             if (eventType == XmlPullParser.START_TAG) {
 
@@ -65,6 +67,15 @@ public class RssRemoteHelper {
                      String s = xpp.nextText();
                      //MLog.i(TAG, "link: " + s);
                      rss.setLink(s);
+                  } else {
+                     if (publisher == null || publisher.isEmpty()) {
+                        String link = xpp.nextText();
+                        try {
+                           publisher = StringUtil2.determinePublisher(link);
+                        }catch (Exception e) {
+                           MLog.e(TAG,"error parsing: "+link + " -> " +e);
+                        }
+                     }
                   }
                } else if (xpp.getName().equalsIgnoreCase("pubDate")) {
                   if (insideItem) {
@@ -135,8 +146,11 @@ public class RssRemoteHelper {
 
             } else if(eventType== XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("item")){
                insideItem=false;
-               rss.setArticleId(rss.getTitle().hashCode() +"-"+ rss.getPubDate()); //generate article id
-               rssList.add(rss);
+               if (rss != null) {
+                  rss.setArticleId(rss.getTitle().hashCode() + "-" + rss.getPubDate()); //generate article id
+                  rss.setPublisher(publisher);
+                  rssList.add(rss);
+               }
                MLog.i(TAG,"rss: "+rss);
             }
 

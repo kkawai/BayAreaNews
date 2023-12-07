@@ -89,7 +89,7 @@ fun ImageCard(
         ) {
 
             Text(
-                text = "${rss.timeAgo} · ${rss.author}",
+                text = "${rss.publisher} · ${rss.timeAgo} · ${rss.author}",
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.padding(0.dp),
             )

@@ -23,7 +23,7 @@ import java.util.List;
 public final class RssLocalDbHelper {
 
     private static final String TAG = "RssDb";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 4;
     private static RssLocalDbHelper instance;
     private static final String TABLE_RSS = "rss";
     private static final String TABLE_RSS_FAVORITES = "rss_favorites";
@@ -64,6 +64,7 @@ public final class RssLocalDbHelper {
         public static final String COL_IMAGE_URL = "image_url";
         public static final String COL_LINK = "link";
         public static final String COL_PUB_DATE = "pub_date";
+        public static final String COL_PUBLISHER = "publisher";
         public static final String COL_TITLE = "title";
         public static final String COL_VIDEO_URL = "video_url";
 
@@ -145,6 +146,24 @@ public final class RssLocalDbHelper {
                             + RssColumns.COL_VIDEO_URL + " TEXT);");
                 } catch (final Throwable t) {
                     MLog.e(TAG, "Error creating database.  Very bad: ", t);
+                }
+            } else if (newVersion == 4) {
+                try {
+                    db.execSQL("ALTER TABLE " + TABLE_RSS + " ADD "
+                            + RssColumns.COL_PUBLISHER + " TEXT");
+                    MLog.i(TAG, TABLE_RSS + " table upgraded. onUpgrade() oldVersion=" +
+                            oldVersion + " newVersion=" + newVersion);
+                } catch (final Exception e) {
+                    MLog.e(TAG, "Error in altering users table: ", e);
+                }
+
+                try {
+                    db.execSQL("ALTER TABLE " + TABLE_RSS_FAVORITES + " ADD "
+                            + RssColumns.COL_PUBLISHER + " TEXT");
+                    MLog.i(TAG, TABLE_RSS_FAVORITES + " table upgraded. onUpgrade() oldVersion=" +
+                            oldVersion + " newVersion=" + newVersion);
+                } catch (final Exception e) {
+                    MLog.e(TAG, "Error in altering users table: ", e);
                 }
             }
         }
