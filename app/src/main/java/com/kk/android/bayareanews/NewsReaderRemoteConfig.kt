@@ -25,10 +25,10 @@ class NewsReaderRemoteConfig {
             }
         remoteConfigTimeout = CoroutineScope(Dispatchers.IO).launch {
             if (!NewsReaderApp.app.remoteConfigResponse.isCompleted) {
-                MLog.i("nnnnn", "MainActivity about to delay 5 seconds")
+                MLog.i("nnnnn", "MainActivity to allow 5 seconds to fetch remote config")
                 delay(5000) //wait max 4 seconds for config response
                 NewsReaderApp.app.remoteConfigResponse.complete(false)
-                MLog.i("nnnnn", "MainActivity finished delay of 5 seconds")
+                MLog.i("nnnnn", "MainActivity. waited 5 seconds to fetch remote config")
             }
         }
         remoteConfigTimeout?.start()
