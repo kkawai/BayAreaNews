@@ -206,7 +206,7 @@ public class Rss {
     }
 
     public String getPublisher() {
-        return publisher;
+        return publisher != null ? publisher : "";
     }
 
     public void setPublisher(String publisher) {

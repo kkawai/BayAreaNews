@@ -119,7 +119,7 @@ private fun _RssListScreen(
         ErrorScreen(
             errorText = listState.value.error,
             retryAction = { onGetRss() })
-    } else if (!listState.value.isLoading && listState.value.topRss.title != null && listState.value.rssList.isNotEmpty()) {
+    } else {
         isRefreshing = false
         Box(
             modifier = Modifier
