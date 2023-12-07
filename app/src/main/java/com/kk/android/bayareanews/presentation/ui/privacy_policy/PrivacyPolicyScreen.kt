@@ -1,6 +1,11 @@
 package com.kk.android.bayareanews.presentation.ui.home_screen
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,9 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.kk.android.bayareanews.NewsReaderApp
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.Constants
-import com.kk.android.bayareanews.presentation.ui.common.WebViewScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,8 +63,18 @@ fun PrivacyPolicyScreen(
                 )
             }
         ) { values ->
-            WebViewScreen(url = Constants.PRIVACY_POLICY_URL, values)
+            PrivacyPolicyText(text = NewsReaderApp.app.remoteConfigMap
+                .get(Constants.PRIVACY_POLICY_V2)?.asString()?:Constants.PRIVACY_POLICY_DEFAULT,
+                values)
         }
-
     }
+}
+
+@Composable
+fun PrivacyPolicyText(text: String, contentPadding: PaddingValues = PaddingValues(0.dp)) {
+    Text(
+        modifier = Modifier.padding(top = 70.dp, start = 8.dp, end = 8.dp)
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        text = text)
 }

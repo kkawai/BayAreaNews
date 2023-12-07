@@ -46,6 +46,7 @@ import com.kk.android.bayareanews.domain.model.Rss
 @Composable
 fun ImageCard(
     rss: Rss,
+    expandedByDefault: Boolean,
     isFavorite: Boolean,
     modifier: Modifier = Modifier,
     onArticleShared: () -> Unit,
@@ -54,7 +55,7 @@ fun ImageCard(
 ) {
 
     var isExpanded by rememberSaveable {
-        mutableStateOf(Constants.IS_CARD_EXPANDED_BY_DEFAULT)
+        mutableStateOf(expandedByDefault)
     }
 
     var isFavorited by rememberSaveable {

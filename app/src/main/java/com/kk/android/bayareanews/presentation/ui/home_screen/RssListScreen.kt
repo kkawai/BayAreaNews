@@ -59,7 +59,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.kk.android.bayareanews.NewsReaderApp
 import com.kk.android.bayareanews.R
+import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.common.EncodingUtil
 import com.kk.android.bayareanews.common.ShareUtil
 import com.kk.android.bayareanews.domain.model.Rss
@@ -189,6 +191,7 @@ private fun _RssListScreen(
 
                 items(listState.value.rssList) { rss ->
                     ImageCard(
+                        expandedByDefault = NewsReaderApp.app.remoteConfigMap.get(Constants.MAIN_CARDS_EXPANDED)?.asBoolean()?:true,
                         rss = rss,
                         isFavorite = listState.value.favoritesMap.containsKey(rss.articleId),
                         onArticleShared = { shareArticle(context, rss.link) },

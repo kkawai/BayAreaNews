@@ -7,8 +7,11 @@ object Constants {
     const val SHARED_PREFS_HOODLINE_KEY = "hoodline_breaking_news"
     const val SHARED_PREFS_NAME = "com.kk.android.bayareanews.SHARED_PREFS"
     const val CONTENT_EXPIRE_TIME = 1000*60*60 * 6L  //6 hours
-    const val IS_CARD_EXPANDED_BY_DEFAULT = true
     const val PRIVACY_POLICY_URL =
         "https://raw.githack.com/kkawai/BayAreaNews/main/external/privacy_policy.html"
-    const val FEATURED_CATEGORIES = "featured_categories";
+    const val FEATURED_CATEGORIES = "featured_categories"
+    const val MAIN_CARDS_EXPANDED = "main_cards_expanded"
+    const val FEATURED_CARDS_EXPANDED = "featured_cards_expanded"
+    const val PRIVACY_POLICY_V2 = "privacy_policy"
+    const val PRIVACY_POLICY_DEFAULT = "The app does not require, collect, transmit, store or use any personally identifiable information from its users in any way, shape, or form. Any \"Favorited\" content is not saved against any personally identifiable information and not associated to any form of social media whatsoever."
 }
