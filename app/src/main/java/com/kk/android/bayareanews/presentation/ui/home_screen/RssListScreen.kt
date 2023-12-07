@@ -60,7 +60,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.kk.android.bayareanews.R
-import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.common.EncodingUtil
 import com.kk.android.bayareanews.common.ShareUtil
 import com.kk.android.bayareanews.domain.model.Rss
@@ -81,7 +80,7 @@ private fun PostListDivider() {
 }
 
 private fun shareArticle(context: Context, url: String) {
-    ShareUtil.shareUrl(context,url)
+    ShareUtil.shareUrl(context, url)
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -134,9 +133,14 @@ private fun _RssListScreen(
                         TopStorySection(
                             listState.value.topRss,
                             isFavorited = listState.value.favoritesMap.containsKey(listState.value.topRss.articleId),
-                            onArticleShared = {shareArticle(context, listState.value.topRss.link)},
-                            onSaveFavorite = {onSaveFavorite(listState.value.topRss)},
-                            onDeleteFavorite = {onDeleteFavorite(listState.value.topRss)},
+                            onArticleShared = {
+                                shareArticle(
+                                    context,
+                                    listState.value.topRss.link
+                                )
+                            },
+                            onSaveFavorite = { onSaveFavorite(listState.value.topRss) },
+                            onDeleteFavorite = { onDeleteFavorite(listState.value.topRss) },
                             modifier = Modifier
                                 .clickable {
                                     onArticleClicked(
@@ -148,6 +152,13 @@ private fun _RssListScreen(
                     }
                 }
 
+                item {
+                    Text(
+                        modifier = Modifier.padding(16.dp),
+                        text = stringResource(id = R.string.home_popular_section_title),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
                 if (featuredState.value.featuredRss.isNotEmpty()) {
                     item {
                         FeaturedRssSection(
@@ -157,6 +168,12 @@ private fun _RssListScreen(
                             onSaveFavorite,
                             onDeleteFavorite
                         )
+                    }
+                }
+                item {
+                    Column {
+                        Spacer(Modifier.height(16.dp))
+                        PostListDivider()
                     }
                 }
 
@@ -174,7 +191,7 @@ private fun _RssListScreen(
                     ImageCard(
                         rss = rss,
                         isFavorite = listState.value.favoritesMap.containsKey(rss.articleId),
-                        onArticleShared = { shareArticle(context,rss.link) },
+                        onArticleShared = { shareArticle(context, rss.link) },
                         onDeleteFavorite = { onDeleteFavorite(rss) },
                         onSaveFavorite = { onSaveFavorite(rss) },
                         modifier = Modifier
@@ -307,32 +324,23 @@ private fun FeaturedRssSection(
     onDeleteFavorite: (rss: Rss) -> Unit,
 ) {
     val context = LocalContext.current
-    Column {
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = stringResource(id = R.string.home_popular_section_title),
-            style = MaterialTheme.typography.titleLarge
-        )
-        Row(
-            modifier = Modifier
-                .horizontalScroll(rememberScrollState())
-                .height(IntrinsicSize.Max)
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            for (rss in rssList) {
-                FeaturedRssCard(
-                    rss,
-                    { shareArticle(context, rss.link) },
-                    favoritesMap.containsKey(rss.articleId),
-                    { onSaveFavorite(rss) },
-                    { onDeleteFavorite(rss) },
-                    modifier = Modifier.clickable { onArticleClicked(EncodingUtil.encodeUrlSafe(rss.link)) },
-                )
-            }
+    Row(
+        modifier = Modifier
+            .horizontalScroll(rememberScrollState())
+            .height(IntrinsicSize.Max)
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        for (rss in rssList) {
+            FeaturedRssCard(
+                rss,
+                { shareArticle(context, rss.link) },
+                favoritesMap.containsKey(rss.articleId),
+                { onSaveFavorite(rss) },
+                { onDeleteFavorite(rss) },
+                modifier = Modifier.clickable { onArticleClicked(EncodingUtil.encodeUrlSafe(rss.link)) },
+            )
         }
-        Spacer(Modifier.height(16.dp))
-        PostListDivider()
     }
 }
 

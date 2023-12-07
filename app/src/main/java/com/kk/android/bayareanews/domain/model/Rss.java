@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.DatabaseUtils;
 
 import com.kk.android.bayareanews.common.StringUtil;
+import com.kk.android.bayareanews.common.StringUtil2;
 import com.kk.android.bayareanews.common.TimeUtil;
 import com.kk.android.bayareanews.data.local.RssLocalDbHelper;
 
@@ -206,7 +207,13 @@ public class Rss {
     }
 
     public String getPublisher() {
-        return publisher != null ? publisher : "";
+        if (publisher != null && !publisher.isEmpty()) {
+            return publisher;
+        }
+        if (link != null) {
+            return StringUtil2.determinePublisher(link);
+        }
+        return "";
     }
 
     public void setPublisher(String publisher) {
