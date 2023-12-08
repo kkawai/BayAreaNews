@@ -6,13 +6,13 @@ import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CompletableDeferred
 
 @HiltAndroidApp
-class NewsReaderApp: Application() {
+class MainApp: Application() {
 
     val remoteConfigResponse = CompletableDeferred<Boolean>()
     var remoteConfigMap: Map<String, FirebaseRemoteConfigValue> = emptyMap()
 
     companion object {
-        lateinit var app: NewsReaderApp
+        lateinit var app: MainApp
     }
     override fun onCreate() {
         super.onCreate()

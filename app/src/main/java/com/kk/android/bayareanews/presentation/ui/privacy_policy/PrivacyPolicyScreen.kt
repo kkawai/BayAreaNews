@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.kk.android.bayareanews.NewsReaderApp
+import com.kk.android.bayareanews.MainApp
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.Constants
 
@@ -79,7 +79,7 @@ fun PrivacyPolicyScreen(
             }
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)
-            PrivacyPolicyText(text = NewsReaderApp.app.remoteConfigMap
+            PrivacyPolicyText(text = MainApp.app.remoteConfigMap
                 .get(Constants.PRIVACY_POLICY_V2)?.asString()?:Constants.PRIVACY_POLICY_DEFAULT,
                 screenModifier)
         }

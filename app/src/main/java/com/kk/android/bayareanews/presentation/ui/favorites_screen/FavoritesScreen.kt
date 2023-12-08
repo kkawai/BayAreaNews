@@ -2,7 +2,6 @@ package com.kk.android.bayareanews.presentation.ui.home_screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,7 +34,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.kk.android.bayareanews.NewsReaderApp
+import com.kk.android.bayareanews.MainApp
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.common.EncodingUtil
@@ -91,7 +90,7 @@ private fun _FavoritesScreen(
             LazyColumn(modifier = modifier.fillMaxSize()) {
                 itemsIndexed(favoritesState.value.favorites) { index, rss ->
                     ImageCard(
-                        expandedByDefault = NewsReaderApp.app.remoteConfigMap.get(Constants.FEATURED_CARDS_EXPANDED)?.asBoolean()?:false,
+                        expandedByDefault = MainApp.app.remoteConfigMap.get(Constants.FEATURED_CARDS_EXPANDED)?.asBoolean()?:false,
                         isFavorite = true, //initially, everything in this screen is a favorite
                         onDeleteFavorite = {onDeleteFavorite(rss)},
                         onSaveFavorite = {onSaveFavorite(rss)},

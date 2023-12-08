@@ -6,13 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.core.view.WindowCompat
-import com.kk.android.bayareanews.NewsReaderRemoteConfig
+import com.kk.android.bayareanews.RemoteConfig
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val remoteConfig = NewsReaderRemoteConfig()
+    private val remoteConfig = RemoteConfig()
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {

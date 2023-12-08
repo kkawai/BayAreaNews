@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -60,7 +59,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.kk.android.bayareanews.NewsReaderApp
+import com.kk.android.bayareanews.MainApp
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.common.EncodingUtil
@@ -191,7 +190,7 @@ private fun _RssListScreen(
 
                 items(listState.value.rssList) { rss ->
                     ImageCard(
-                        expandedByDefault = NewsReaderApp.app.remoteConfigMap.get(Constants.MAIN_CARDS_EXPANDED)?.asBoolean()?:true,
+                        expandedByDefault = MainApp.app.remoteConfigMap.get(Constants.MAIN_CARDS_EXPANDED)?.asBoolean()?:true,
                         rss = rss,
                         isFavorite = listState.value.favoritesMap.containsKey(rss.articleId),
                         onArticleShared = { shareArticle(context, rss.link) },

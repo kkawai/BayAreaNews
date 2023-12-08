@@ -2,7 +2,7 @@ package com.kk.android.bayareanews.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.kk.android.bayareanews.NewsReaderApp
+import com.kk.android.bayareanews.MainApp
 import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.data.RssApi
 import com.kk.android.bayareanews.data.local.RssLocalDbHelper
@@ -29,8 +29,8 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
 
         val remoteList = rssApi.getRssArticlesFromUrl(rssUrl)
         if (remoteList.isNotEmpty()) {
-            RssLocalDbHelper.getInstance(NewsReaderApp.app).deleteRss(originalCategory)
-            RssLocalDbHelper.getInstance(NewsReaderApp.app).insertRss(originalCategory, remoteList)
+            RssLocalDbHelper.getInstance(MainApp.app).deleteRss(originalCategory)
+            RssLocalDbHelper.getInstance(MainApp.app).insertRss(originalCategory, remoteList)
             sharedPrefs().edit().putLong(originalCategory, Date().time).apply()
         }
         rssFeedHolder.rss = remoteList
@@ -57,8 +57,8 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
 
         val remoteList = rssApi.getRssArticlesFromUrl(rssUrl)
         if (remoteList.isNotEmpty()) {
-            RssLocalDbHelper.getInstance(NewsReaderApp.app).deleteRss(originalCategory)
-            RssLocalDbHelper.getInstance(NewsReaderApp.app).insertRss(originalCategory, remoteList)
+            RssLocalDbHelper.getInstance(MainApp.app).deleteRss(originalCategory)
+            RssLocalDbHelper.getInstance(MainApp.app).insertRss(originalCategory, remoteList)
             sharedPrefs().edit().putLong(Constants.SHARED_PREFS_HOODLINE_KEY, Date().time).apply()
         }
         rssFeedHolder.rss = remoteList
@@ -76,7 +76,7 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
     }
 
     private fun sharedPrefs(): SharedPreferences {
-        return NewsReaderApp.app.getSharedPreferences(
+        return MainApp.app.getSharedPreferences(
             Constants.SHARED_PREFS_NAME,
             Context.MODE_PRIVATE
         )

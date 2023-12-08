@@ -66,10 +66,6 @@ fun AppDrawer(
                         closeDrawer() },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
-
-        BackPressHandler(onBackPressed = {
-            closeDrawer()
-        })
     }
 }
 

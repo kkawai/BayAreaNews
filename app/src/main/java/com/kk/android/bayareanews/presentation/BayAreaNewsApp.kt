@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.kk.android.bayareanews.presentation.ui.AppDrawer
+import com.kk.android.bayareanews.presentation.ui.common.BackPressHandler
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
 import kotlinx.coroutines.launch
@@ -45,6 +46,12 @@ fun BayAreaNewsApp(
 
         val isExpandedScreen = widthSizeClass == WindowWidthSizeClass.Expanded
         val sizeAwareDrawerState = rememberSizeAwareDrawerState(isExpandedScreen)
+
+        if (sizeAwareDrawerState.isOpen) {
+            BackPressHandler(onBackPressed = {
+                coroutineScope.launch { sizeAwareDrawerState.close() }
+            })
+        }
 
         ModalNavigationDrawer(
             drawerContent = {

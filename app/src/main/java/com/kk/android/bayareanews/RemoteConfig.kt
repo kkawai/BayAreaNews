@@ -11,7 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class NewsReaderRemoteConfig {
+class RemoteConfig {
 
     private var remoteConfigTimeout: Job? = null
     fun fetch(activity: Activity) {
@@ -20,14 +20,14 @@ class NewsReaderRemoteConfig {
             .addOnCompleteListener(activity) { task ->
                 remoteConfigTimeout?.cancel()
                 MLog.i("nnnnn", "MainActivity received remote from firebase")
-                NewsReaderApp.app.remoteConfigMap = remoteConfig.all
-                NewsReaderApp.app.remoteConfigResponse.complete(task.isSuccessful)
+                MainApp.app.remoteConfigMap = remoteConfig.all
+                MainApp.app.remoteConfigResponse.complete(task.isSuccessful)
             }
         remoteConfigTimeout = CoroutineScope(Dispatchers.IO).launch {
-            if (!NewsReaderApp.app.remoteConfigResponse.isCompleted) {
+            if (!MainApp.app.remoteConfigResponse.isCompleted) {
                 MLog.i("nnnnn", "MainActivity to allow 5 seconds to fetch remote config")
                 delay(5000) //wait max 4 seconds for config response
-                NewsReaderApp.app.remoteConfigResponse.complete(false)
+                MainApp.app.remoteConfigResponse.complete(false)
                 MLog.i("nnnnn", "MainActivity. waited 5 seconds to fetch remote config")
             }
         }

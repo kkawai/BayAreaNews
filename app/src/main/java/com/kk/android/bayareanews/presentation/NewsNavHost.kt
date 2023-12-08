@@ -23,7 +23,8 @@ fun NewsNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     openDrawer: () -> Unit = {},
-    startDestination: String = Screen.HomeScreen.route) {
+    startDestination: String = Screen.HomeScreen.route
+) {
 
     NavHost(
         navController = navController,
@@ -76,7 +77,12 @@ fun NewsNavHost(
                     type = NavType.StringType
                 })
         ) { backStackEntry ->
-            WebViewScreen(backStackEntry.arguments?.getString("link") ?: "")
+            WebViewScreen(
+                url = backStackEntry.arguments?.getString("link") ?: "",
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
+                onGoBackClicked = { navController.popBackStack() }
+            )
         }
 
         composable(
