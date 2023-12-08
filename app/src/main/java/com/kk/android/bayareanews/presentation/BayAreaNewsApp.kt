@@ -72,7 +72,7 @@ fun BayAreaNewsApp(
                 NewsNavHost(
                     isExpandedScreen = isExpandedScreen,
                     navController = navController,
-                    openDrawer = { coroutineScope.launch { sizeAwareDrawerState.open() } },
+                    openDrawer = { coroutineScope.launch{ sizeAwareDrawerState.open() } },
                 )
             }
         }

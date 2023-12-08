@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -54,6 +55,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -350,6 +352,8 @@ private fun FeaturedRssSection(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RssListScreen(
+    isExpandedScreen: Boolean,
+    openDrawer: () -> Unit,
     onGetRss: () -> Unit,
     onRefresh: () -> Unit,
     onSaveFav: (rss: Rss) -> Unit,
@@ -375,6 +379,19 @@ fun RssListScreen(
                     scrollBehavior = scrollBehavior,
                     title = {
                         Text(text = stringResource(id = R.string.app_name))
+                    },
+                    navigationIcon = {
+                        if (!isExpandedScreen) {
+                            IconButton(onClick = openDrawer) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Menu,
+                                    contentDescription = stringResource(
+                                        R.string.cd_open_navigation_drawer
+                                    ),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,

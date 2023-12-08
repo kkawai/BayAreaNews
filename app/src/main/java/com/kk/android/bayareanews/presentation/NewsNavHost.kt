@@ -30,7 +30,7 @@ fun NewsNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = Screen.HomeScreen.route
+        startDestination = startDestination
     ) {
 
         composable(
@@ -38,6 +38,8 @@ fun NewsNavHost(
         ) {
             val viewModel = hiltViewModel<RssViewModel>()
             RssListScreen(
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
                 onGetRss = { viewModel.getRssList() },
                 onRefresh = { viewModel.getRssList(true) },
                 onSaveFav = { rss -> viewModel.saveFavorite(rss) },
