@@ -18,17 +18,17 @@ class RemoteConfig {
         val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener(activity) { task ->
-                remoteConfigTimeout?.cancel()
+                //remoteConfigTimeout?.cancel()
                 MLog.i("nnnnn", "MainActivity received remote from firebase")
                 MainApp.app.remoteConfigMap = remoteConfig.all
                 MainApp.app.remoteConfigResponse.complete(task.isSuccessful)
             }
         remoteConfigTimeout = CoroutineScope(Dispatchers.IO).launch {
             if (!MainApp.app.remoteConfigResponse.isCompleted) {
-                MLog.i("nnnnn", "MainActivity to allow 5 seconds to fetch remote config")
-                delay(5000) //wait max 4 seconds for config response
+                MLog.i("nnnnn", "MainActivity to allow 11 seconds to fetch remote config")
+                delay(11000) //wait max 4 seconds for config response
                 MainApp.app.remoteConfigResponse.complete(false)
-                MLog.i("nnnnn", "MainActivity. waited 5 seconds to fetch remote config")
+                MLog.i("nnnnn", "MainActivity. waited 11 seconds to fetch remote config")
             }
         }
         remoteConfigTimeout?.start()
