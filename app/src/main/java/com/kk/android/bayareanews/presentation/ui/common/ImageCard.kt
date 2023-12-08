@@ -39,7 +39,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
 import com.kk.android.bayareanews.R
-import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.domain.model.Rss
 
 @ExperimentalMaterial3Api

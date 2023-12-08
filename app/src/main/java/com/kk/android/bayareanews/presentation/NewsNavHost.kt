@@ -2,8 +2,10 @@ package com.kk.android.bayareanews.presentation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,9 +20,14 @@ import com.kk.android.bayareanews.presentation.ui.home_screen.RssListScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
 
 @Composable
-fun NewsNavHost(contentPadding: PaddingValues = PaddingValues(0.dp)) {
+fun NewsNavHost(
+    isExpandedScreen: Boolean,
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+    openDrawer: () -> Unit = {},
+    startDestination: String = Screen.HomeScreen.route,
+    contentPadding: PaddingValues = PaddingValues(0.dp)) {
 
-    val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = Screen.HomeScreen.route

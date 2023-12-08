@@ -30,4 +30,5 @@
     <string name="home_post_min_read">%1$s - %2$d min read</string>
     <string name="home_popular_section_title">Popular reads</string>
     <string name="top_stories_continued">Top stories continued</string>
+    <string name="home_title">Home</string>
 </resources>
