@@ -1,9 +1,7 @@
 package com.kk.android.bayareanews.presentation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -25,8 +23,7 @@ fun NewsNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     openDrawer: () -> Unit = {},
-    startDestination: String = Screen.HomeScreen.route,
-    contentPadding: PaddingValues = PaddingValues(0.dp)) {
+    startDestination: String = Screen.HomeScreen.route) {
 
     NavHost(
         navController = navController,
@@ -50,7 +47,6 @@ fun NewsNavHost(
                     navController.navigate(Screen.PrivacyPolicyScreen.route)
                 },
                 onFavoritesClicked = { navController.navigate(Screen.FavoritesScreen.route) },
-                contentPadding = contentPadding,
                 onArticleClicked = { link ->
                     navController.navigate(Screen.DetailsScreen.route + "/${link}")
                 })
@@ -61,8 +57,9 @@ fun NewsNavHost(
         ) {
             val viewModel = hiltViewModel<FavoritesViewModel>()
             FavoritesScreen(
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
                 onGoBackClicked = { navController.popBackStack() },
-                contentPadding = contentPadding,
                 onGetFavorites = { viewModel.getFavorites() },
                 onSaveFav = { rss -> viewModel.saveFavorite(rss) },
                 onDeleteFav = { rss -> viewModel.deleteFavorite(rss) },
@@ -85,7 +82,10 @@ fun NewsNavHost(
         composable(
             Screen.PrivacyPolicyScreen.route
         ) {
-            PrivacyPolicyScreen(onGoBackClicked = { navController.popBackStack() })
+            PrivacyPolicyScreen(
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
+                onGoBackClicked = { navController.popBackStack() })
         }
 
     }

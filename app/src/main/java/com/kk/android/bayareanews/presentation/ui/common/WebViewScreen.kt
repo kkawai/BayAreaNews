@@ -12,7 +12,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.kk.android.bayareanews.common.EncodingUtil
 
 @Composable
-fun WebViewScreen(url: String, contentPadding: PaddingValues = PaddingValues(0.dp)) {
+fun WebViewScreen(url: String) {
     val context = LocalContext.current
     AndroidView(factory = {
         WebView(context).apply {

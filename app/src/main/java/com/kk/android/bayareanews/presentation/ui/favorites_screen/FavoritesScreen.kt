@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -54,8 +55,7 @@ private fun _FavoritesScreen(
     onDeleteFavorite: (rss: Rss) -> Unit,
     state: StateFlow<RssFavoritesState>,
     onArticleClicked: (articleLink: String) -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    modifier: Modifier = Modifier
 ) {
 
     var isRefreshing by remember { mutableStateOf(false) }
@@ -88,7 +88,7 @@ private fun _FavoritesScreen(
                 .pullRefresh(pullRefreshState)
         ) {
             val context = LocalContext.current
-            LazyColumn(modifier = modifier.fillMaxSize(), contentPadding = contentPadding) {
+            LazyColumn(modifier = modifier.fillMaxSize()) {
                 itemsIndexed(favoritesState.value.favorites) { index, rss ->
                     ImageCard(
                         expandedByDefault = NewsReaderApp.app.remoteConfigMap.get(Constants.FEATURED_CARDS_EXPANDED)?.asBoolean()?:false,
@@ -116,10 +116,11 @@ private fun _FavoritesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoritesScreen(
+    isExpandedScreen: Boolean,
+    openDrawer: () -> Unit,
     onGoBackClicked: () -> Unit,
     onArticleClicked: (articleLink: String) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
     onGetFavorites: ()->Unit,
     onSaveFav: (rss: Rss) -> Unit,
     onDeleteFav: (rss: Rss) -> Unit,
@@ -139,6 +140,19 @@ fun FavoritesScreen(
                     title = {
                         Text(text = stringResource(id = R.string.favorites))
                     },
+                    navigationIcon = {
+                        if (!isExpandedScreen) {
+                            IconButton(onClick = openDrawer) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Menu,
+                                    contentDescription = stringResource(
+                                        R.string.cd_open_navigation_drawer
+                                    ),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                    },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
                         titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -155,14 +169,15 @@ fun FavoritesScreen(
                     }
                 )
             }
-        ) { values ->
+        ) { innerPadding ->
+            val screenModifier = Modifier.padding(innerPadding)
             _FavoritesScreen(
                 onArticleClicked = onArticleClicked,
-                contentPadding = values,
                 onGetFavorites = onGetFavorites,
                 onSaveFavorite = onSaveFav,
                 onDeleteFavorite = onDeleteFav,
-                state = state
+                state = state,
+                modifier = screenModifier
             )
         }
 

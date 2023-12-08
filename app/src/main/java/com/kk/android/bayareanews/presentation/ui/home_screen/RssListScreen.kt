@@ -55,7 +55,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -97,8 +96,7 @@ private fun _RssListScreen(
     rssListState: StateFlow<RssListState>,
     featuredState: StateFlow<RssFeaturedState>,
     onArticleClicked: (articleLink: String) -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    modifier: Modifier = Modifier
 ) {
 
     var isRefreshing by remember { mutableStateOf(false) }
@@ -130,7 +128,7 @@ private fun _RssListScreen(
                 .pullRefresh(pullRefreshState)
         ) {
 
-            LazyColumn(modifier = modifier.fillMaxSize(), contentPadding = contentPadding) {
+            LazyColumn(modifier = modifier.fillMaxSize()) {
 
                 if (listState.value.topRss.title?.isNotBlank() ?: false) {
                     item {
@@ -363,8 +361,7 @@ fun RssListScreen(
     onPrivacyPolicyClicked: () -> Unit,
     onFavoritesClicked: () -> Unit,
     onArticleClicked: (articleLink: String) -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -417,10 +414,11 @@ fun RssListScreen(
                     }
                 )
             }
-        ) { values ->
+        ) { innerPadding ->
+            val screenModifier = Modifier.padding(innerPadding)
             _RssListScreen(
                 onArticleClicked = onArticleClicked,
-                contentPadding = values,
+                modifier = screenModifier,
                 onGetRss = onGetRss,
                 onRefresh = onRefresh,
                 onSaveFavorite = onSaveFav,
