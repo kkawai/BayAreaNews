@@ -43,6 +43,7 @@ fun WebViewScreen(
 
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            /*
             topBar = {
                 TopAppBar(
                     scrollBehavior = scrollBehavior,
@@ -77,7 +78,9 @@ fun WebViewScreen(
                         }
                     }
                 )
-            }
+            } //topBar
+            */
+
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)
             val context = LocalContext.current
