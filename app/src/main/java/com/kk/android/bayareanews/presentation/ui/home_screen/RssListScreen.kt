@@ -402,14 +402,6 @@ fun RssListScreen(
                                 contentDescription = stringResource(R.string.favorites)
                             )
                         }
-                        IconButton(onClick = {
-                            onPrivacyPolicyClicked()
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.PrivacyTip,
-                                contentDescription = stringResource(R.string.favorites)
-                            )
-                        }
                     }
                 )
             }

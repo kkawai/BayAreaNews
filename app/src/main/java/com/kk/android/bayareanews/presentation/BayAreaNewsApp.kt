@@ -33,9 +33,9 @@ fun BayAreaNewsApp(
 ) {
     BayAreaNewsTheme {
         val navController = rememberNavController()
-        val navigationActions = remember(navController) {
-            BayAreaNewsNavigationActions(navController)
-        }
+        //val navigationActions = remember(navController) {
+        //    BayAreaNewsNavigationActions(navController)
+        //}
 
         val coroutineScope = rememberCoroutineScope()
 
@@ -56,9 +56,9 @@ fun BayAreaNewsApp(
             drawerContent = {
                 AppDrawer(
                     currentRoute = currentRoute,
-                    navigateToHome = navigationActions.navigateToHome,
-                    navigateToFavorites = navigationActions.navigateToFavorites,
-                    navigateToPrivacyPolicy = navigationActions.navigateToPrivacyPolicy,
+                    navigateToHome = {navController.navigate(Screen.HomeScreen.route)},
+                    navigateToFavorites = {navController.navigate(Screen.FavoritesScreen.route)},
+                    navigateToPrivacyPolicy = {navController.navigate(Screen.PrivacyPolicyScreen.route)},
                     closeDrawer = { coroutineScope.launch { sizeAwareDrawerState.close() } }
                 )
             },
@@ -70,9 +70,9 @@ fun BayAreaNewsApp(
                 if (isExpandedScreen) {
                     AppNavRail(
                         currentRoute = currentRoute,
-                        navigateToHome = navigationActions.navigateToHome,
-                        navigateToFavorites = navigationActions.navigateToFavorites,
-                        navigateToPrivacyPolicy = navigationActions.navigateToPrivacyPolicy
+                        navigateToHome = {navController.navigate(Screen.HomeScreen.route)},
+                        navigateToFavorites = {navController.navigate(Screen.FavoritesScreen.route)},
+                        navigateToPrivacyPolicy = {navController.navigate(Screen.PrivacyPolicyScreen.route)}
                     )
                 }
                 NewsNavHost(

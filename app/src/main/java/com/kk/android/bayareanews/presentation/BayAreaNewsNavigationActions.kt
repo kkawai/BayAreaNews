@@ -7,6 +7,7 @@ import com.kk.android.bayareanews.presentation.ui.common.Screen
 /**
  * Models the navigation actions in the app.
  */
+//Not Used at the moment; was causing some nav problems
 class BayAreaNewsNavigationActions(navController: NavHostController) {
     val navigateToHome: () -> Unit = {
         navController.navigate(Screen.HomeScreen.route) {
