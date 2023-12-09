@@ -64,7 +64,8 @@ fun BayAreaNewsApp(
             },
             drawerState = sizeAwareDrawerState,
             // Only enable opening the drawer via gestures if the screen is not expanded
-            gesturesEnabled = false//!isExpandedScreen
+            gesturesEnabled = !isExpandedScreen
+                    && !currentRoute.startsWith(Screen.DetailsScreen.route)//!isExpandedScreen
         ) {
             Row {
                 if (isExpandedScreen) {

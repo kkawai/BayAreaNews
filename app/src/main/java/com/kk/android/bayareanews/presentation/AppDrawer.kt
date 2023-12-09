@@ -3,6 +3,7 @@ package com.kk.android.bayareanews.presentation
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -36,7 +37,7 @@ fun AppDrawer(
     closeDrawer: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ModalDrawerSheet(modifier) {
+    ModalDrawerSheet(modifier.fillMaxWidth(.8f)) {
         BayAreaNewsLogo(
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp)
         )
