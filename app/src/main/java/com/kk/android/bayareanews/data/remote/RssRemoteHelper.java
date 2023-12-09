@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by kevin on 1/10/2016.
+ * Created by kevin on 1/10/2016 ->  Updated 2023
  */
 public class RssRemoteHelper {
 

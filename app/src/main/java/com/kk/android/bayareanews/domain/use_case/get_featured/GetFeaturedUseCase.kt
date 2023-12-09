@@ -18,9 +18,9 @@ class GetFeaturedUseCase @Inject constructor(private val rssRepository: RssRepos
 
     operator fun invoke( refresh: Boolean): Flow<Resource<RssFeedHolder>> = flow {
 
-        MLog.i("nnnnn","GetFeaturedUseCase waiting for remote config")
+        MLog.i("nnnnn","GetFeaturedUseCase waiting for remote config..")
         val remoteConfigResponse = MainApp.app.remoteConfigResponse.await()
-        MLog.i("nnnnn","GetFeaturedUseCase received remote config")
+        MLog.i("nnnnn","GetFeaturedUseCase after waiting for remote config. remoteConfigResponse=$remoteConfigResponse")
         if (!remoteConfigResponse) {
             emit(Resource.Error("Error: Failed to get remote config "))
             return@flow

@@ -1,18 +1,19 @@
 package com.kk.android.bayareanews.presentation
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import com.kk.android.bayareanews.RemoteConfig
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.ref.WeakReference
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val remoteConfig = RemoteConfig()
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,11 +23,6 @@ class MainActivity : ComponentActivity() {
             val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
             BayAreaNewsApp(widthSizeClass)
         }
-        remoteConfig.fetch(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        remoteConfig.cancel()
+        RemoteConfig(lifecycleScope, WeakReference<Activity>(this)).fetch()
     }
 }

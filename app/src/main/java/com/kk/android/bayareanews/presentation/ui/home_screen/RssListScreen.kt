@@ -153,14 +153,14 @@ private fun _RssListScreen(
                     }
                 }
 
-                item {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = stringResource(id = R.string.home_popular_section_title),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-                if (featuredState.value.featuredRss.isNotEmpty()) {
+                if (featuredListState.value.featuredRss.isNotEmpty()) {
+                    item {
+                        Text(
+                            modifier = Modifier.padding(16.dp),
+                            text = stringResource(id = R.string.home_popular_section_title),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
                     item {
                         FeaturedRssSection(
                             featuredListState.value.featuredRss,
@@ -171,6 +171,7 @@ private fun _RssListScreen(
                         )
                     }
                 }
+
                 item {
                     Column {
                         Spacer(Modifier.height(16.dp))
