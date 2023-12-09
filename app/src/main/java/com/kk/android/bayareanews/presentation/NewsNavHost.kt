@@ -19,9 +19,10 @@ import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
 
 @Composable
 fun NewsNavHost(
+    navigationActions: BayAreaNewsNavigationActions,
     isExpandedScreen: Boolean,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController,
     openDrawer: () -> Unit = {},
     startDestination: String = Screen.HomeScreen.route
 ) {
@@ -45,11 +46,11 @@ fun NewsNavHost(
                 rssListState = viewModel.rssListState,
                 featuredState = viewModel.featuredState,
                 onPrivacyPolicyClicked = {
-                    navController.navigate(Screen.PrivacyPolicyScreen.route)
+                    navigationActions.navigateToPrivacyPolicy()
                 },
-                onFavoritesClicked = { navController.navigate(Screen.FavoritesScreen.route) },
+                onFavoritesClicked = { navigationActions.navigateToFavorites() },
                 onArticleClicked = { link ->
-                    navController.navigate(Screen.DetailsScreen.route + "/${link}")
+                    navigationActions.navigateToWebView(link)
                 })
         }
 
@@ -66,7 +67,7 @@ fun NewsNavHost(
                 onDeleteFav = { rss -> viewModel.deleteFavorite(rss) },
                 state = viewModel.favoritesState,
                 onArticleClicked = { link ->
-                    navController.navigate(Screen.DetailsScreen.route + "/${link}")
+                    navigationActions.navigateToWebView(link)
                 })
         }
 
