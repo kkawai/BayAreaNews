@@ -47,7 +47,7 @@ class RssViewModel @Inject constructor(
     }
 
     private fun getRemainingStories(rss: List<Rss>): List<Rss> {
-        return if (rss.size > 1) rss.subList(1,rss.size-1) else emptyList()
+        return if (rss.size > 1) rss.subList(1,rss.size) else emptyList()
     }
 
     fun getRssList(refresh: Boolean = false) {

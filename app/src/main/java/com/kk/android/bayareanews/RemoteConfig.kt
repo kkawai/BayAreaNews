@@ -32,7 +32,7 @@ class RemoteConfig(
         job = lifecycleCoroutineScope.launch {
             if (!MainApp.app.remoteConfigResponse.isCompleted) {
                 MLog.i("nnnnn", "MainActivity 11 seconds max to fetch remote config")
-                delay(11000) //wait max 4 seconds for config response
+                delay(11000) //wait max seconds for config response
                 MainApp.app.remoteConfigResponse.complete(false)
                 MLog.i("nnnnn", "MainActivity. waited 11 seconds. remote config did not respond")
             }

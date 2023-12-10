@@ -1,10 +1,6 @@
 package com.kk.android.bayareanews
 
-import com.kk.android.bayareanews.domain.use_case.get_favorites.DeleteFavoriteUseCase
-import com.kk.android.bayareanews.domain.use_case.get_favorites.SaveFavoriteUseCase
-import com.kk.android.bayareanews.domain.use_case.get_rss.GetFeaturedUseCase
-import com.kk.android.bayareanews.domain.use_case.get_rss.GetRssUseCase
-import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
+import com.kk.android.bayareanews.common.Constants
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Rule
@@ -23,6 +19,9 @@ class RssRepositoryTest {
             val rssFeedHolder = fakeRssRepository.getFeaturedArticles(false)
             Assert.assertEquals(2, rssFeedHolder.rss.size)
             Assert.assertEquals(0, rssFeedHolder.favorites.size)
+            val rssFeedHolder2 = fakeRssRepository.getRssArticles(false, Constants.HOODLINE_RSS_URL, Constants.HOODLINE_CATEGORY)
+            Assert.assertEquals(2, rssFeedHolder2.rss.size)
+            Assert.assertEquals(2, rssFeedHolder2.favorites.size)
         }
     }
 }
