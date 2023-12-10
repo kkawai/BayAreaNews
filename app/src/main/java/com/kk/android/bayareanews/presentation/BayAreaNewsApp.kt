@@ -76,7 +76,7 @@ fun BayAreaNewsApp(
                         navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy}
                     )
                 }
-                NewsNavHost(
+                BayAreaNewsNavHost(
                     navigationActions = navigationActions,
                     isExpandedScreen = isExpandedScreen,
                     navController = navController,

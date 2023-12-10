@@ -424,7 +424,7 @@ fun RssListScreen(
 }
 
 @Composable
-fun FeaturedRssCard(
+private fun FeaturedRssCard(
     rss: Rss,
     onArticleShared: () -> Unit,
     isFavorite: Boolean,

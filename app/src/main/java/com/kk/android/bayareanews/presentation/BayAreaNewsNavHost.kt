@@ -17,7 +17,7 @@ import com.kk.android.bayareanews.presentation.ui.home_screen.RssListScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
 
 @Composable
-fun NewsNavHost(
+fun BayAreaNewsNavHost(
     navigationActions: BayAreaNewsNavigationActions,
     isExpandedScreen: Boolean,
     modifier: Modifier = Modifier,

@@ -37,6 +37,7 @@ class RemoteConfig(
                 MLog.i("nnnnn", "MainActivity. waited 11 seconds. remote config did not respond")
             }
         }
+        job?.start()
     }
 
 }

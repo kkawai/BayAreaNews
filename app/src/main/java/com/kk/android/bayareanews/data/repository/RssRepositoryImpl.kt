@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.kk.android.bayareanews.MainApp
 import com.kk.android.bayareanews.common.Constants
+import com.kk.android.bayareanews.common.MLog
 import com.kk.android.bayareanews.data.RssApi
 import com.kk.android.bayareanews.data.local.RssLocalDbHelper
 import com.kk.android.bayareanews.domain.model.Rss
@@ -14,11 +15,27 @@ import javax.inject.Inject
 
 class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRepository {
 
-    override suspend fun getFeaturedArticles( refresh: Boolean,
-                                              rssUrl: String,
-                                              originalCategory: String): RssFeedHolder {
+    override suspend fun getFeaturedArticles( refresh: Boolean): RssFeedHolder {
 
         val rssFeedHolder = RssFeedHolder()
+        MLog.i("nnnnn","getFeaturedArticles waiting for remote config..")
+        val remoteConfigResponse = MainApp.app.remoteConfigResponse.await()
+        MLog.i("nnnnn","getFeaturedArticles after waiting for remote config. remoteConfigResponse=$remoteConfigResponse")
+        if (!remoteConfigResponse) {
+            MLog.w("nnnnn","getFeaturedArticles Error: Failed to get remote config ")
+            return rssFeedHolder
+        }
+        val originalCategory = MainApp.app.remoteConfigMap.get(Constants.FEATURED_CATEGORIES)?.asString()?:""
+        if (originalCategory.isBlank()) {
+            MLog.w("nnnnn","getFeaturedArticles Error: Failed to get featured category from remote config ")
+            return rssFeedHolder
+        }
+        val rssUrlFromConfig = MainApp.app.remoteConfigMap.get(originalCategory.trim())?.asString()?:""
+        if (rssUrlFromConfig.isBlank()) {
+            MLog.w("nnnnn","getFeaturedArticles Error: Failed to get featured category url from remote config ")
+            return rssFeedHolder
+        }
+
         if (!refresh && !featuredNeedsRefresh(originalCategory)) {
             val localList = rssApi.getRssArticlesFromLocalDb(originalCategory)
             if (localList.isNotEmpty()) {
@@ -27,7 +44,7 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
             }
         }
 
-        val remoteList = rssApi.getRssArticlesFromUrl(rssUrl)
+        val remoteList = rssApi.getRssArticlesFromUrl(rssUrlFromConfig)
         if (remoteList.isNotEmpty()) {
             RssLocalDbHelper.getInstance(MainApp.app).deleteRss(originalCategory)
             RssLocalDbHelper.getInstance(MainApp.app).insertRss(originalCategory, remoteList)
