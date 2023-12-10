@@ -103,3 +103,13 @@
 
 -dontwarn org.joda.convert.FromString
 -dontwarn org.joda.convert.ToString
+
+    # Add this global rule
+    -keepattributes Signature
+
+    # This rule will properly ProGuard all the model classes in
+    # the package com.yourcompany.models.
+    # Modify this rule to fit the structure of your app.
+    -keepclassmembers class com.kk.android.bayareanews.domain.model.** {
+      *;
+    }
