@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -33,6 +34,7 @@ fun AppDrawer(
     currentRoute: String,
     navigateToHome: () -> Unit,
     navigateToFavorites: () -> Unit,
+    navigateToContactInfo: () -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
     closeDrawer: () -> Unit,
     modifier: Modifier = Modifier
@@ -55,6 +57,15 @@ fun AppDrawer(
             selected = currentRoute == Screen.FavoritesScreen.route,
             onClick = { navigateToFavorites()
                         closeDrawer() },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
+
+        NavigationDrawerItem(
+            label = { Text(stringResource(id = R.string.contact_info)) },
+            icon = { Icon(Icons.Filled.Email, null) },
+            selected = currentRoute == Screen.ContactInfoScreen.route,
+            onClick = { navigateToContactInfo()
+                closeDrawer() },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
 
@@ -100,6 +111,7 @@ fun PreviewAppDrawer() {
             currentRoute = Screen.HomeScreen.route,
             navigateToHome = {},
             navigateToFavorites = {},
+            navigateToContactInfo = {},
             navigateToPrivacyPolicy = {},
             closeDrawer = {}
         )

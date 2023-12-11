@@ -1,5 +1,6 @@
 package com.kk.android.bayareanews.presentation.ui.home_screen
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,15 +22,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kk.android.bayareanews.MainApp
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.Constants
+import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PrivacyPolicyScreen(
+fun ContactInfoScreen(
     isExpandedScreen: Boolean,
     openDrawer: () -> Unit,
     onGoBackClicked: () -> Unit
@@ -46,7 +49,7 @@ fun PrivacyPolicyScreen(
                 TopAppBar(
                     scrollBehavior = scrollBehavior,
                     title = {
-                        Text(text = stringResource(id = R.string.privacy_policy_title))
+                        Text(text = stringResource(id = R.string.contact_info))
                     },
                     navigationIcon = {
                         if (!isExpandedScreen) {
@@ -79,18 +82,31 @@ fun PrivacyPolicyScreen(
             }
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)
-            PrivacyPolicyText(text = MainApp.app.remoteConfigMap
-                .get(Constants.PRIVACY_POLICY_V2)?.asString()?:Constants.PRIVACY_POLICY_DEFAULT,
+            ContactInfoText(text = MainApp.app.remoteConfigMap
+                .get(Constants.CONTACT_INFO)?.asString()?:Constants.CONTACT_INFO_DEFAULT,
                 screenModifier)
         }
     }
 }
 
 @Composable
-fun PrivacyPolicyText(text: String, modifier: Modifier) {
+fun ContactInfoText(text: String, modifier: Modifier) {
     Text(
-        modifier = modifier.padding(top = 32.dp, start = 8.dp, end = 8.dp)
+        modifier = modifier
+            .padding(top = 32.dp, start = 8.dp, end = 8.dp)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
         text = text)
+}
+
+@Preview
+@Composable
+fun ContactInfoTextPreview() {
+    BayAreaNewsTheme {
+        Surface {
+            Column {
+                ContactInfoText(text = Constants.CONTACT_INFO_DEFAULT, modifier = Modifier)
+            }
+        }
+    }
 }

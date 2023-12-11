@@ -27,6 +27,7 @@ fun AppNavRail(
     navigateToHome: () -> Unit,
     navigateToFavorites: () -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
+    navigateToContactInfo: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavigationRail(
@@ -56,6 +57,13 @@ fun AppNavRail(
             alwaysShowLabel = false
         )
         NavigationRailItem(
+            selected = currentRoute == Screen.ContactInfoScreen.route,
+            onClick = navigateToContactInfo,
+            icon = { Icon(Icons.Filled.Favorite, stringResource(R.string.contact_info)) },
+            label = { Text(stringResource(R.string.contact_info)) },
+            alwaysShowLabel = false
+        )
+        NavigationRailItem(
             selected = currentRoute == Screen.PrivacyPolicyScreen.route,
             onClick = navigateToPrivacyPolicy,
             icon = { Icon(Icons.Filled.PrivacyTip, stringResource(R.string.privacy_policy_title)) },
@@ -75,6 +83,7 @@ fun PreviewAppNavRail() {
             currentRoute = Screen.HomeScreen.route,
             navigateToHome = {},
             navigateToFavorites = {},
+            navigateToContactInfo = {},
             navigateToPrivacyPolicy = {}
         )
     }

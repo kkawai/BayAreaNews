@@ -32,6 +32,15 @@ class BayAreaNewsNavigationActions(navController: NavHostController) {
             restoreState = true
         }
     }
+    val navigateToContactInfo: () -> Unit = {
+        navController.navigate(Screen.ContactInfoScreen.route) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
     val navigateToPrivacyPolicy: () -> Unit = {
         navController.navigate(Screen.PrivacyPolicyScreen.route) {
             popUpTo(navController.graph.findStartDestination().id) {

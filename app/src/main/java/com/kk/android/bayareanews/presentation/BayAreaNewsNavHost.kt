@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.presentation.ui.common.WebViewScreen
+import com.kk.android.bayareanews.presentation.ui.home_screen.ContactInfoScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesViewModel
 import com.kk.android.bayareanews.presentation.ui.home_screen.PrivacyPolicyScreen
@@ -83,6 +84,15 @@ fun BayAreaNewsNavHost(
                 openDrawer = openDrawer,
                 onGoBackClicked = { navController.popBackStack() }
             )
+        }
+
+        composable(
+            Screen.ContactInfoScreen.route
+        ) {
+            ContactInfoScreen(
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
+                onGoBackClicked = { navController.popBackStack() })
         }
 
         composable(

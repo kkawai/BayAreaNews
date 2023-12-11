@@ -58,6 +58,7 @@ fun BayAreaNewsApp(
                     currentRoute = currentRoute,
                     navigateToHome = {navigationActions.navigateToHome()},
                     navigateToFavorites = {navigationActions.navigateToFavorites()},
+                    navigateToContactInfo = {navigationActions.navigateToContactInfo()},
                     navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy()},
                     closeDrawer = { coroutineScope.launch { sizeAwareDrawerState.close() } }
                 )
@@ -73,6 +74,7 @@ fun BayAreaNewsApp(
                         currentRoute = currentRoute,
                         navigateToHome = {navigationActions.navigateToHome()},
                         navigateToFavorites = {navigationActions.navigateToFavorites()},
+                        navigateToContactInfo = {navigationActions.navigateToContactInfo()},
                         navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy}
                     )
                 }
