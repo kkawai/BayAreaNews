@@ -10,6 +10,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -26,31 +29,29 @@ class RssViewModelTest {
     fun rssViewModelTest() {
         runTest {
 
-            var eventCounter = 0
             var event2Counter = 0
             val viewModel = RssViewModel(GetRssUseCase(FakeRssRepository()),
                 GetFeaturedUseCase(FakeRssRepository()),
                 SaveFavoriteUseCase(FakeRssRepository()),
                 DeleteFavoriteUseCase(FakeRssRepository())
             )
+            /*
+             * Demonstrates 2 different ways to collect/take changes in the state of a StateFlow
+             * (rssListState AND featureRss)
+             */
             coroutineScope {
                 launch {
-                    //viewModel.rssListState.collect(flowCollector)
-                    viewModel.rssListState.collect {
-                        eventCounter++
-                        if (it.isLoading == false && it.rssList.size == 1) {
-                            MLog.i("nnnnn", "rssListState event count: $eventCounter cancel job")
-                            cancel()
-                        }
+                    viewModel.rssListState.takeWhile {
+                        it.isLoading != false && it.rssList.size != 1 && it.topRss.title == null
                     }
                 }
                 launch {
-                    //viewModel.featuredState.collect(flowCollector2)
                     viewModel.featuredState.collect {
                         event2Counter++
                         if (it.isLoading == false && it.featuredRss.size == 2) {
                             MLog.i("nnnnn", "featuredState event count: $event2Counter cancel job")
-                            cancel()
+                            cancel() //cancels the coroutine scope which in turn kills all jobs under it
+                                     //in this case the collecting of featureRss events
                         }
                     }
                 }
