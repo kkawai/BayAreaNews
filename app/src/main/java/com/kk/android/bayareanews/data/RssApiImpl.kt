@@ -26,4 +26,11 @@ class RssApiImpl: RssApi {
         return RssLocalDbHelper.getInstance(MainApp.app).rssFavorites
     }
 
+    override suspend fun searchRssLocalDb(term: String): List<Rss> {
+        return RssLocalDbHelper.getInstance(MainApp.app).searchRss(term)
+    }
+
+    override suspend fun searchFavoriteRssLocalDb(term: String): List<Rss> {
+        return RssLocalDbHelper.getInstance(MainApp.app).searchFavoriteRss(term)
+    }
 }

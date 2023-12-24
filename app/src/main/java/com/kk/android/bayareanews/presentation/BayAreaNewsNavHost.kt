@@ -16,6 +16,7 @@ import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesViewModel
 import com.kk.android.bayareanews.presentation.ui.home_screen.PrivacyPolicyScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssListScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun BayAreaNewsNavHost(
@@ -24,7 +25,9 @@ fun BayAreaNewsNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     openDrawer: () -> Unit = {},
-    startDestination: String = Screen.HomeScreen.route
+    startDestination: String = Screen.HomeScreen.route,
+    speechFlow: MutableStateFlow<String>?,
+    onSpeechButtonClicked: ()->Unit
 ) {
 
     NavHost(
@@ -51,7 +54,9 @@ fun BayAreaNewsNavHost(
                 onFavoritesClicked = { navigationActions.navigateToFavorites() },
                 onArticleClicked = { link ->
                     navigationActions.navigateToWebView(link)
-                })
+                },
+                speechFlow = speechFlow,
+                onSpeechButtonClicked = onSpeechButtonClicked)
         }
 
         composable(

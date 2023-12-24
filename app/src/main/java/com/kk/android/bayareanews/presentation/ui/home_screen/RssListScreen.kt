@@ -67,10 +67,12 @@ import com.kk.android.bayareanews.common.ShareUtil
 import com.kk.android.bayareanews.domain.model.Rss
 import com.kk.android.bayareanews.domain.use_case.get_rss.RssFeaturedState
 import com.kk.android.bayareanews.domain.use_case.get_rss.RssListState
+import com.kk.android.bayareanews.presentation.MyExpandableAppBar
 import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
 import com.kk.android.bayareanews.presentation.ui.common.ImageCard
 import com.kk.android.bayareanews.presentation.ui.common.LoadingScreen
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -361,7 +363,9 @@ fun RssListScreen(
     onPrivacyPolicyClicked: () -> Unit,
     onFavoritesClicked: () -> Unit,
     onArticleClicked: (articleLink: String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    speechFlow: MutableStateFlow<String>?,
+    onSpeechButtonClicked: ()->Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -372,39 +376,12 @@ fun RssListScreen(
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                TopAppBar(
-                    scrollBehavior = scrollBehavior,
-                    title = {
-                        Text(text = stringResource(id = R.string.app_name))
-                    },
-                    navigationIcon = {
-                        if (!isExpandedScreen) {
-                            IconButton(onClick = openDrawer) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Menu,
-                                    contentDescription = stringResource(
-                                        R.string.cd_open_navigation_drawer
-                                    ),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    actions = {
-                        IconButton(onClick = {
-                            onFavoritesClicked()
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Favorite,
-                                contentDescription = stringResource(R.string.favorites)
-                            )
-                        }
-                    }
-                )
+                MyExpandableAppBar(scrollBehavior = scrollBehavior,
+                                   speechFlow = speechFlow,
+                                   onSpeechButtonClicked = onSpeechButtonClicked,
+                                   isExpandedScreen = isExpandedScreen,
+                                   onFavoritesClicked = onFavoritesClicked,
+                                   openDrawer = openDrawer)
             }
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)

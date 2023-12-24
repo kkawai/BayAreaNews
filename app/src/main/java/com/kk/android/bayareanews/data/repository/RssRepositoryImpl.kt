@@ -111,4 +111,7 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
         return rssApi.getFavoriteRssArticles()
     }
 
+    override suspend fun searchArticles(term: String): List<Rss> {
+        return rssApi.searchRssLocalDb(term) + rssApi.searchFavoriteRssLocalDb(term)
+    }
 }

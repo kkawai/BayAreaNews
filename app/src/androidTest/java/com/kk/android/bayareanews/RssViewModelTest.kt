@@ -10,11 +10,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import rules.TestDispatcherRule
@@ -48,6 +47,7 @@ class RssViewModelTest {
                 launch {
                     viewModel.featuredState.collect {
                         event2Counter++
+                        MLog.i("nnnnn", "featuredState event viewModel.featuredState: ${viewModel.featuredState.value.isLoading} eventCounter: $event2Counter")
                         if (it.isLoading == false && it.featuredRss.size == 2) {
                             MLog.i("nnnnn", "featuredState event count: $event2Counter cancel job")
                             cancel() //cancels the coroutine scope which in turn kills all jobs under it
@@ -56,6 +56,7 @@ class RssViewModelTest {
                     }
                 }
             }
+            assertTrue(event2Counter >= 2)
             MLog.i("nnnnn", "ViewModel test finished")
         }
     }

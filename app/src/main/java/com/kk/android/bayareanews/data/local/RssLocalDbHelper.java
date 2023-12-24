@@ -17,6 +17,10 @@ import com.kk.android.bayareanews.domain.model.Rss;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.kk.android.bayareanews.data.local.RssLocalDbHelper.RssColumns.COL_AUTHOR;
+import static com.kk.android.bayareanews.data.local.RssLocalDbHelper.RssColumns.COL_PUBLISHER;
+import static com.kk.android.bayareanews.data.local.RssLocalDbHelper.RssColumns.COL_TITLE;
+
 /**
  * @author kkawai
  */
@@ -95,7 +99,7 @@ public final class RssLocalDbHelper {
                         + RssColumns.COL_DESCR + " TEXT, " + RssColumns.COL_IMAGE_URL + " TEXT, "
                         + RssColumns.COL_LINK + " TEXT, "
                         + RssColumns.COL_PUB_DATE + " INTEGER DEFAULT 0, "
-                        + RssColumns.COL_TITLE + " TEXT, "
+                        + COL_TITLE + " TEXT, "
                         + RssColumns.COL_VIDEO_URL + " TEXT);");
             } catch (final Throwable t) {
                 MLog.e(TAG, "Error creating database.  Very bad: ", t);
@@ -142,7 +146,7 @@ public final class RssLocalDbHelper {
                             + RssColumns.COL_DESCR + " TEXT, " + RssColumns.COL_IMAGE_URL + " TEXT, "
                             + RssColumns.COL_LINK + " TEXT, "
                             + RssColumns.COL_PUB_DATE + " INTEGER DEFAULT 0, "
-                            + RssColumns.COL_TITLE + " TEXT, "
+                            + COL_TITLE + " TEXT, "
                             + RssColumns.COL_VIDEO_URL + " TEXT);");
                 } catch (final Throwable t) {
                     MLog.e(TAG, "Error creating database.  Very bad: ", t);
@@ -254,6 +258,52 @@ public final class RssLocalDbHelper {
             MLog.e(TAG, "Error in getting favorite rss: ", t);
         }
         return rss;
+    }
+
+    public synchronized List<Rss> searchRss(String searchTerm) {
+
+        final List<Rss> rssList = new ArrayList<>();
+        try {
+            final SQLiteDatabase db = sqlHelper.getReadableDatabase();
+            final String sql = String.format("select * from " + TABLE_RSS
+                    + " where " + COL_TITLE + " like '%" + searchTerm + "%'"
+                    + " or " + COL_AUTHOR + " like '%" + searchTerm + "%'"
+                    + " or " + COL_PUBLISHER + " = '" + searchTerm + "'"
+                    + " order by " + RssColumns.DEFAULT_SORT_ORDER);
+            final Cursor c = db.rawQuery(sql, null);
+            final ContentValues contentValues = new ContentValues();
+            while (c.moveToNext()) {
+                DatabaseUtils.cursorRowToContentValues(c, contentValues);
+                rssList.add(new Rss(contentValues));
+            }
+            c.close();
+        } catch (Throwable t) {
+            MLog.e(TAG, "Error in getting rss favorites: ", t);
+        }
+        return rssList;
+    }
+
+    public synchronized List<Rss> searchFavoriteRss(String searchTerm) {
+
+        final List<Rss> rssList = new ArrayList<>();
+        try {
+            final SQLiteDatabase db = sqlHelper.getReadableDatabase();
+            final String sql = String.format("select * from " + TABLE_RSS_FAVORITES
+                    + " where " + COL_TITLE + " like '%" + searchTerm + "%'"
+                    + " or " + COL_AUTHOR + " like '%" + searchTerm + "%'"
+                    + " or " + COL_PUBLISHER + " = '" + searchTerm + "'"
+                    + " order by " + RssColumns.DEFAULT_SORT_ORDER);
+            final Cursor c = db.rawQuery(sql, null);
+            final ContentValues contentValues = new ContentValues();
+            while (c.moveToNext()) {
+                DatabaseUtils.cursorRowToContentValues(c, contentValues);
+                rssList.add(new Rss(contentValues));
+            }
+            c.close();
+        } catch (Throwable t) {
+            MLog.e(TAG, "Error in getting rss favorites: ", t);
+        }
+        return rssList;
     }
 
     public synchronized List<Rss> getRssFavorites() {

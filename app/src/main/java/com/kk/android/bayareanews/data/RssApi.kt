@@ -12,4 +12,8 @@ interface RssApi {
     suspend fun deleteFavoriteArticleByArticleId(articleId: String): Int
 
     suspend fun getFavoriteRssArticles(): List<Rss>
+
+    suspend fun searchRssLocalDb(term: String): List<Rss>
+
+    suspend fun searchFavoriteRssLocalDb(term: String): List<Rss>
 }

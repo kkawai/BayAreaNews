@@ -24,12 +24,15 @@ import androidx.navigation.compose.rememberNavController
 import com.kk.android.bayareanews.presentation.ui.common.BackPressHandler
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BayAreaNewsApp(
     widthSizeClass: WindowWidthSizeClass,
+    speechFlow: MutableStateFlow<String>?,
+    onSpeechButtonClicked: ()->Unit
 ) {
     BayAreaNewsTheme {
         val navController = rememberNavController()
@@ -83,6 +86,8 @@ fun BayAreaNewsApp(
                     isExpandedScreen = isExpandedScreen,
                     navController = navController,
                     openDrawer = { coroutineScope.launch{ sizeAwareDrawerState.open() } },
+                    speechFlow = speechFlow,
+                    onSpeechButtonClicked = onSpeechButtonClicked
                 )
             }
         }

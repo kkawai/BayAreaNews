@@ -23,4 +23,12 @@ class FakeRssApi : RssApi {
     override suspend fun getFavoriteRssArticles(): List<Rss> {
         return FakeRssData.fakeRssData()
     }
+
+    override suspend fun searchRssLocalDb(term: String): List<Rss> {
+        return FakeRssData.fakeRssData()
+    }
+
+    override suspend fun searchFavoriteRssLocalDb(term: String): List<Rss> {
+        return FakeRssData.fakeRssData()
+    }
 }
