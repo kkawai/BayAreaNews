@@ -15,6 +15,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -91,12 +93,9 @@ private fun _SearchScreen(
 @Composable
 fun SearchScreen(
     isExpandedScreen: Boolean,
-    openDrawer: () -> Unit,
     onSaveFav: (rss: Rss) -> Unit,
     onDeleteFav: (rss: Rss) -> Unit,
     rssListState: StateFlow<SearchState>,
-    onPrivacyPolicyClicked: () -> Unit,
-    onFavoritesClicked: () -> Unit,
     onArticleClicked: (articleLink: String) -> Unit,
     modifier: Modifier = Modifier,
     speechFlow: MutableStateFlow<String>?,
@@ -111,17 +110,20 @@ fun SearchScreen(
     ) {
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
+        val appBarTitle = remember {
+            mutableStateOf("Find: " + searchTerm)
+        }
+
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                MyExpandableAppBar(
-                    title = stringResource(id = R.string.search_for, searchTerm),
+                SearchScreenAppBar(
+                    title = appBarTitle.value,
                     scrollBehavior = scrollBehavior,
                     speechFlow = speechFlow,
                     onSpeechButtonClicked = onSpeechButtonClicked,
                     isExpandedScreen = isExpandedScreen,
-                    onFavoritesClicked = onFavoritesClicked,
-                    openDrawer = openDrawer,
+                    onGoBack = onGoBack,
                     onPerformSearch = onPerformSearch
                 )
             }

@@ -59,7 +59,11 @@ fun BayAreaNewsNavHost(
                 },
                 speechFlow = speechFlow,
                 onSpeechButtonClicked = onSpeechButtonClicked,
-                onPerformSearch = { searchTerm -> navigationActions.navigateToSearch(searchTerm)})
+                onPerformSearch = { searchTerm ->
+                    if (searchTerm.isNotBlank()) {
+                        navigationActions.navigateToSearch(searchTerm)
+                    }
+                })
         }
 
         composable(
@@ -121,23 +125,21 @@ fun BayAreaNewsNavHost(
         ) { backStackEntry ->
             val searchTerm = backStackEntry.arguments?.getString("searchTerm") ?: ""
             val viewModel = hiltViewModel<SearchViewModel>()
-            //viewModel.searchRss(searchTerm)
             SearchScreen(
                 isExpandedScreen = isExpandedScreen,
-                openDrawer = openDrawer,
                 onSaveFav = { rss -> viewModel.saveFavorite(rss) },
                 onDeleteFav = { rss -> viewModel.deleteFavorite(rss) },
                 rssListState = viewModel.rssListState,
-                onPrivacyPolicyClicked = {
-                    navigationActions.navigateToPrivacyPolicy()
-                },
-                onFavoritesClicked = { navigationActions.navigateToFavorites() },
                 onArticleClicked = { link ->
                     navigationActions.navigateToWebView(link)
                 },
                 speechFlow = speechFlow,
                 onSpeechButtonClicked = onSpeechButtonClicked,
-                onPerformSearch = { navigationActions.navigateToSearch(it)},
+                onPerformSearch = {
+                    if (it.isNotBlank()) {
+                        viewModel.searchRss(it)
+                    }
+                },
                 onGoBack = { navController.popBackStack() },
                 searchTerm = searchTerm)
         }
