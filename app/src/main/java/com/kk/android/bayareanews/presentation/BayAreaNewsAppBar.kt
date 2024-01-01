@@ -2,7 +2,6 @@ package com.kk.android.bayareanews.presentation
 
 import android.util.Log
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -10,14 +9,12 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -46,7 +43,10 @@ fun MyExpandableAppBar(scrollBehavior: TopAppBarScrollBehavior,
                        onSpeechButtonClicked: ()->Unit,
                        isExpandedScreen: Boolean,
                        onFavoritesClicked: ()->Unit,
-                       openDrawer: () -> Unit) {
+                       openDrawer: () -> Unit,
+                       onPerformSearch: (String) -> Unit,
+                       title: String
+                       ) {
     val expandedInitially = false
     val (expanded, onExpandedChanged) = remember {
         mutableStateOf(expandedInitially)
@@ -54,9 +54,10 @@ fun MyExpandableAppBar(scrollBehavior: TopAppBarScrollBehavior,
 
     Crossfade(targetState = expanded) { isSearchFieldVisible ->
         when (isSearchFieldVisible) {
-            true -> MySearchBar(onExpandedChanged, speechFlow, onSpeechButtonClicked)
+            true -> MySearchBar(onExpandedChanged, speechFlow, onSpeechButtonClicked,onPerformSearch)
 
             false -> MyTopAppBar(
+                title = title,
                 isExpandedScreen = isExpandedScreen,
                 scrollBehavior,
                 onSearchButtonClicked = {
@@ -70,7 +71,9 @@ fun MyExpandableAppBar(scrollBehavior: TopAppBarScrollBehavior,
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MyTopAppBar(isExpandedScreen: Boolean,
+private fun MyTopAppBar(
+                title: String,
+                isExpandedScreen: Boolean,
                 scrollBehavior: TopAppBarScrollBehavior,
                 onSearchButtonClicked: ()->Unit,
                 onFavoritesClicked: ()->Unit,
@@ -79,7 +82,7 @@ private fun MyTopAppBar(isExpandedScreen: Boolean,
     TopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
-            Text(text = stringResource(id = R.string.app_name))
+            Text(text = title)
         },
         navigationIcon = {
             if (!isExpandedScreen) {
@@ -105,7 +108,7 @@ private fun MyTopAppBar(isExpandedScreen: Boolean,
             }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
-                    contentDescription = "Search"//stringResource(R.string.favorites)
+                    contentDescription = stringResource(R.string.search)
                 )
             }
             IconButton(onClick = {
@@ -123,9 +126,11 @@ private fun MyTopAppBar(isExpandedScreen: Boolean,
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MySearchBar(onExpandedChanged: (Boolean) -> Unit,
+private fun MySearchBar(
+                onExpandedChanged: (Boolean) -> Unit,
                 speechFlow: MutableStateFlow<String>?,
-                onSpeechButtonClicked: ()->Unit) {
+                onSpeechButtonClicked: ()->Unit,
+                onPerformSearch: (String)->Unit) {
 
     var query by remember {
         mutableStateOf("")
@@ -144,7 +149,7 @@ private fun MySearchBar(onExpandedChanged: (Boolean) -> Unit,
     var active by remember {
         mutableStateOf(true)
     }
-    val searchHistory = listOf("bitcoin", "cookies", "memes")
+    //val searchHistory = listOf("bitcoin", "cookies", "memes")
     val textFieldFocusRequester = remember { FocusRequester() }
 
     SideEffect {
@@ -159,6 +164,10 @@ private fun MySearchBar(onExpandedChanged: (Boolean) -> Unit,
         onQueryChange = { query = it },
         onSearch = {
             Log.i("vvvvv","perform search on: $query")
+            keyboard?.hide()
+            active = false
+            onExpandedChanged(false)
+            onPerformSearch(query)
         },
         active = active,
         onActiveChange = {
@@ -172,7 +181,7 @@ private fun MySearchBar(onExpandedChanged: (Boolean) -> Unit,
             Text( text = "Search")
         },
         leadingIcon = {
-            Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search")
+            Icon(imageVector = Icons.Outlined.Search, contentDescription = stringResource(id = R.string.search))
         },
         trailingIcon = {
             Row {
@@ -180,7 +189,7 @@ private fun MySearchBar(onExpandedChanged: (Boolean) -> Unit,
                 IconButton(onClick = {onSpeechButtonClicked()}) {
                     Icon(
                         imageVector = Icons.Filled.Mic,
-                        contentDescription = "Mic"
+                        contentDescription = stringResource(id = R.string.mic)
                     )
                 }
 
@@ -195,7 +204,7 @@ private fun MySearchBar(onExpandedChanged: (Boolean) -> Unit,
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.Close,
-                            contentDescription = "Close"
+                            contentDescription = stringResource(id = R.string.close)
                         )
                     }
                 }
@@ -203,7 +212,7 @@ private fun MySearchBar(onExpandedChanged: (Boolean) -> Unit,
         }
 
     ) {
-        searchHistory.takeLast(3).forEach { item ->
+        /*searchHistory.takeLast(3).forEach { item ->
 
             ListItem(
                 modifier = Modifier.clickable { query = item },
@@ -214,7 +223,7 @@ private fun MySearchBar(onExpandedChanged: (Boolean) -> Unit,
                         contentDescription = "Search History"
                     )
                 })
-        }
+        }*/
     }
 
 }

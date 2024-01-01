@@ -365,7 +365,8 @@ fun RssListScreen(
     onArticleClicked: (articleLink: String) -> Unit,
     modifier: Modifier = Modifier,
     speechFlow: MutableStateFlow<String>?,
-    onSpeechButtonClicked: ()->Unit
+    onSpeechButtonClicked: ()->Unit,
+    onPerformSearch: (String)->Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -376,12 +377,15 @@ fun RssListScreen(
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                MyExpandableAppBar(scrollBehavior = scrollBehavior,
+                MyExpandableAppBar(
+                                   title = stringResource(id = R.string.app_name),
+                                   scrollBehavior = scrollBehavior,
                                    speechFlow = speechFlow,
                                    onSpeechButtonClicked = onSpeechButtonClicked,
                                    isExpandedScreen = isExpandedScreen,
                                    onFavoritesClicked = onFavoritesClicked,
-                                   openDrawer = openDrawer)
+                                   openDrawer = openDrawer,
+                                   onPerformSearch = onPerformSearch)
             }
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)

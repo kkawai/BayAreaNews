@@ -33,4 +33,8 @@ class FakeRssRepository: RssRepository {
     override suspend fun getFavoriteArticles(): List<Rss> {
         return FakeRssData.fakeRssData()
     }
+
+    override suspend fun searchArticles(term: String): List<Rss> {
+        return FakeRssData.fakeRssData()
+    }
 }

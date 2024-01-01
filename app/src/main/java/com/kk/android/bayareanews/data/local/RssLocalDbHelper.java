@@ -265,11 +265,11 @@ public final class RssLocalDbHelper {
         final List<Rss> rssList = new ArrayList<>();
         try {
             final SQLiteDatabase db = sqlHelper.getReadableDatabase();
-            final String sql = String.format("select * from " + TABLE_RSS
+            final String sql = "select * from " + TABLE_RSS
                     + " where " + COL_TITLE + " like '%" + searchTerm + "%'"
                     + " or " + COL_AUTHOR + " like '%" + searchTerm + "%'"
                     + " or " + COL_PUBLISHER + " = '" + searchTerm + "'"
-                    + " order by " + RssColumns.DEFAULT_SORT_ORDER);
+                    + " order by " + RssColumns.DEFAULT_SORT_ORDER;
             final Cursor c = db.rawQuery(sql, null);
             final ContentValues contentValues = new ContentValues();
             while (c.moveToNext()) {
@@ -288,11 +288,11 @@ public final class RssLocalDbHelper {
         final List<Rss> rssList = new ArrayList<>();
         try {
             final SQLiteDatabase db = sqlHelper.getReadableDatabase();
-            final String sql = String.format("select * from " + TABLE_RSS_FAVORITES
+            final String sql = "select * from " + TABLE_RSS_FAVORITES
                     + " where " + COL_TITLE + " like '%" + searchTerm + "%'"
                     + " or " + COL_AUTHOR + " like '%" + searchTerm + "%'"
                     + " or " + COL_PUBLISHER + " = '" + searchTerm + "'"
-                    + " order by " + RssColumns.DEFAULT_SORT_ORDER);
+                    + " order by " + RssColumns.DEFAULT_SORT_ORDER;
             final Cursor c = db.rawQuery(sql, null);
             final ContentValues contentValues = new ContentValues();
             while (c.moveToNext()) {

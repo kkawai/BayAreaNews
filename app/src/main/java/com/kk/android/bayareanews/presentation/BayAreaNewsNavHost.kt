@@ -16,6 +16,8 @@ import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesViewModel
 import com.kk.android.bayareanews.presentation.ui.home_screen.PrivacyPolicyScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssListScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
+import com.kk.android.bayareanews.presentation.ui.search_screen.SearchScreen
+import com.kk.android.bayareanews.presentation.ui.search_screen.SearchViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -56,7 +58,8 @@ fun BayAreaNewsNavHost(
                     navigationActions.navigateToWebView(link)
                 },
                 speechFlow = speechFlow,
-                onSpeechButtonClicked = onSpeechButtonClicked)
+                onSpeechButtonClicked = onSpeechButtonClicked,
+                onPerformSearch = { searchTerm -> navigationActions.navigateToSearch(searchTerm)})
         }
 
         composable(
@@ -107,6 +110,36 @@ fun BayAreaNewsNavHost(
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = openDrawer,
                 onGoBackClicked = { navController.popBackStack() })
+        }
+
+        composable(
+            Screen.SearchScreen.route + "/{searchTerm}",
+            arguments = listOf(
+                navArgument("searchTerm") {
+                    type = NavType.StringType
+                })
+        ) { backStackEntry ->
+            val searchTerm = backStackEntry.arguments?.getString("searchTerm") ?: ""
+            val viewModel = hiltViewModel<SearchViewModel>()
+            viewModel.searchRss(searchTerm)
+            SearchScreen(
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
+                onSaveFav = { rss -> viewModel.saveFavorite(rss) },
+                onDeleteFav = { rss -> viewModel.deleteFavorite(rss) },
+                rssListState = viewModel.rssListState,
+                onPrivacyPolicyClicked = {
+                    navigationActions.navigateToPrivacyPolicy()
+                },
+                onFavoritesClicked = { navigationActions.navigateToFavorites() },
+                onArticleClicked = { link ->
+                    navigationActions.navigateToWebView(link)
+                },
+                speechFlow = speechFlow,
+                onSpeechButtonClicked = onSpeechButtonClicked,
+                onPerformSearch = { navigationActions.navigateToSearch(it)},
+                onGoBack = { navController.popBackStack() },
+                searchTerm = searchTerm)
         }
 
     }

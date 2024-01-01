@@ -22,7 +22,7 @@
     <string name="share_with_others">Share with others</string>
     <string name="mark_as_favorite">Mark as favorite</string>
     <string name="favorites">Favorites</string>
-    <string name="go_back">Back to Breaking News</string>
+    <string name="go_back">Back to Bay Area News</string>
     <string name="no_favorites">No Favorites added yet.</string>
     <string name="retry_op">Retry</string>
     <string name="privacy_policy_title">Privacy Policy</string>
@@ -33,4 +33,9 @@
     <string name="home_title">Home</string>
     <string name="cd_open_navigation_drawer">Open navigation drawer</string>
     <string name="contact_info">Contact Info</string>
+    <string name="search">Search</string>
+    <string name="search_no_results">No articles found: %1$s</string>
+    <string name="close">Close</string>
+    <string name="mic">Microphone</string>
+    <string name="search_for">Find: %1$s</string>
 </resources>
