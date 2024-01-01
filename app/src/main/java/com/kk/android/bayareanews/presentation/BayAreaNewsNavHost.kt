@@ -121,7 +121,7 @@ fun BayAreaNewsNavHost(
         ) { backStackEntry ->
             val searchTerm = backStackEntry.arguments?.getString("searchTerm") ?: ""
             val viewModel = hiltViewModel<SearchViewModel>()
-            viewModel.searchRss(searchTerm)
+            //viewModel.searchRss(searchTerm)
             SearchScreen(
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = openDrawer,

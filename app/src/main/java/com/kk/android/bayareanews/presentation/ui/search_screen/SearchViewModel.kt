@@ -1,5 +1,6 @@
 package com.kk.android.bayareanews.presentation.ui.search_screen
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kk.android.bayareanews.common.Resource
@@ -25,11 +26,18 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val searchUseCase: SearchUseCase,
     private val saveFavoriteUseCase: SaveFavoriteUseCase,
-    private val deleteFavoriteUseCase: DeleteFavoriteUseCase
+    private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _rssListState = MutableStateFlow(SearchState())
     val rssListState = _rssListState.asStateFlow()
+
+    init {
+        savedStateHandle.get<String>("searchTerm")?.let { searchTerm ->
+            searchRss(searchTerm)
+        }
+    }
 
     fun searchRss(searchTerm: String) {
         searchUseCase(searchTerm)
