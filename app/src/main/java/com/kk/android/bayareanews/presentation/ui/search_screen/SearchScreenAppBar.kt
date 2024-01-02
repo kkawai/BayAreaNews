@@ -20,8 +20,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +44,7 @@ fun SearchScreenAppBar(scrollBehavior: TopAppBarScrollBehavior,
                        isExpandedScreen: Boolean,
                        onGoBack: () -> Unit,
                        onPerformSearch: (String) -> Unit,
-                       title: MutableState<String>
+                       title: State<String>
                        ) {
     val expandedInitially = false
     val (expanded, onExpandedChanged) = remember {
@@ -70,7 +70,7 @@ fun SearchScreenAppBar(scrollBehavior: TopAppBarScrollBehavior,
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MyTopAppBar(
-                title: MutableState<String>,
+                title: State<String>,
                 isExpandedScreen: Boolean,
                 scrollBehavior: TopAppBarScrollBehavior,
                 onSearchButtonClicked: ()->Unit,

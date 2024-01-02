@@ -14,21 +14,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.EncodingUtil
 import com.kk.android.bayareanews.common.ShareUtil
 import com.kk.android.bayareanews.domain.model.Rss
 import com.kk.android.bayareanews.domain.use_case.get_rss.SearchState
-import com.kk.android.bayareanews.presentation.MyExpandableAppBar
 import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
 import com.kk.android.bayareanews.presentation.ui.common.ImageCard
 import com.kk.android.bayareanews.presentation.ui.common.LoadingScreen
@@ -47,7 +42,7 @@ private fun _SearchScreen(
     rssListState: StateFlow<SearchState>,
     onArticleClicked: (articleLink: String) -> Unit,
     onGoBack: () -> Unit,
-    searchTerm: MutableState<String>,
+    searchTerm: State<String>,
     modifier: Modifier = Modifier
 ) {
 
@@ -103,7 +98,7 @@ fun SearchScreen(
     onSpeechButtonClicked: () -> Unit,
     onPerformSearch: (String) -> Unit,
     onGoBack: () -> Unit,
-    title: MutableState<String>,
+    title: State<String>,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
