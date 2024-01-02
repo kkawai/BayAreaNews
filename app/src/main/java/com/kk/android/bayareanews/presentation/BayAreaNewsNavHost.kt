@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.kk.android.bayareanews.R
+import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.presentation.ui.common.WebViewScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.ContactInfoScreen
@@ -121,19 +122,18 @@ fun BayAreaNewsNavHost(
         }
 
         composable(
-            Screen.SearchScreen.route + "/{searchTerm}",
+            Screen.SearchScreen.route + "/{${Constants.SEARCH_TERM_KEY}}",
             arguments = listOf(
-                navArgument("searchTerm") {
+                navArgument(Constants.SEARCH_TERM_KEY) {
                     type = NavType.StringType
                 })
         ) { backStackEntry ->
-            val searchTerm = backStackEntry.arguments?.getString("searchTerm") ?: ""
+            val searchTerm = backStackEntry.arguments?.getString(Constants.SEARCH_TERM_KEY) ?: ""
             val viewModel = hiltViewModel<SearchViewModel>()
-            val title = remember {
-                mutableStateOf("")
-            }
             val searchFor = stringResource(id = R.string.search_for)
-            title.value = searchFor + " " + searchTerm
+            val title = remember {
+                mutableStateOf(searchFor + " " + searchTerm)
+            }
             SearchScreen(
                 isExpandedScreen = isExpandedScreen,
                 onSaveFav = { rss -> viewModel.saveFavorite(rss) },
@@ -146,8 +146,8 @@ fun BayAreaNewsNavHost(
                 onSpeechButtonClicked = onSpeechButtonClicked,
                 onPerformSearch = {
                     if (it.isNotEmpty()) {
-                        viewModel.searchRss(it)
                         title.value = searchFor + " " + it
+                        viewModel.searchRss(it)
                     }
                 },
                 onGoBack = { navController.popBackStack() },

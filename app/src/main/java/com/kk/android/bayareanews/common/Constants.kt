@@ -18,4 +18,5 @@ object Constants {
     const val CONTACT_INFO_DEFAULT = "This app contact:\nbayareanews933@gmail.com \n\n" +
             "hoodline contact:\ncontact@hoodline.com \n\n" +
             "wired contact:\nmail@wired.com"
+    const val SEARCH_TERM_KEY = "searchTerm"
 }
