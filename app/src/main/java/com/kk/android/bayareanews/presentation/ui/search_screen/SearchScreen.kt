@@ -103,7 +103,7 @@ fun SearchScreen(
     onSpeechButtonClicked: () -> Unit,
     onPerformSearch: (String) -> Unit,
     onGoBack: () -> Unit,
-    searchTerm: String,
+    title: MutableState<String>,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -111,18 +111,12 @@ fun SearchScreen(
     ) {
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-        val appBarTitle = remember {
-            mutableStateOf("")
-        }
-
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
 
-                appBarTitle.value = stringResource(id = R.string.search_for, searchTerm)
-
                 SearchScreenAppBar(
-                    title = appBarTitle,
+                    title = title,
                     scrollBehavior = scrollBehavior,
                     speechFlow = speechFlow,
                     onSpeechButtonClicked = onSpeechButtonClicked,
@@ -140,7 +134,7 @@ fun SearchScreen(
                 onDeleteFavorite = onDeleteFav,
                 rssListState = rssListState,
                 onGoBack = onGoBack,
-                searchTerm = appBarTitle,
+                searchTerm = title,
             )
         }
 

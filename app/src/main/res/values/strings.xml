@@ -37,5 +37,5 @@
     <string name="search_no_results">No articles found: %1$s</string>
     <string name="close">Close</string>
     <string name="mic">Microphone</string>
-    <string name="search_for">Find: %1$s</string>
+    <string name="search_for">Find: </string>
 </resources>

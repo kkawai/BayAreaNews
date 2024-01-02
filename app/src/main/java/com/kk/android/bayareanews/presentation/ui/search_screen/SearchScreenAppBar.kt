@@ -53,7 +53,7 @@ fun SearchScreenAppBar(scrollBehavior: TopAppBarScrollBehavior,
 
     Crossfade(targetState = expanded) { isSearchFieldVisible ->
         when (isSearchFieldVisible) {
-            true -> MySearchBar(title, onExpandedChanged, speechFlow, onSpeechButtonClicked,onPerformSearch)
+            true -> MySearchBar(onExpandedChanged, speechFlow, onSpeechButtonClicked,onPerformSearch)
 
             false -> MyTopAppBar(
                 title = title,
@@ -116,7 +116,6 @@ private fun MyTopAppBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MySearchBar(
-                title: MutableState<String>,
                 onExpandedChanged: (Boolean) -> Unit,
                 speechFlow: MutableStateFlow<String>?,
                 onSpeechButtonClicked: ()->Unit,
@@ -158,9 +157,6 @@ private fun MySearchBar(
             active = false
             onExpandedChanged(false)
             onPerformSearch(query)
-            if (query.isNotEmpty()) {
-                title.value = "Find: " + query
-            }
         },
         active = active,
         onActiveChange = {
@@ -171,7 +167,7 @@ private fun MySearchBar(
             Log.i("vvvvv", "DockedSearchBar active: $active")
         },
         placeholder = {
-            Text( text = "Search")
+            Text( text = stringResource(id = R.string.search))
         },
         leadingIcon = {
             Icon(imageVector = Icons.Outlined.Search, contentDescription = stringResource(id = R.string.search))

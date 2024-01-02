@@ -1,13 +1,17 @@
 package com.kk.android.bayareanews.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.presentation.ui.common.WebViewScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.ContactInfoScreen
@@ -125,6 +129,11 @@ fun BayAreaNewsNavHost(
         ) { backStackEntry ->
             val searchTerm = backStackEntry.arguments?.getString("searchTerm") ?: ""
             val viewModel = hiltViewModel<SearchViewModel>()
+            val title = remember {
+                mutableStateOf("")
+            }
+            val searchFor = stringResource(id = R.string.search_for)
+            title.value = searchFor + " " + searchTerm
             SearchScreen(
                 isExpandedScreen = isExpandedScreen,
                 onSaveFav = { rss -> viewModel.saveFavorite(rss) },
@@ -138,10 +147,11 @@ fun BayAreaNewsNavHost(
                 onPerformSearch = {
                     if (it.isNotEmpty()) {
                         viewModel.searchRss(it)
+                        title.value = searchFor + " " + it
                     }
                 },
                 onGoBack = { navController.popBackStack() },
-                searchTerm = searchTerm)
+                title = title)
         }
 
     }
