@@ -60,7 +60,7 @@ fun BayAreaNewsNavHost(
                 speechFlow = speechFlow,
                 onSpeechButtonClicked = onSpeechButtonClicked,
                 onPerformSearch = { searchTerm ->
-                    if (searchTerm.isNotBlank()) {
+                    if (searchTerm.isNotEmpty()) {
                         navigationActions.navigateToSearch(searchTerm)
                     }
                 })
@@ -136,7 +136,7 @@ fun BayAreaNewsNavHost(
                 speechFlow = speechFlow,
                 onSpeechButtonClicked = onSpeechButtonClicked,
                 onPerformSearch = {
-                    if (it.isNotBlank()) {
+                    if (it.isNotEmpty()) {
                         viewModel.searchRss(it)
                     }
                 },

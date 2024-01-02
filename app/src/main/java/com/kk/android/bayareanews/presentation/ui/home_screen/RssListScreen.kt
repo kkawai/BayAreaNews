@@ -116,7 +116,7 @@ private fun _RssListScreen(
 
     if (listState.value.isLoading) {
         LoadingScreen()
-    } else if (listState.value.error.isNotBlank()) {
+    } else if (listState.value.error.isNotEmpty()) {
         isRefreshing = false
         ErrorScreen(
             errorText = listState.value.error,
@@ -131,7 +131,7 @@ private fun _RssListScreen(
 
             LazyColumn(modifier = modifier.fillMaxSize()) {
 
-                if (listState.value.topRss.title?.isNotBlank() ?: false) {
+                if (listState.value.topRss.title?.isNotEmpty() ?: false) {
                     item {
                         TopStorySection(
                             listState.value.topRss,

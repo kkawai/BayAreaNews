@@ -20,6 +20,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,7 +44,7 @@ fun SearchScreenAppBar(scrollBehavior: TopAppBarScrollBehavior,
                        isExpandedScreen: Boolean,
                        onGoBack: () -> Unit,
                        onPerformSearch: (String) -> Unit,
-                       title: String
+                       title: MutableState<String>
                        ) {
     val expandedInitially = false
     val (expanded, onExpandedChanged) = remember {
@@ -52,7 +53,7 @@ fun SearchScreenAppBar(scrollBehavior: TopAppBarScrollBehavior,
 
     Crossfade(targetState = expanded) { isSearchFieldVisible ->
         when (isSearchFieldVisible) {
-            true -> MySearchBar(onExpandedChanged, speechFlow, onSpeechButtonClicked,onPerformSearch)
+            true -> MySearchBar(title, onExpandedChanged, speechFlow, onSpeechButtonClicked,onPerformSearch)
 
             false -> MyTopAppBar(
                 title = title,
@@ -69,7 +70,7 @@ fun SearchScreenAppBar(scrollBehavior: TopAppBarScrollBehavior,
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MyTopAppBar(
-                title: String,
+                title: MutableState<String>,
                 isExpandedScreen: Boolean,
                 scrollBehavior: TopAppBarScrollBehavior,
                 onSearchButtonClicked: ()->Unit,
@@ -78,7 +79,7 @@ private fun MyTopAppBar(
     TopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
-            Text(text = title)
+            Text(text = title.value)
         },
         navigationIcon = {
             if (!isExpandedScreen) {
@@ -115,6 +116,7 @@ private fun MyTopAppBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MySearchBar(
+                title: MutableState<String>,
                 onExpandedChanged: (Boolean) -> Unit,
                 speechFlow: MutableStateFlow<String>?,
                 onSpeechButtonClicked: ()->Unit,
@@ -127,7 +129,7 @@ private fun MySearchBar(
     val speechText = speechFlow?.collectAsState()
 
     speechText?.let {
-        if (it.value.isNotBlank()) {
+        if (it.value.isNotEmpty()) {
             query = it.value
             speechFlow.update { "" }
             keyboard?.show()
@@ -156,6 +158,9 @@ private fun MySearchBar(
             active = false
             onExpandedChanged(false)
             onPerformSearch(query)
+            if (query.isNotEmpty()) {
+                title.value = "Find: " + query
+            }
         },
         active = active,
         onActiveChange = {

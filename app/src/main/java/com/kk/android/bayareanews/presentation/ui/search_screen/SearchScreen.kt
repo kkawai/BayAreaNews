@@ -14,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,7 +47,7 @@ private fun _SearchScreen(
     rssListState: StateFlow<SearchState>,
     onArticleClicked: (articleLink: String) -> Unit,
     onGoBack: () -> Unit,
-    searchTerm: String,
+    searchTerm: MutableState<String>,
     modifier: Modifier = Modifier
 ) {
 
@@ -55,7 +56,7 @@ private fun _SearchScreen(
 
     if (listState.value.isLoading) {
         LoadingScreen()
-    } else if (listState.value.error.isNotBlank()) {
+    } else if (listState.value.error.isNotEmpty()) {
         ErrorScreen(
             errorText = listState.value.error,
             retryAction = { /*todo*/ })
@@ -111,14 +112,17 @@ fun SearchScreen(
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
         val appBarTitle = remember {
-            mutableStateOf("Find: " + searchTerm)
+            mutableStateOf("")
         }
 
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
+
+                appBarTitle.value = stringResource(id = R.string.search_for, searchTerm)
+
                 SearchScreenAppBar(
-                    title = appBarTitle.value,
+                    title = appBarTitle,
                     scrollBehavior = scrollBehavior,
                     speechFlow = speechFlow,
                     onSpeechButtonClicked = onSpeechButtonClicked,
@@ -136,7 +140,7 @@ fun SearchScreen(
                 onDeleteFavorite = onDeleteFav,
                 rssListState = rssListState,
                 onGoBack = onGoBack,
-                searchTerm = searchTerm,
+                searchTerm = appBarTitle,
             )
         }
 

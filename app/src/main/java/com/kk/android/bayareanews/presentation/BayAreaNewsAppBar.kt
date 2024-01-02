@@ -140,7 +140,7 @@ private fun MySearchBar(
     val speechText = speechFlow?.collectAsState()
 
     speechText?.let {
-        if (it.value.isNotBlank()) {
+        if (it.value.isNotEmpty()) {
             query = it.value
             speechFlow.update { "" }
             keyboard?.show()
