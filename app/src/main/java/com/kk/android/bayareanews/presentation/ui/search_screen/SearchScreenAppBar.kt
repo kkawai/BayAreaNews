@@ -126,21 +126,25 @@ private fun MySearchBar(
     }
     val keyboard = LocalSoftwareKeyboardController.current
     val speechText = speechFlow?.collectAsState()
-
-    speechText?.let {
-        if (it.value.isNotEmpty()) {
-            query = it.value
-            speechFlow.update { "" }
-            keyboard?.show()
-        }
-    }
-
     var active by remember {
         mutableStateOf(true)
     }
+    fun doSearch(query: String) {
+        keyboard?.hide()
+        active = false
+        onExpandedChanged(false)
+        onPerformSearch(query)
+        Log.i("vvvvv","perform search on: $query")
+    }
+    speechText?.let {
+        if (it.value.isNotEmpty()) {
+            query = it.value
+            speechFlow.update {""}
+            doSearch(query)
+        }
+    }
     //val searchHistory = listOf("bitcoin", "cookies", "memes")
     val textFieldFocusRequester = remember { FocusRequester() }
-
     SideEffect {
         textFieldFocusRequester.requestFocus()
     }
@@ -152,11 +156,7 @@ private fun MySearchBar(
         query = query,
         onQueryChange = { query = it },
         onSearch = {
-            Log.i("vvvvv","perform search on: $query")
-            keyboard?.hide()
-            active = false
-            onExpandedChanged(false)
-            onPerformSearch(query)
+            doSearch(query)
         },
         active = active,
         onActiveChange = {
