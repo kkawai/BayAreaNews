@@ -2,6 +2,7 @@ package com.kk.android.bayareanews.presentation.ui.search_screen
 
 import android.util.Log
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -9,11 +10,13 @@ import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -143,7 +146,7 @@ private fun MySearchBar(
             doSearch(query)
         }
     }
-    //val searchHistory = listOf("bitcoin", "cookies", "memes")
+    val searchHistory = listOf("bitcoin", "cookies", "memes")
     val textFieldFocusRequester = remember { FocusRequester() }
     SideEffect {
         textFieldFocusRequester.requestFocus()
@@ -202,7 +205,7 @@ private fun MySearchBar(
         }
 
     ) {
-        /*searchHistory.takeLast(3).forEach { item ->
+        searchHistory.takeLast(3).forEach { item ->
 
             ListItem(
                 modifier = Modifier.clickable { query = item },
@@ -213,7 +216,7 @@ private fun MySearchBar(
                         contentDescription = "Search History"
                     )
                 })
-        }*/
+        }
     }
 
 }

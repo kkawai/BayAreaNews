@@ -67,6 +67,7 @@ import com.kk.android.bayareanews.common.ShareUtil
 import com.kk.android.bayareanews.domain.model.Rss
 import com.kk.android.bayareanews.domain.use_case.get_rss.RssFeaturedState
 import com.kk.android.bayareanews.domain.use_case.get_rss.RssListState
+import com.kk.android.bayareanews.domain.use_case.get_rss.SearchState
 import com.kk.android.bayareanews.presentation.MyExpandableAppBar
 import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
 import com.kk.android.bayareanews.presentation.ui.common.ImageCard
@@ -366,7 +367,9 @@ fun RssListScreen(
     modifier: Modifier = Modifier,
     speechFlow: MutableStateFlow<String>?,
     onSpeechButtonClicked: ()->Unit,
-    onPerformSearch: (String)->Unit
+    onPerformSearch: (String)->Unit,
+    onPerformSearchWhileTyping: (String)->Unit,
+    searchResultFlowWhileTyping: StateFlow<SearchState>,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -385,7 +388,10 @@ fun RssListScreen(
                                    isExpandedScreen = isExpandedScreen,
                                    onFavoritesClicked = onFavoritesClicked,
                                    openDrawer = openDrawer,
-                                   onPerformSearch = onPerformSearch)
+                                   onPerformSearch = onPerformSearch,
+                                   onPerformSearchWhileTyping = onPerformSearchWhileTyping,
+                                   searchResultFlowWhileTyping = searchResultFlowWhileTyping,
+                                   onArticleClicked = onArticleClicked)
             }
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)

@@ -46,6 +46,7 @@ fun BayAreaNewsNavHost(
             Screen.HomeScreen.route
         ) {
             val viewModel = hiltViewModel<RssViewModel>()
+            val searchViewModel = hiltViewModel<SearchViewModel>()
             RssListScreen(
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = openDrawer,
@@ -68,7 +69,11 @@ fun BayAreaNewsNavHost(
                     if (searchTerm.isNotEmpty()) {
                         navigationActions.navigateToSearch(searchTerm)
                     }
-                })
+                },
+                onPerformSearchWhileTyping = {searchTerm ->
+                    searchViewModel.searchRss(searchTerm)
+                                             },
+                searchResultFlowWhileTyping = searchViewModel.rssListState)
         }
 
         composable(

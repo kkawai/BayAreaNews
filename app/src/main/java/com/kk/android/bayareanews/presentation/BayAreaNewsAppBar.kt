@@ -2,6 +2,7 @@ package com.kk.android.bayareanews.presentation
 
 import android.util.Log
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -9,14 +10,15 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -34,7 +36,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import com.kk.android.bayareanews.R
+import com.kk.android.bayareanews.common.EncodingUtil
+import com.kk.android.bayareanews.domain.use_case.get_rss.SearchState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,6 +51,9 @@ fun MyExpandableAppBar(scrollBehavior: TopAppBarScrollBehavior,
                        onFavoritesClicked: ()->Unit,
                        openDrawer: () -> Unit,
                        onPerformSearch: (String) -> Unit,
+                       onPerformSearchWhileTyping: (String)->Unit,
+                       searchResultFlowWhileTyping: StateFlow<SearchState>,
+                       onArticleClicked: (articleLink: String) -> Unit,
                        title: String
                        ) {
     val expandedInitially = false
@@ -55,7 +63,9 @@ fun MyExpandableAppBar(scrollBehavior: TopAppBarScrollBehavior,
 
     Crossfade(targetState = expanded) { isSearchFieldVisible ->
         when (isSearchFieldVisible) {
-            true -> MySearchBar(onExpandedChanged, speechFlow, onSpeechButtonClicked,onPerformSearch)
+            true -> MySearchBar(onExpandedChanged, speechFlow, onSpeechButtonClicked,
+                onPerformSearch, onPerformSearchWhileTyping, searchResultFlowWhileTyping,
+                onArticleClicked)
 
             false -> MyTopAppBar(
                 title = title,
@@ -131,7 +141,11 @@ private fun MySearchBar(
                 onExpandedChanged: (Boolean) -> Unit,
                 speechFlow: MutableStateFlow<String>?,
                 onSpeechButtonClicked: ()->Unit,
-                onPerformSearch: (String)->Unit) {
+                onPerformSearch: (String)->Unit,
+                onPerformSearchWhileTyping: (String)->Unit,
+                searchResultFlowWhileTyping: StateFlow<SearchState>,
+                onArticleClicked: (articleLink: String) -> Unit
+) {
 
     var query by remember {
         mutableStateOf("")
@@ -158,6 +172,7 @@ private fun MySearchBar(
     }
 
     //val searchHistory = listOf("bitcoin", "cookies", "memes")
+    val searchResultsWhileTyping = searchResultFlowWhileTyping.collectAsState()
     val textFieldFocusRequester = remember { FocusRequester() }
 
     SideEffect {
@@ -169,7 +184,9 @@ private fun MySearchBar(
             .fillMaxWidth()
             .focusRequester(textFieldFocusRequester),
         query = query,
-        onQueryChange = { query = it },
+        onQueryChange = { query = it
+                            onPerformSearchWhileTyping(query)
+                        },
         onSearch = {
             doSearch(query)
         },
@@ -182,7 +199,7 @@ private fun MySearchBar(
             Log.i("vvvvv", "DockedSearchBar active: $active")
         },
         placeholder = {
-            Text( text = "Search")
+            Text( text = stringResource(id = R.string.search))
         },
         leadingIcon = {
             Icon(imageVector = Icons.Outlined.Search, contentDescription = stringResource(id = R.string.search))
@@ -216,18 +233,23 @@ private fun MySearchBar(
         }
 
     ) {
-        /*searchHistory.takeLast(3).forEach { item ->
 
-            ListItem(
-                modifier = Modifier.clickable { query = item },
-                headlineContent = { Text( text = item) },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Outlined.History,
-                        contentDescription = "Search History"
-                    )
-                })
-        }*/
+        if (searchResultsWhileTyping.value.rss.isNotEmpty()) {
+            searchResultsWhileTyping.value.rss.takeLast(4).forEach { item ->
+
+                ListItem(
+                    modifier = Modifier.clickable { onArticleClicked(
+                        EncodingUtil.encodeUrlSafe(item.link)) },
+                    headlineContent = { Text( text = item.title) },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Outlined.History,
+                            contentDescription = stringResource(id = R.string.search)
+                        )
+                    })
+            }
+        }
+
     }
 
 }
