@@ -2,6 +2,7 @@ package com.kk.android.bayareanews.presentation
 
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import com.kk.android.bayareanews.common.EncodingUtil
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 
 /**
@@ -66,7 +67,8 @@ class BayAreaNewsNavigationActions(navController: NavHostController) {
         }
     }
     val navigateToWebView: (url: String) -> Unit = { link ->
-        navController.navigate(Screen.DetailsScreen.route + "/${link}") {
+        val encodedLink = EncodingUtil.encodeUrlSafe(link)
+        navController.navigate(Screen.DetailsScreen.route + "/${encodedLink}") {
         //unlike the others, do not call 'popUpTo' since WebView is not a drawer nav item
         }
     }

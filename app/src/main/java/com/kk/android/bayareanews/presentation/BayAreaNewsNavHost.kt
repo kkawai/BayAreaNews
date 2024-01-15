@@ -23,6 +23,7 @@ import com.kk.android.bayareanews.presentation.ui.home_screen.RssListScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
 import com.kk.android.bayareanews.presentation.ui.search_screen.SearchScreen
 import com.kk.android.bayareanews.presentation.ui.search_screen.SearchViewModel
+import com.kk.android.bayareanews.presentation.ui.search_screen.SearchWhileTypingViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -135,6 +136,7 @@ fun BayAreaNewsNavHost(
         ) { backStackEntry ->
             val searchTerm = backStackEntry.arguments?.getString(Constants.SEARCH_TERM_KEY) ?: ""
             val viewModel = hiltViewModel<SearchViewModel>()
+            val searchWhileTypingViewModel = hiltViewModel<SearchWhileTypingViewModel>()
             val searchFor = stringResource(id = R.string.search_for)
             val title = remember {
                 mutableStateOf(searchFor + " " + searchTerm)
@@ -155,6 +157,10 @@ fun BayAreaNewsNavHost(
                         viewModel.searchRss(it)
                     }
                 },
+                onPerformSearchWhileTyping = {searchTerm ->
+                    searchWhileTypingViewModel.searchRss(searchTerm)
+                },
+                searchResultFlowWhileTyping = searchWhileTypingViewModel.rssListState,
                 onGoBack = { navController.popBackStack() },
                 title = title)
         }

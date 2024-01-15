@@ -36,7 +36,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import com.kk.android.bayareanews.R
+import com.kk.android.bayareanews.domain.use_case.get_rss.SearchState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +49,9 @@ fun SearchScreenAppBar(scrollBehavior: TopAppBarScrollBehavior,
                        isExpandedScreen: Boolean,
                        onGoBack: () -> Unit,
                        onPerformSearch: (String) -> Unit,
+                       onPerformSearchWhileTyping: (String)->Unit,
+                       searchResultFlowWhileTyping: StateFlow<SearchState>,
+                       onArticleClicked: (articleLink: String) -> Unit,
                        title: State<String>
                        ) {
     val expandedInitially = false
@@ -56,7 +61,9 @@ fun SearchScreenAppBar(scrollBehavior: TopAppBarScrollBehavior,
 
     Crossfade(targetState = expanded) { isSearchFieldVisible ->
         when (isSearchFieldVisible) {
-            true -> MySearchBar(onExpandedChanged, speechFlow, onSpeechButtonClicked,onPerformSearch)
+            true -> MySearchBar(onExpandedChanged, speechFlow, onSpeechButtonClicked,
+                onPerformSearch, onPerformSearchWhileTyping,
+                searchResultFlowWhileTyping, onArticleClicked)
 
             false -> MyTopAppBar(
                 title = title,
@@ -122,7 +129,10 @@ private fun MySearchBar(
                 onExpandedChanged: (Boolean) -> Unit,
                 speechFlow: MutableStateFlow<String>?,
                 onSpeechButtonClicked: ()->Unit,
-                onPerformSearch: (String)->Unit) {
+                onPerformSearch: (String)->Unit,
+                onPerformSearchWhileTyping: (String)->Unit,
+                searchResultFlowWhileTyping: StateFlow<SearchState>,
+                onArticleClicked: (articleLink: String) -> Unit,) {
 
     var query by remember {
         mutableStateOf("")
@@ -146,7 +156,7 @@ private fun MySearchBar(
             doSearch(query)
         }
     }
-    val searchHistory = listOf("bitcoin", "cookies", "memes")
+    val searchResultsWhileTyping = searchResultFlowWhileTyping.collectAsState()
     val textFieldFocusRequester = remember { FocusRequester() }
     SideEffect {
         textFieldFocusRequester.requestFocus()
@@ -158,6 +168,7 @@ private fun MySearchBar(
             .focusRequester(textFieldFocusRequester),
         query = query,
         onQueryChange = { query = it
+            onPerformSearchWhileTyping(query)
             Log.i("vvvvv", "DockedSearchBar typed: $query")},
         onSearch = {
             doSearch(query)
@@ -205,17 +216,19 @@ private fun MySearchBar(
         }
 
     ) {
-        searchHistory.takeLast(3).forEach { item ->
+        if (searchResultsWhileTyping.value.rss.isNotEmpty()) {
+            searchResultsWhileTyping.value.rss.takeLast(4).forEach { item ->
 
-            ListItem(
-                modifier = Modifier.clickable { query = item },
-                headlineContent = { Text( text = item) },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Outlined.History,
-                        contentDescription = "Search History"
-                    )
-                })
+                ListItem(
+                    modifier = Modifier.clickable { onArticleClicked(item.link) },
+                    headlineContent = { Text( text = item.title) },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Outlined.History,
+                            contentDescription = stringResource(id = R.string.search)
+                        )
+                    })
+            }
         }
     }
 

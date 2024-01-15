@@ -36,7 +36,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import com.kk.android.bayareanews.R
-import com.kk.android.bayareanews.common.EncodingUtil
 import com.kk.android.bayareanews.domain.use_case.get_rss.SearchState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -238,8 +237,7 @@ private fun MySearchBar(
             searchResultsWhileTyping.value.rss.takeLast(4).forEach { item ->
 
                 ListItem(
-                    modifier = Modifier.clickable { onArticleClicked(
-                        EncodingUtil.encodeUrlSafe(item.link)) },
+                    modifier = Modifier.clickable { onArticleClicked(item.link) },
                     headlineContent = { Text( text = item.title) },
                     leadingContent = {
                         Icon(

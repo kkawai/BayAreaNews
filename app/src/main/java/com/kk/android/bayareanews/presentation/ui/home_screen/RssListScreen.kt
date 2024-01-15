@@ -21,11 +21,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -39,7 +36,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -62,7 +58,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.kk.android.bayareanews.MainApp
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.Constants
-import com.kk.android.bayareanews.common.EncodingUtil
 import com.kk.android.bayareanews.common.ShareUtil
 import com.kk.android.bayareanews.domain.model.Rss
 import com.kk.android.bayareanews.domain.use_case.get_rss.RssFeaturedState
@@ -147,11 +142,7 @@ private fun _RssListScreen(
                             onDeleteFavorite = { onDeleteFavorite(listState.value.topRss) },
                             modifier = Modifier
                                 .clickable {
-                                    onArticleClicked(
-                                        EncodingUtil.encodeUrlSafe(
-                                            listState.value.topRss.link
-                                        )
-                                    )
+                                    onArticleClicked(listState.value.topRss.link)
                                 })
                     }
                 }
@@ -202,7 +193,7 @@ private fun _RssListScreen(
                         onSaveFavorite = { onSaveFavorite(rss) },
                         modifier = Modifier
                             .padding(16.dp)
-                            .clickable { onArticleClicked(EncodingUtil.encodeUrlSafe(rss.link)) }
+                            .clickable { onArticleClicked(rss.link) }
                     )
                 }
             }
@@ -344,7 +335,7 @@ private fun FeaturedRssSection(
                 favoritesMap.containsKey(rss.articleId),
                 { onSaveFavorite(rss) },
                 { onDeleteFavorite(rss) },
-                modifier = Modifier.clickable { onArticleClicked(EncodingUtil.encodeUrlSafe(rss.link)) },
+                modifier = Modifier.clickable { onArticleClicked(rss.link) },
             )
         }
     }

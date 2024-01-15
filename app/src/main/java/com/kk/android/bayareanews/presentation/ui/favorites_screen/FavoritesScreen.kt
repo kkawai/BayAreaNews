@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import com.kk.android.bayareanews.MainApp
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.Constants
-import com.kk.android.bayareanews.common.EncodingUtil
 import com.kk.android.bayareanews.common.ShareUtil
 import com.kk.android.bayareanews.domain.model.Rss
 import com.kk.android.bayareanews.domain.use_case.get_rss.RssFavoritesState
@@ -98,7 +97,7 @@ private fun _FavoritesScreen(
                         rss = rss,
                         modifier = Modifier
                             .padding(16.dp)
-                            .clickable {onArticleClicked(EncodingUtil.encodeUrlSafe(rss.link))}
+                            .clickable {onArticleClicked(rss.link)}
                     )
                 }
             }

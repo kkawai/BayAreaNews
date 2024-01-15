@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.kk.android.bayareanews.common.EncodingUtil
 import com.kk.android.bayareanews.common.ShareUtil
 import com.kk.android.bayareanews.domain.model.Rss
 import com.kk.android.bayareanews.domain.use_case.get_rss.SearchState
@@ -75,7 +74,7 @@ private fun _SearchScreen(
                         onSaveFavorite = { onSaveFavorite(rss) },
                         modifier = Modifier
                             .padding(16.dp)
-                            .clickable { onArticleClicked(EncodingUtil.encodeUrlSafe(rss.link)) }
+                            .clickable { onArticleClicked(rss.link) }
                     )
                 }
             }
@@ -97,6 +96,8 @@ fun SearchScreen(
     speechFlow: MutableStateFlow<String>?,
     onSpeechButtonClicked: () -> Unit,
     onPerformSearch: (String) -> Unit,
+    onPerformSearchWhileTyping: (String)->Unit,
+    searchResultFlowWhileTyping: StateFlow<SearchState>,
     onGoBack: () -> Unit,
     title: State<String>,
 ) {
@@ -117,7 +118,10 @@ fun SearchScreen(
                     onSpeechButtonClicked = onSpeechButtonClicked,
                     isExpandedScreen = isExpandedScreen,
                     onGoBack = onGoBack,
-                    onPerformSearch = onPerformSearch
+                    onPerformSearch = onPerformSearch,
+                    onPerformSearchWhileTyping = onPerformSearchWhileTyping,
+                    searchResultFlowWhileTyping = searchResultFlowWhileTyping,
+                    onArticleClicked = onArticleClicked
                 )
             }
         ) { innerPadding ->
@@ -129,7 +133,7 @@ fun SearchScreen(
                 onDeleteFavorite = onDeleteFav,
                 rssListState = rssListState,
                 onGoBack = onGoBack,
-                searchTerm = title,
+                searchTerm = title
             )
         }
 
