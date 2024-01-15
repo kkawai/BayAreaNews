@@ -59,8 +59,8 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -76,19 +76,18 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    //implementation("androidx.compose.foundation:foundation")
-    implementation("androidx.compose.foundation:foundation:1.6.0-beta03")
+    implementation("androidx.compose.foundation:foundation:1.6.0-rc01")
 
     //
     implementation(platform("androidx.compose:compose-bom:2023.06.01"))
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
     //
 
     //kk
     implementation ("com.github.bumptech.glide:glide:4.14.2")
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
-    annotationProcessor("androidx.annotation:annotation:1.7.0")
+    annotationProcessor("androidx.annotation:annotation:1.7.1")
     //implementation("com.google.android.material:material:1.11.0-beta01")
 
     //implementation("com.giphy.sdk:ui:2.3.12")
@@ -107,7 +106,7 @@ dependencies {
 
     // Retrofit with Kotlin serialization Converter
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     //image downloader
     //implementation("io.coil-kt:coil-compose:2.4.0")
@@ -123,7 +122,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")  //has hiltViewModel()
 
 
-    val nav_version = "2.7.5"
+    val nav_version = "2.7.6"
 
     // Kotlin
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
@@ -141,8 +140,8 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
     //material3
-    implementation("androidx.compose.material3:material3-android:1.2.0-alpha11")
-    implementation("androidx.compose.material3:material3-window-size-class:1.2.0-alpha11")
+    implementation("androidx.compose.material3:material3-android:1.2.0-beta02")
+    implementation("androidx.compose.material3:material3-window-size-class:1.2.0-beta02")
     implementation("com.google.accompanist:accompanist-flowlayout:0.33.2-alpha")
 
     implementation("io.coil-kt:coil:2.5.0")

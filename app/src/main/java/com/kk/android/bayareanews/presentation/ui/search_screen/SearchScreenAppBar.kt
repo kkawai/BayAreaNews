@@ -154,7 +154,8 @@ private fun MySearchBar(
             .fillMaxWidth()
             .focusRequester(textFieldFocusRequester),
         query = query,
-        onQueryChange = { query = it },
+        onQueryChange = { query = it
+            Log.i("vvvvv", "DockedSearchBar typed: $query")},
         onSearch = {
             doSearch(query)
         },
