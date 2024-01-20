@@ -38,4 +38,5 @@
     <string name="close">Close</string>
     <string name="mic">Microphone</string>
     <string name="search_for">Find: </string>
+    <string name="playstore_update">Playstore Update</string>
 </resources>

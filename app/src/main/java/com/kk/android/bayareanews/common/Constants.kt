@@ -19,4 +19,5 @@ object Constants {
             "hoodline contact:\ncontact@hoodline.com \n\n" +
             "wired contact:\nmail@wired.com"
     const val SEARCH_TERM_KEY = "searchTerm"
+    const val PLAYSTORE_URL = "https://play.google.com/store/apps/details?id=com.kk.android.bayareanews"
 }
