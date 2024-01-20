@@ -27,7 +27,7 @@ import static com.kk.android.bayareanews.data.local.RssLocalDbHelper.RssColumns.
 public final class RssLocalDbHelper {
 
     private static final String TAG = "RssDb";
-    private static final int DB_VERSION = 4;
+    private static final int DB_VERSION = 8;
     private static RssLocalDbHelper instance;
     private static final String TABLE_RSS = "rss";
     private static final String TABLE_RSS_FAVORITES = "rss_favorites";
@@ -105,71 +105,64 @@ public final class RssLocalDbHelper {
                 MLog.e(TAG, "Error creating database.  Very bad: ", t);
             }
 
+        }
 
+        private void updateOrCreateTables(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
+            try {
+                db.execSQL("ALTER TABLE " + TABLE_RSS + " ADD "
+                        + RssColumns.COL_ORIGINAL_CATEGORY + " TEXT");
+                MLog.i(TAG, TABLE_RSS + " table upgraded. onUpgrade() oldVersion=" +
+                        oldVersion + " newVersion=" + newVersion);
+            } catch (final Throwable t) {
+                MLog.i(TAG, "updateOrCreateTables (a): " + t);
+            }
 
-//         try {
-//            db.execSQL(String.format("CREATE INDEX %s ON %s(%s);", TABLE_NAME + "_artist_name_index", TABLE_NAME, RssColumns.COL_ARTIST_NAME));
-//         } catch (final Throwable t) {
-//            MLog.e(TAG, "Error creating database index: ", t);
-//         }
+            try {
+                db.execSQL("ALTER TABLE " + TABLE_RSS + " ADD "
+                        + RssColumns.COL_ARTICLE_ID + " TEXT");
+                MLog.i(TAG, TABLE_RSS + " table upgraded. onUpgrade() oldVersion=" +
+                        oldVersion + " newVersion=" + newVersion);
+            } catch (final Throwable t) {
+                MLog.i(TAG, "updateOrCreateTables (b): " + t);
+            }
+
+            //exact copy of TABLE_RSS.  needed since daily articles don't last.
+            try {
+                db.execSQL("CREATE TABLE " + TABLE_RSS_FAVORITES + " (" + RssColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        + RssColumns.COL_ARTICLE_ID + " TEXT, "
+                        + RssColumns.COL_AUTHOR + " TEXT, "
+                        + RssColumns.COL_CATEGORY + " TEXT, "
+                        + RssColumns.COL_ORIGINAL_CATEGORY + " TEXT, "
+                        + RssColumns.COL_DESCR + " TEXT, " + RssColumns.COL_IMAGE_URL + " TEXT, "
+                        + RssColumns.COL_LINK + " TEXT, "
+                        + RssColumns.COL_PUB_DATE + " INTEGER DEFAULT 0, "
+                        + COL_TITLE + " TEXT, "
+                        + RssColumns.COL_VIDEO_URL + " TEXT);");
+            } catch (final Throwable t) {
+                MLog.i(TAG, "updateOrCreateTables (c): " + t);
+            }
+            try {
+                db.execSQL("ALTER TABLE " + TABLE_RSS + " ADD "
+                        + RssColumns.COL_PUBLISHER + " TEXT");
+                MLog.i(TAG, TABLE_RSS + " table upgraded. onUpgrade() oldVersion=" +
+                        oldVersion + " newVersion=" + newVersion);
+            } catch (final Throwable t) {
+                MLog.i(TAG, "updateOrCreateTables (d): " + t);
+            }
+
+            try {
+                db.execSQL("ALTER TABLE " + TABLE_RSS_FAVORITES + " ADD "
+                        + RssColumns.COL_PUBLISHER + " TEXT");
+                MLog.i(TAG, TABLE_RSS_FAVORITES + " table upgraded. onUpgrade() oldVersion=" +
+                        oldVersion + " newVersion=" + newVersion);
+            } catch (final Throwable t) {
+                MLog.i(TAG, "updateOrCreateTables (e): " + t);
+            }
         }
 
         @Override
         public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
-            if (newVersion == 2) {
-                try {
-                    db.execSQL("ALTER TABLE " + TABLE_RSS + " ADD "
-                            + RssColumns.COL_ORIGINAL_CATEGORY + " TEXT");
-                    MLog.i(TAG, TABLE_RSS + " table upgraded. onUpgrade() oldVersion=" +
-                            oldVersion + " newVersion=" + newVersion);
-                } catch (final Exception e) {
-                    MLog.e(TAG, "Error in altering users table: ", e);
-                }
-            } else if (newVersion == 3) {
-
-                try {
-                    db.execSQL("ALTER TABLE " + TABLE_RSS + " ADD "
-                            + RssColumns.COL_ARTICLE_ID + " TEXT");
-                    MLog.i(TAG, TABLE_RSS + " table upgraded. onUpgrade() oldVersion=" +
-                            oldVersion + " newVersion=" + newVersion);
-                } catch (final Exception e) {
-                    MLog.e(TAG, "Error in altering users table: ", e);
-                }
-
-                //exact copy of TABLE_RSS.  needed since daily articles don't last.
-                try {
-                    db.execSQL("CREATE TABLE " + TABLE_RSS_FAVORITES + " (" + RssColumns.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                            + RssColumns.COL_ARTICLE_ID + " TEXT, "
-                            + RssColumns.COL_AUTHOR + " TEXT, "
-                            + RssColumns.COL_CATEGORY + " TEXT, "
-                            + RssColumns.COL_ORIGINAL_CATEGORY + " TEXT, "
-                            + RssColumns.COL_DESCR + " TEXT, " + RssColumns.COL_IMAGE_URL + " TEXT, "
-                            + RssColumns.COL_LINK + " TEXT, "
-                            + RssColumns.COL_PUB_DATE + " INTEGER DEFAULT 0, "
-                            + COL_TITLE + " TEXT, "
-                            + RssColumns.COL_VIDEO_URL + " TEXT);");
-                } catch (final Throwable t) {
-                    MLog.e(TAG, "Error creating database.  Very bad: ", t);
-                }
-            } else if (newVersion == 4) {
-                try {
-                    db.execSQL("ALTER TABLE " + TABLE_RSS + " ADD "
-                            + RssColumns.COL_PUBLISHER + " TEXT");
-                    MLog.i(TAG, TABLE_RSS + " table upgraded. onUpgrade() oldVersion=" +
-                            oldVersion + " newVersion=" + newVersion);
-                } catch (final Exception e) {
-                    MLog.e(TAG, "Error in altering users table: ", e);
-                }
-
-                try {
-                    db.execSQL("ALTER TABLE " + TABLE_RSS_FAVORITES + " ADD "
-                            + RssColumns.COL_PUBLISHER + " TEXT");
-                    MLog.i(TAG, TABLE_RSS_FAVORITES + " table upgraded. onUpgrade() oldVersion=" +
-                            oldVersion + " newVersion=" + newVersion);
-                } catch (final Exception e) {
-                    MLog.e(TAG, "Error in altering users table: ", e);
-                }
-            }
+            updateOrCreateTables(db, oldVersion, newVersion );
         }
     }
 
