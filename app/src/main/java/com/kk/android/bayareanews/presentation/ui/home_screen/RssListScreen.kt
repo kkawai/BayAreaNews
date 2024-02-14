@@ -1,6 +1,9 @@
 package com.kk.android.bayareanews.presentation.ui.home_screen
 
+import android.app.Application
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -38,6 +41,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -68,6 +72,11 @@ import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
 import com.kk.android.bayareanews.presentation.ui.common.ImageCard
 import com.kk.android.bayareanews.presentation.ui.common.LoadingScreen
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
+import com.tapresearch.tapsdk.TapResearch
+import com.tapresearch.tapsdk.callback.TRContentCallback
+import com.tapresearch.tapsdk.callback.TRErrorCallback
+import com.tapresearch.tapsdk.models.TRError
+import com.tapresearch.tapsdk.models.TRPlacement
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -86,6 +95,7 @@ private fun shareArticle(context: Context, url: String) {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 private fun _RssListScreen(
+    tapInitState: StateFlow<Boolean>,
     onGetRss: () -> Unit,
     onRefresh: () -> Unit,
     onSaveFavorite: (rss: Rss) -> Unit,
@@ -109,6 +119,7 @@ private fun _RssListScreen(
 
     val listState = rssListState.collectAsState()
     val featuredListState = featuredState.collectAsState()
+    val tapIsReady = tapInitState.collectAsState()
 
     if (listState.value.isLoading) {
         LoadingScreen()
@@ -125,7 +136,17 @@ private fun _RssListScreen(
                 .pullRefresh(pullRefreshState)
         ) {
 
+            val isTapHomeAvailable: MutableState<Boolean> =
+                rememberSaveable { mutableStateOf(false) }
+
             LazyColumn(modifier = modifier.fillMaxSize()) {
+
+                if (tapIsReady.value) {
+                    checkHomePlacementAvailable(context, isTapHomeAvailable)
+                    if (isTapHomeAvailable.value) {
+
+                    }
+                }
 
                 if (listState.value.topRss.title?.isNotEmpty() ?: false) {
                     item {
@@ -185,7 +206,8 @@ private fun _RssListScreen(
 
                 items(listState.value.rssList) { rss ->
                     ImageCard(
-                        expandedByDefault = MainApp.app.remoteConfigMap.get(Constants.MAIN_CARDS_EXPANDED)?.asBoolean()?:true,
+                        expandedByDefault = MainApp.app.remoteConfigMap.get(Constants.MAIN_CARDS_EXPANDED)
+                            ?.asBoolean() ?: true,
                         rss = rss,
                         isFavorite = listState.value.favoritesMap.containsKey(rss.articleId),
                         onArticleShared = { shareArticle(context, rss.link) },
@@ -204,6 +226,44 @@ private fun _RssListScreen(
                 modifier = Modifier.align(Alignment.TopCenter)
             )
         }
+    }
+}
+
+private fun checkHomePlacementAvailable(
+    context: Context,
+    isTapHomeAvailable: MutableState<Boolean>
+) {
+    val application = context.applicationContext as Application
+    if (TapResearch.canShowContentForPlacement(
+            "home-screen",
+            errorCallback = object : TRErrorCallback {
+                override fun onTapResearchDidError(trError: TRError) {
+                    trError.description?.let {
+                        Log.e("TRERROR", it)
+                        Toast.makeText(context, "Home not available", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            },
+        )
+    ) {
+        Toast.makeText(context, "Home available", Toast.LENGTH_SHORT).show()
+        isTapHomeAvailable.value = true
+        TapResearch.showContentForPlacement("home-screen", application,
+            contentCallback = object : TRContentCallback {
+                override fun onTapResearchContentShown(placement: String) {
+                    //tapResearchDidDismiss(placement)
+                }
+
+                override fun onTapResearchContentDismissed(placement: String) {
+                    //tapResearchContentShown(placement)
+                }
+            },
+            errorCallback = object : TRErrorCallback {
+                override fun onTapResearchDidError(trError: TRError) {
+                    //showErrorToast(trError)
+                }
+            }
+        )
     }
 }
 
@@ -344,6 +404,7 @@ private fun FeaturedRssSection(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RssListScreen(
+    tapInitState: StateFlow<Boolean>,
     isExpandedScreen: Boolean,
     openDrawer: () -> Unit,
     onGetRss: () -> Unit,
@@ -357,9 +418,9 @@ fun RssListScreen(
     onArticleClicked: (articleLink: String) -> Unit,
     modifier: Modifier = Modifier,
     speechFlow: MutableStateFlow<String>?,
-    onSpeechButtonClicked: ()->Unit,
-    onPerformSearch: (String)->Unit,
-    onPerformSearchWhileTyping: (String)->Unit,
+    onSpeechButtonClicked: () -> Unit,
+    onPerformSearch: (String) -> Unit,
+    onPerformSearchWhileTyping: (String) -> Unit,
     searchResultFlowWhileTyping: StateFlow<SearchState>,
 ) {
     Surface(
@@ -372,21 +433,23 @@ fun RssListScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 MyExpandableAppBar(
-                                   title = stringResource(id = R.string.app_name),
-                                   scrollBehavior = scrollBehavior,
-                                   speechFlow = speechFlow,
-                                   onSpeechButtonClicked = onSpeechButtonClicked,
-                                   isExpandedScreen = isExpandedScreen,
-                                   onFavoritesClicked = onFavoritesClicked,
-                                   openDrawer = openDrawer,
-                                   onPerformSearch = onPerformSearch,
-                                   onPerformSearchWhileTyping = onPerformSearchWhileTyping,
-                                   searchResultFlowWhileTyping = searchResultFlowWhileTyping,
-                                   onArticleClicked = onArticleClicked)
+                    title = stringResource(id = R.string.app_name),
+                    scrollBehavior = scrollBehavior,
+                    speechFlow = speechFlow,
+                    onSpeechButtonClicked = onSpeechButtonClicked,
+                    isExpandedScreen = isExpandedScreen,
+                    onFavoritesClicked = onFavoritesClicked,
+                    openDrawer = openDrawer,
+                    onPerformSearch = onPerformSearch,
+                    onPerformSearchWhileTyping = onPerformSearchWhileTyping,
+                    searchResultFlowWhileTyping = searchResultFlowWhileTyping,
+                    onArticleClicked = onArticleClicked
+                )
             }
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)
             _RssListScreen(
+                tapInitState,
                 onArticleClicked = onArticleClicked,
                 modifier = screenModifier,
                 onGetRss = onGetRss,

@@ -25,9 +25,11 @@ import com.kk.android.bayareanews.presentation.ui.search_screen.SearchScreen
 import com.kk.android.bayareanews.presentation.ui.search_screen.SearchViewModel
 import com.kk.android.bayareanews.presentation.ui.search_screen.SearchWhileTypingViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun BayAreaNewsNavHost(
+    tapInitState: StateFlow<Boolean>,
     navigationActions: BayAreaNewsNavigationActions,
     isExpandedScreen: Boolean,
     modifier: Modifier = Modifier,
@@ -49,6 +51,7 @@ fun BayAreaNewsNavHost(
             val viewModel = hiltViewModel<RssViewModel>()
             val searchViewModel = hiltViewModel<SearchViewModel>()
             RssListScreen(
+                tapInitState,
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = openDrawer,
                 onGetRss = { viewModel.getRssList() },

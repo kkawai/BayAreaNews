@@ -25,11 +25,13 @@ import com.kk.android.bayareanews.presentation.ui.common.BackPressHandler
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BayAreaNewsApp(
+    tapInitState: StateFlow<Boolean>,
     widthSizeClass: WindowWidthSizeClass,
     speechFlow: MutableStateFlow<String>?,
     onSpeechButtonClicked: ()->Unit
@@ -82,6 +84,7 @@ fun BayAreaNewsApp(
                     )
                 }
                 BayAreaNewsNavHost(
+                    tapInitState,
                     navigationActions = navigationActions,
                     isExpandedScreen = isExpandedScreen,
                     navController = navController,
