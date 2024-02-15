@@ -28,13 +28,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kk.android.bayareanews.R
 import com.tapresearch.tapsdk.models.TRReward
-import kotlinx.coroutines.flow.update
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RewardsScreen(
-    rewardViewModel: RewardViewModel,
+    rewards: List<TRReward>,
+    onRewardsShown: ()->Unit,
     isExpandedScreen: Boolean,
     openDrawer: () -> Unit,
     onGoBackClicked: () -> Unit
@@ -44,7 +44,6 @@ fun RewardsScreen(
         color = MaterialTheme.colorScheme.background
     ) {
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-        rewardViewModel.hideRewardScreen()
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
@@ -84,21 +83,17 @@ fun RewardsScreen(
             }
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)
-            val set = HashSet<String>()
             Column(screenModifier) {
                 Spacer(Modifier.padding(16.dp))
-                if (rewardViewModel.getRewards().isNotEmpty()) {
-                    for (reward in rewardViewModel.getRewards()) {
-                        if (!set.contains(reward.transactionIdentifier)) {
-                            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                                DisplayRewardItem(reward = reward)
-                            }
-                        } else {
-                            reward.transactionIdentifier?.let { set.add(it) }
+                if (rewards.isNotEmpty()) {
+                    for (reward in rewards) {
+                        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                            DisplayRewardItem(reward = reward)
                         }
                     }
                 }
             }
+            onRewardsShown()
         }
     }
 }

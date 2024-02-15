@@ -20,7 +20,4 @@ object Constants {
             "wired contact:\nmail@wired.com"
     const val SEARCH_TERM_KEY = "searchTerm"
     const val PLAYSTORE_URL = "https://play.google.com/store/apps/details?id=com.kk.android.bayareanews"
-
-    const val TR_SURVEY_WALL_PL = "survey-wall"
-    const val TR_EARN_CENTER_PL = "earn-center"
 }

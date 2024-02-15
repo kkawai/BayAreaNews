@@ -27,7 +27,6 @@ import com.kk.android.bayareanews.presentation.ui.search_screen.SearchScreen
 import com.kk.android.bayareanews.presentation.ui.search_screen.SearchViewModel
 import com.kk.android.bayareanews.presentation.ui.search_screen.SearchWhileTypingViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun BayAreaNewsNavHost(
@@ -39,7 +38,7 @@ fun BayAreaNewsNavHost(
     openDrawer: () -> Unit = {},
     startDestination: String = Screen.HomeScreen.route,
     speechFlow: MutableStateFlow<String>?,
-    onSpeechButtonClicked: ()->Unit
+    onSpeechButtonClicked: () -> Unit
 ) {
 
     NavHost(
@@ -79,10 +78,11 @@ fun BayAreaNewsNavHost(
                         navigationActions.navigateToSearch(searchTerm)
                     }
                 },
-                onPerformSearchWhileTyping = {searchTerm ->
+                onPerformSearchWhileTyping = { searchTerm ->
                     searchViewModel.searchRss(searchTerm)
-                                             },
-                searchResultFlowWhileTyping = searchViewModel.rssListState)
+                },
+                searchResultFlowWhileTyping = searchViewModel.rssListState
+            )
         }
 
         composable(
@@ -139,7 +139,8 @@ fun BayAreaNewsNavHost(
             Screen.RewardsScreen.route
         ) {
             RewardsScreen(
-                rewardViewModel = rewardViewModel,
+                rewardViewModel.getRewards(),
+                { rewardViewModel.hideRewardScreen() },
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = openDrawer,
                 onGoBackClicked = { navController.popBackStack() })
@@ -175,12 +176,13 @@ fun BayAreaNewsNavHost(
                         viewModel.searchRss(it)
                     }
                 },
-                onPerformSearchWhileTyping = {searchTerm ->
+                onPerformSearchWhileTyping = { searchTerm ->
                     searchWhileTypingViewModel.searchRss(searchTerm)
                 },
                 searchResultFlowWhileTyping = searchWhileTypingViewModel.rssListState,
                 onGoBack = { navController.popBackStack() },
-                title = title)
+                title = title
+            )
         }
 
     }

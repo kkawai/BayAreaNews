@@ -1,9 +1,6 @@
 package com.kk.android.bayareanews.presentation.ui.home_screen
 
-import android.app.Application
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -42,7 +39,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -73,10 +69,6 @@ import com.kk.android.bayareanews.presentation.ui.common.ErrorScreen
 import com.kk.android.bayareanews.presentation.ui.common.ImageCard
 import com.kk.android.bayareanews.presentation.ui.common.LoadingScreen
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
-import com.tapresearch.tapsdk.TapResearch
-import com.tapresearch.tapsdk.callback.TRContentCallback
-import com.tapresearch.tapsdk.callback.TRErrorCallback
-import com.tapresearch.tapsdk.models.TRError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -114,12 +106,9 @@ private fun _RssListScreen(
             onRefresh()
         }
     )
-
     val context = LocalContext.current
-
     val listState = rssListState.collectAsState()
     val featuredListState = featuredState.collectAsState()
-    val tapIsReadyState = rewardViewModel.trInitReady.collectAsState()
 
     if (listState.value.isLoading) {
         LoadingScreen()
@@ -136,28 +125,27 @@ private fun _RssListScreen(
                 .pullRefresh(pullRefreshState)
         ) {
 
-            val showHomeOnce: MutableState<Boolean> =
-                rememberSaveable { mutableStateOf(false) }
-            val earnCenterAvailable: MutableState<Boolean> =
-                rememberSaveable { mutableStateOf(false) }
-            val surveyWallAvailable: MutableState<Boolean> =
-                rememberSaveable { mutableStateOf(false) }
+            val isHomePlacementAvailable =
+                rewardViewModel.isHomePlacementAvailable.collectAsState()
+            val isEarnCenterPlacementAvailable =
+                rewardViewModel.isEarnCenterPlacementAvailable.collectAsState()
+            val isSurveyWallPlacementAvailable =
+                rewardViewModel.isSurveyWallPlacementAvailable.collectAsState()
+            var isHomePlacementShownOnce by rememberSaveable { mutableStateOf(false) }
 
-            if (tapIsReadyState.value) {
-                if (!showHomeOnce.value) {
-                    showHomeOnce.value = true
-                    checkHomePlacementAvailable(context)
-                    checkButtonPlacementAvailable(context, "earn-center", earnCenterAvailable)
-                    checkButtonPlacementAvailable(context, "survey-wall", surveyWallAvailable)
+            if (isHomePlacementAvailable.value) {
+                if (!isHomePlacementShownOnce) {
+                    isHomePlacementShownOnce = true
+                    rewardViewModel.showHomeScreenPlacement()
                 }
             }
 
             LazyColumn(modifier = modifier.fillMaxSize()) {
 
-                if (earnCenterAvailable.value) {
+                if (isEarnCenterPlacementAvailable.value) {
                     item {
                         Button(
-                            onClick = { showButtonPlacement(context, "earn-center") },
+                            onClick = { rewardViewModel.showEarnCenterPlacement() },
                             modifier = Modifier.padding(8.dp),
                         ) {
                             Text(text = "Earn Center")
@@ -165,10 +153,10 @@ private fun _RssListScreen(
                     }
                 }
 
-                if (surveyWallAvailable.value) {
+                if (isSurveyWallPlacementAvailable.value) {
                     item {
                         Button(
-                            onClick = { showButtonPlacement(context, "survey-wall") },
+                            onClick = { rewardViewModel.showSurveyWallPlacement() },
                             modifier = Modifier.padding(8.dp),
                         ) {
                             Text(text = "Survey Wall")
@@ -255,77 +243,6 @@ private fun _RssListScreen(
                 modifier = Modifier.align(Alignment.TopCenter)
             )
         }
-    }
-}
-
-private fun checkButtonPlacementAvailable(context: Context, placement: String, isPlacementAvailable: MutableState<Boolean>) {
-    if (TapResearch.canShowContentForPlacement(
-            placement,
-            errorCallback = object : TRErrorCallback {
-                override fun onTapResearchDidError(trError: TRError) {
-                    trError.description?.let {
-                        Log.e("TRERROR", it)
-                        //Toast.makeText(context, "$placement not available", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            },
-        )
-    ) {
-        isPlacementAvailable.value = true
-    }
-}
-
-private fun showButtonPlacement(context: Context, placement: String) {
-    val application = context.applicationContext as Application
-    TapResearch.showContentForPlacement(placement, application,
-        contentCallback = object : TRContentCallback {
-            override fun onTapResearchContentShown(placement: String) {
-                //tapResearchDidDismiss(placement)
-            }
-
-            override fun onTapResearchContentDismissed(placement: String) {
-                //tapResearchContentShown(placement)
-            }
-        },
-        errorCallback = object : TRErrorCallback {
-            override fun onTapResearchDidError(trError: TRError) {
-                //showErrorToast(trError)
-            }
-        }
-    )
-}
-
-private fun checkHomePlacementAvailable(context: Context) {
-    val application = context.applicationContext as Application
-    if (TapResearch.canShowContentForPlacement(
-            "home-screen",
-            errorCallback = object : TRErrorCallback {
-                override fun onTapResearchDidError(trError: TRError) {
-                    trError.description?.let {
-                        Log.e("TRERROR", it)
-                        Toast.makeText(context, "Home not available", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            },
-        )
-    ) {
-        //Toast.makeText(context, "Home available", Toast.LENGTH_SHORT).show()
-        TapResearch.showContentForPlacement("home-screen", application,
-            contentCallback = object : TRContentCallback {
-                override fun onTapResearchContentShown(placement: String) {
-                    //tapResearchDidDismiss(placement)
-                }
-
-                override fun onTapResearchContentDismissed(placement: String) {
-                    //tapResearchContentShown(placement)
-                }
-            },
-            errorCallback = object : TRErrorCallback {
-                override fun onTapResearchDidError(trError: TRError) {
-                    //showErrorToast(trError)
-                }
-            }
-        )
     }
 }
 
@@ -476,7 +393,7 @@ fun RssListScreen(
     rssListState: StateFlow<RssListState>,
     featuredState: StateFlow<RssFeaturedState>,
     onPrivacyPolicyClicked: () -> Unit,
-    onRewardsClicked: ()->Unit,
+    onRewardsClicked: () -> Unit,
     onFavoritesClicked: () -> Unit,
     onArticleClicked: (articleLink: String) -> Unit,
     modifier: Modifier = Modifier,

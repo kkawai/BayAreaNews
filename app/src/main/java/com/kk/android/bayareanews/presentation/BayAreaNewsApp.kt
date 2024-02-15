@@ -57,10 +57,12 @@ fun BayAreaNewsApp(
                 coroutineScope.launch { sizeAwareDrawerState.close() }
             })
         }
-        val showRewardScreenState = rewardViewModel.showRewardsStateFlow.collectAsState()
-        if (showRewardScreenState.value) {
+
+        val showRewardScreenStateFlow = rewardViewModel.showRewardScreenStateFlow.collectAsState()
+        if (showRewardScreenStateFlow.value) {
             navigationActions.navigateToRewards()
         }
+
         ModalNavigationDrawer(
             drawerContent = {
                 AppDrawer(
