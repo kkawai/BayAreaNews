@@ -14,6 +14,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -59,7 +60,10 @@ fun BayAreaNewsApp(
                 coroutineScope.launch { sizeAwareDrawerState.close() }
             })
         }
-
+        val showRewardScreenState = rewardViewModel.showRewardScreen.collectAsState()
+        if (showRewardScreenState.value) {
+            navigationActions.navigateToRewards()
+        }
         ModalNavigationDrawer(
             drawerContent = {
                 AppDrawer(

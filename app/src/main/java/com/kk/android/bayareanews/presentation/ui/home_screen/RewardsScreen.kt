@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kk.android.bayareanews.R
 import com.tapresearch.tapsdk.models.TRReward
+import kotlinx.coroutines.flow.update
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +43,7 @@ fun RewardsScreen(
         color = MaterialTheme.colorScheme.background
     ) {
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-
+        rewardViewModel.showRewardScreen.update { false }
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {

@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
     private val speechFlow = MutableStateFlow("")
     private val rewardsFlow = MutableStateFlow(RewardsState())
     private val _rewardsFlow = rewardsFlow.asStateFlow()
+    val rewardViewModel = RewardViewModel()
 
     private val getSpeech = registerForActivityResult(GetSpeech()) { speechText: String ->
         speechFlow.update {
@@ -56,10 +57,9 @@ class MainActivity : ComponentActivity() {
         //WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
-            val rewardViewModel = RewardViewModel()
             val rewardState = _rewardsFlow.collectAsState()
             if (rewardState.value.rewardList.isNotEmpty()) {
-                rewardViewModel.rewards = rewardState.value.rewardList
+                rewardViewModel.addRewards(rewardState.value.rewardList)
             }
             BayAreaNewsApp(rewardViewModel, tapInitState, widthSizeClass, speechFlow, { getSpeech.launch(Unit) })
         }
@@ -83,12 +83,12 @@ class MainActivity : ComponentActivity() {
                     rewardsFlow.update {
                         it.copy(rewardList = rewards)
                     }
+                    rewardViewModel.showRewardScreen.update { true }
                 }
             },
             errorCallback =
             object : TRErrorCallback {
                 override fun onTapResearchDidError(trError: TRError) {
-                    //showErrorToast(trError)
                     Toast.makeText(this@MainActivity, "TapError: $trError", Toast.LENGTH_SHORT).show()
                 }
             },
@@ -97,7 +97,6 @@ class MainActivity : ComponentActivity() {
                 override fun onTapResearchSdkReady() {
                     Log.d(TAG, "SDK is ready")
                     // now that the SDK is ready, we can show content
-                    Toast.makeText(this@MainActivity, "Tap Ready", Toast.LENGTH_SHORT).show()
                     tapInitState.update { true }
                 }
             },
