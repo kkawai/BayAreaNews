@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun BayAreaNewsNavHost(
     rewardViewModel: RewardViewModel,
-    tapInitState: StateFlow<Boolean>,
     navigationActions: BayAreaNewsNavigationActions,
     isExpandedScreen: Boolean,
     modifier: Modifier = Modifier,
@@ -55,7 +54,6 @@ fun BayAreaNewsNavHost(
             val searchViewModel = hiltViewModel<SearchViewModel>()
             RssListScreen(
                 rewardViewModel,
-                tapInitState,
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = openDrawer,
                 onGetRss = { viewModel.getRssList() },

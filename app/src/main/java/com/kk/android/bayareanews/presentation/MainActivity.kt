@@ -8,13 +8,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.RemoteConfig
 import com.kk.android.bayareanews.common.speech.GetSpeech
 import com.kk.android.bayareanews.presentation.ui.home_screen.RewardViewModel
-import com.kk.android.bayareanews.presentation.ui.home_screen.RewardsState
 import com.tapresearch.tapsdk.TapInitOptions
 import com.tapresearch.tapsdk.TapResearch
 import com.tapresearch.tapsdk.callback.TRErrorCallback
@@ -26,7 +24,6 @@ import com.tapresearch.tapsdk.models.TRError
 import com.tapresearch.tapsdk.models.TRReward
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.lang.ref.WeakReference
 
@@ -36,12 +33,9 @@ class MainActivity : ComponentActivity() {
 
     private val TAG = "MainActvty" 
     private val myUserIdentifier = "theinterviewer-1"
-    //private val myUserIdentifier2 = "theinterviewer-2"
-    //private val myUserIdentifier3 = "theinterviewer-3"
-    private val tapInitState = MutableStateFlow(false)
+    //private val myUserIdentifier = "theinterviewer-2"
+    //private val myUserIdentifier = "theinterviewer-3"
     private val speechFlow = MutableStateFlow("")
-    private val rewardsFlow = MutableStateFlow(RewardsState())
-    private val _rewardsFlow = rewardsFlow.asStateFlow()
     val rewardViewModel = RewardViewModel()
 
     private val getSpeech = registerForActivityResult(GetSpeech()) { speechText: String ->
@@ -57,11 +51,7 @@ class MainActivity : ComponentActivity() {
         //WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
-            val rewardState = _rewardsFlow.collectAsState()
-            if (rewardState.value.rewardList.isNotEmpty()) {
-                rewardViewModel.addRewards(rewardState.value.rewardList)
-            }
-            BayAreaNewsApp(rewardViewModel, tapInitState, widthSizeClass, speechFlow, { getSpeech.launch(Unit) })
+            BayAreaNewsApp(rewardViewModel, widthSizeClass, speechFlow, { getSpeech.launch(Unit) })
         }
         RemoteConfig(lifecycleScope, WeakReference<Activity>(this)).fetch()
         initTap()
@@ -77,13 +67,7 @@ class MainActivity : ComponentActivity() {
             rewardCallback =
             object : TRRewardCallback {
                 override fun onTapResearchDidReceiveRewards(rewards: MutableList<TRReward>) {
-                    //showRewardToast(rewards)
-                    //Toast.makeText(this@MainActivity, "Rewarded: $rewards", Toast.LENGTH_SHORT).show()
-                    Log.i(TAG,"Rewarded: $rewards")
-                    rewardsFlow.update {
-                        it.copy(rewardList = rewards)
-                    }
-                    rewardViewModel.showRewardScreen.update { true }
+                    rewardViewModel.addRewards(rewards)
                 }
             },
             errorCallback =
@@ -97,7 +81,7 @@ class MainActivity : ComponentActivity() {
                 override fun onTapResearchSdkReady() {
                     Log.d(TAG, "SDK is ready")
                     // now that the SDK is ready, we can show content
-                    tapInitState.update { true }
+                    rewardViewModel.setReady()
                 }
             },
             tapDataCallback = object: TRQQDataCallback {

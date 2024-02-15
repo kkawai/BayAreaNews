@@ -96,7 +96,6 @@ private fun shareArticle(context: Context, url: String) {
 @Composable
 private fun _RssListScreen(
     rewardViewModel: RewardViewModel,
-    tapInitState: StateFlow<Boolean>,
     onGetRss: () -> Unit,
     onRefresh: () -> Unit,
     onSaveFavorite: (rss: Rss) -> Unit,
@@ -120,7 +119,7 @@ private fun _RssListScreen(
 
     val listState = rssListState.collectAsState()
     val featuredListState = featuredState.collectAsState()
-    val tapIsReadyState = tapInitState.collectAsState()
+    val tapIsReadyState = rewardViewModel.trInitReady.collectAsState()
 
     if (listState.value.isLoading) {
         LoadingScreen()
@@ -468,7 +467,6 @@ private fun FeaturedRssSection(
 @Composable
 fun RssListScreen(
     rewardViewModel: RewardViewModel,
-    tapInitState: StateFlow<Boolean>,
     isExpandedScreen: Boolean,
     openDrawer: () -> Unit,
     onGetRss: () -> Unit,
@@ -516,7 +514,6 @@ fun RssListScreen(
             val screenModifier = Modifier.padding(innerPadding)
             _RssListScreen(
                 rewardViewModel,
-                tapInitState,
                 onArticleClicked = onArticleClicked,
                 modifier = screenModifier,
                 onGetRss = onGetRss,

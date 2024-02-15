@@ -105,6 +105,8 @@ public final class RssLocalDbHelper {
                 MLog.e(TAG, "Error creating database.  Very bad: ", t);
             }
 
+            updateOrCreateTables(db,0,0);
+
         }
 
         private void updateOrCreateTables(final SQLiteDatabase db, final int oldVersion, final int newVersion) {

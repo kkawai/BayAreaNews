@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CurrencyBitcoin
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,7 +44,7 @@ fun RewardsScreen(
         color = MaterialTheme.colorScheme.background
     ) {
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-        rewardViewModel.showRewardScreen.update { false }
+        rewardViewModel.hideRewardScreen()
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
@@ -86,8 +87,8 @@ fun RewardsScreen(
             val set = HashSet<String>()
             Column(screenModifier) {
                 Spacer(Modifier.padding(16.dp))
-                if (rewardViewModel.rewards.isNotEmpty()) {
-                    for (reward in rewardViewModel.rewards) {
+                if (rewardViewModel.getRewards().isNotEmpty()) {
+                    for (reward in rewardViewModel.getRewards()) {
                         if (!set.contains(reward.transactionIdentifier)) {
                             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
                                 DisplayRewardItem(reward = reward)
@@ -104,6 +105,12 @@ fun RewardsScreen(
 
 @Composable
 private fun DisplayRewardItem(reward: TRReward) {
+    Icon(
+        imageVector = Icons.Filled.CurrencyBitcoin,
+        null,
+        Modifier.padding(vertical = 8.dp),
+        tint = MaterialTheme.colorScheme.primary
+    )
     reward.currencyName?.let { Text(modifier = Modifier.padding(8.dp), text = it) }
     reward.rewardAmount?.let { Text(modifier = Modifier.padding(8.dp), text = ""+it) }
     reward.placementTag?.let { Text(modifier = Modifier.padding(8.dp), text = it) }
