@@ -15,8 +15,10 @@ import com.kk.android.bayareanews.common.speech.GetSpeech
 import com.tapresearch.tapsdk.TapInitOptions
 import com.tapresearch.tapsdk.TapResearch
 import com.tapresearch.tapsdk.callback.TRErrorCallback
+import com.tapresearch.tapsdk.callback.TRQQDataCallback
 import com.tapresearch.tapsdk.callback.TRRewardCallback
 import com.tapresearch.tapsdk.callback.TRSdkReadyCallback
+import com.tapresearch.tapsdk.models.QuickQuestion
 import com.tapresearch.tapsdk.models.TRError
 import com.tapresearch.tapsdk.models.TRReward
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,7 +60,6 @@ class MainActivity : ComponentActivity() {
     private fun initTap() {
         Log.d(TAG, "API Token: ${getString(R.string.tap_api_token)}")
         Log.d(TAG, "User identifier: $myUserIdentifier")
-
         TapResearch.initialize(
             apiToken = getString(R.string.tap_api_token),
             userIdentifier = myUserIdentifier,
@@ -68,6 +69,7 @@ class MainActivity : ComponentActivity() {
                 override fun onTapResearchDidReceiveRewards(rewards: MutableList<TRReward>) {
                     //showRewardToast(rewards)
                     Toast.makeText(this@MainActivity, "Rewarded: $rewards", Toast.LENGTH_SHORT).show()
+                    Log.i(TAG,"Rewarded: $rewards")
                 }
             },
             errorCallback =
@@ -86,7 +88,12 @@ class MainActivity : ComponentActivity() {
                     tapInitState.update { true }
                 }
             },
-            // this is optional
+            tapDataCallback = object: TRQQDataCallback {
+                override fun onQuickQuestionDataReceived(data: QuickQuestion) {
+
+                }
+
+            },
             initOptions =
             TapInitOptions(
                 userAttributes =

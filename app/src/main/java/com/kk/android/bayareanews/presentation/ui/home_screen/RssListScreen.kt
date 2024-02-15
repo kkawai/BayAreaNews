@@ -119,7 +119,7 @@ private fun _RssListScreen(
 
     val listState = rssListState.collectAsState()
     val featuredListState = featuredState.collectAsState()
-    val tapIsReady = tapInitState.collectAsState()
+    val tapIsReadyState = tapInitState.collectAsState()
 
     if (listState.value.isLoading) {
         LoadingScreen()
@@ -143,10 +143,10 @@ private fun _RssListScreen(
             val surveyWallAvailable: MutableState<Boolean> =
                 rememberSaveable { mutableStateOf(false) }
 
-            if (tapIsReady.value) {
+            if (tapIsReadyState.value) {
                 if (!showHomeOnce.value) {
-                    checkHomePlacementAvailable(context)
                     showHomeOnce.value = true
+                    checkHomePlacementAvailable(context)
                     checkButtonPlacementAvailable(context, "earn-center", earnCenterAvailable)
                     checkButtonPlacementAvailable(context, "survey-wall", surveyWallAvailable)
                 }
