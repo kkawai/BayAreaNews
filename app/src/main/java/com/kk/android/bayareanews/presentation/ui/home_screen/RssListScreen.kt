@@ -95,6 +95,7 @@ private fun shareArticle(context: Context, url: String) {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 private fun _RssListScreen(
+    rewardsFlow: StateFlow<RewardsState>,
     tapInitState: StateFlow<Boolean>,
     onGetRss: () -> Unit,
     onRefresh: () -> Unit,
@@ -466,6 +467,7 @@ private fun FeaturedRssSection(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RssListScreen(
+    rewardsFlow: StateFlow<RewardsState>,
     tapInitState: StateFlow<Boolean>,
     isExpandedScreen: Boolean,
     openDrawer: () -> Unit,
@@ -513,6 +515,7 @@ fun RssListScreen(
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)
             _RssListScreen(
+                rewardsFlow,
                 tapInitState,
                 onArticleClicked = onArticleClicked,
                 modifier = screenModifier,

@@ -20,6 +20,7 @@ import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesViewModel
 import com.kk.android.bayareanews.presentation.ui.home_screen.PrivacyPolicyScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RewardsScreen
+import com.kk.android.bayareanews.presentation.ui.home_screen.RewardsState
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssListScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
 import com.kk.android.bayareanews.presentation.ui.search_screen.SearchScreen
@@ -30,6 +31,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun BayAreaNewsNavHost(
+    rewardsFlow: StateFlow<RewardsState>,
     tapInitState: StateFlow<Boolean>,
     navigationActions: BayAreaNewsNavigationActions,
     isExpandedScreen: Boolean,
@@ -52,6 +54,7 @@ fun BayAreaNewsNavHost(
             val viewModel = hiltViewModel<RssViewModel>()
             val searchViewModel = hiltViewModel<SearchViewModel>()
             RssListScreen(
+                rewardsFlow,
                 tapInitState,
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = openDrawer,
@@ -138,6 +141,7 @@ fun BayAreaNewsNavHost(
             Screen.RewardsScreen.route
         ) {
             RewardsScreen(
+                rewardsFlow = rewardsFlow,
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = openDrawer,
                 onGoBackClicked = { navController.popBackStack() })

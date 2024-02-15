@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.RemoteConfig
 import com.kk.android.bayareanews.common.speech.GetSpeech
+import com.kk.android.bayareanews.presentation.ui.home_screen.RewardsState
 import com.tapresearch.tapsdk.TapInitOptions
 import com.tapresearch.tapsdk.TapResearch
 import com.tapresearch.tapsdk.callback.TRErrorCallback
@@ -23,6 +24,7 @@ import com.tapresearch.tapsdk.models.TRError
 import com.tapresearch.tapsdk.models.TRReward
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.lang.ref.WeakReference
 
@@ -35,8 +37,9 @@ class MainActivity : ComponentActivity() {
     //private val myUserIdentifier2 = "theinterviewer-2"
     //private val myUserIdentifier3 = "theinterviewer-3"
     private val tapInitState = MutableStateFlow(false)
-
     private val speechFlow = MutableStateFlow("")
+    private val rewardsFlow = MutableStateFlow(RewardsState())
+    private val _rewardsFlow = rewardsFlow.asStateFlow()
 
     private val getSpeech = registerForActivityResult(GetSpeech()) { speechText: String ->
         speechFlow.update {
@@ -51,7 +54,7 @@ class MainActivity : ComponentActivity() {
         //WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
-            BayAreaNewsApp(tapInitState, widthSizeClass, speechFlow, { getSpeech.launch(Unit) })
+            BayAreaNewsApp(_rewardsFlow, tapInitState, widthSizeClass, speechFlow, { getSpeech.launch(Unit) })
         }
         RemoteConfig(lifecycleScope, WeakReference<Activity>(this)).fetch()
         initTap()
@@ -70,6 +73,9 @@ class MainActivity : ComponentActivity() {
                     //showRewardToast(rewards)
                     Toast.makeText(this@MainActivity, "Rewarded: $rewards", Toast.LENGTH_SHORT).show()
                     Log.i(TAG,"Rewarded: $rewards")
+                    rewardsFlow.update {
+                        it.copy(rewardList = rewards)
+                    }
                 }
             },
             errorCallback =
