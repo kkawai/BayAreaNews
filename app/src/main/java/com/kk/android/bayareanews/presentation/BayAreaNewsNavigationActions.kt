@@ -66,6 +66,15 @@ class BayAreaNewsNavigationActions(navController: NavHostController) {
             restoreState = true
         }
     }
+    val navigateToRewards: () -> Unit = {
+        navController.navigate(Screen.RewardsScreen.route) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
     val navigateToWebView: (url: String) -> Unit = { link ->
         val encodedLink = EncodingUtil.encodeUrlSafe(link)
         navController.navigate(Screen.DetailsScreen.route + "/${encodedLink}") {

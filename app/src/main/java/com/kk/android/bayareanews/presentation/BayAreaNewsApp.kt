@@ -65,6 +65,7 @@ fun BayAreaNewsApp(
                     navigateToFavorites = {navigationActions.navigateToFavorites()},
                     navigateToContactInfo = {navigationActions.navigateToContactInfo()},
                     navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy()},
+                    navigateToRewards = {navigationActions.navigateToRewards()},
                     closeDrawer = { coroutineScope.launch { sizeAwareDrawerState.close() } }
                 )
             },
@@ -80,7 +81,8 @@ fun BayAreaNewsApp(
                         navigateToHome = {navigationActions.navigateToHome()},
                         navigateToFavorites = {navigationActions.navigateToFavorites()},
                         navigateToContactInfo = {navigationActions.navigateToContactInfo()},
-                        navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy}
+                        navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy},
+                        navigateToRewards = {navigationActions.navigateToRewards}
                     )
                 }
                 BayAreaNewsNavHost(

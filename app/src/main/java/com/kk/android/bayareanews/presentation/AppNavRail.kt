@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,7 @@ fun AppNavRail(
     navigateToHome: () -> Unit,
     navigateToFavorites: () -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
+    navigateToRewards: () -> Unit,
     navigateToContactInfo: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -70,6 +72,13 @@ fun AppNavRail(
             label = { Text(stringResource(R.string.privacy_policy_title)) },
             alwaysShowLabel = false
         )
+        NavigationRailItem(
+            selected = currentRoute == Screen.RewardsScreen.route,
+            onClick = navigateToRewards,
+            icon = { Icon(Icons.Filled.MonetizationOn, "Rewards") },
+            label = { Text("Rewards") },
+            alwaysShowLabel = false
+        )
         Spacer(Modifier.weight(1f))
     }
 }
@@ -84,7 +93,8 @@ fun PreviewAppNavRail() {
             navigateToHome = {},
             navigateToFavorites = {},
             navigateToContactInfo = {},
-            navigateToPrivacyPolicy = {}
+            navigateToPrivacyPolicy = {},
+            navigateToRewards = {},
         )
     }
 }

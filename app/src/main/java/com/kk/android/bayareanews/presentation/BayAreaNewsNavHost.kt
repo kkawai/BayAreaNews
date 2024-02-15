@@ -19,6 +19,7 @@ import com.kk.android.bayareanews.presentation.ui.home_screen.ContactInfoScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesViewModel
 import com.kk.android.bayareanews.presentation.ui.home_screen.PrivacyPolicyScreen
+import com.kk.android.bayareanews.presentation.ui.home_screen.RewardsScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssListScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
 import com.kk.android.bayareanews.presentation.ui.search_screen.SearchScreen
@@ -62,6 +63,9 @@ fun BayAreaNewsNavHost(
                 featuredState = viewModel.featuredState,
                 onPrivacyPolicyClicked = {
                     navigationActions.navigateToPrivacyPolicy()
+                },
+                onRewardsClicked = {
+                    navigationActions.navigateToRewards()
                 },
                 onFavoritesClicked = { navigationActions.navigateToFavorites() },
                 onArticleClicked = { link ->
@@ -125,6 +129,15 @@ fun BayAreaNewsNavHost(
             Screen.PrivacyPolicyScreen.route
         ) {
             PrivacyPolicyScreen(
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
+                onGoBackClicked = { navController.popBackStack() })
+        }
+
+        composable(
+            Screen.RewardsScreen.route
+        ) {
+            RewardsScreen(
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = openDrawer,
                 onGoBackClicked = { navController.popBackStack() })
