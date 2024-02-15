@@ -8,10 +8,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.lifecycleScope
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.RemoteConfig
 import com.kk.android.bayareanews.common.speech.GetSpeech
+import com.kk.android.bayareanews.presentation.ui.home_screen.RewardViewModel
 import com.kk.android.bayareanews.presentation.ui.home_screen.RewardsState
 import com.tapresearch.tapsdk.TapInitOptions
 import com.tapresearch.tapsdk.TapResearch
@@ -54,7 +56,12 @@ class MainActivity : ComponentActivity() {
         //WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
-            BayAreaNewsApp(_rewardsFlow, tapInitState, widthSizeClass, speechFlow, { getSpeech.launch(Unit) })
+            val rewardViewModel = RewardViewModel()
+            val rewardState = _rewardsFlow.collectAsState()
+            if (rewardState.value.rewardList.isNotEmpty()) {
+                rewardViewModel.rewards = rewardState.value.rewardList
+            }
+            BayAreaNewsApp(rewardViewModel, tapInitState, widthSizeClass, speechFlow, { getSpeech.launch(Unit) })
         }
         RemoteConfig(lifecycleScope, WeakReference<Activity>(this)).fetch()
         initTap()
@@ -71,7 +78,7 @@ class MainActivity : ComponentActivity() {
             object : TRRewardCallback {
                 override fun onTapResearchDidReceiveRewards(rewards: MutableList<TRReward>) {
                     //showRewardToast(rewards)
-                    Toast.makeText(this@MainActivity, "Rewarded: $rewards", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this@MainActivity, "Rewarded: $rewards", Toast.LENGTH_SHORT).show()
                     Log.i(TAG,"Rewarded: $rewards")
                     rewardsFlow.update {
                         it.copy(rewardList = rewards)

@@ -1,8 +1,11 @@
 package com.kk.android.bayareanews.presentation.ui.home_screen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,20 +20,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kk.android.bayareanews.R
 import com.tapresearch.tapsdk.models.TRReward
-import kotlinx.coroutines.flow.StateFlow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RewardsScreen(
-    rewardsFlow: StateFlow<RewardsState>,
+    rewardViewModel: RewardViewModel,
     isExpandedScreen: Boolean,
     openDrawer: () -> Unit,
     onGoBackClicked: () -> Unit
@@ -80,16 +82,13 @@ fun RewardsScreen(
             }
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)
-            val rewards = rewardsFlow.collectAsState()
             val set = HashSet<String>()
-            //PrivacyPolicyText(text = MainApp.app.remoteConfigMap
-            //    .get(Constants.PRIVACY_POLICY_V2)?.asString()?:Constants.PRIVACY_POLICY_DEFAULT,
-            //    screenModifier)
-            Column() {
-                if (rewards.value.rewardList.isNotEmpty()) {
-                    for (reward in rewards.value.rewardList) {
+            Column(screenModifier) {
+                Spacer(Modifier.padding(16.dp))
+                if (rewardViewModel.rewards.isNotEmpty()) {
+                    for (reward in rewardViewModel.rewards) {
                         if (!set.contains(reward.transactionIdentifier)) {
-                            Row() {
+                            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
                                 DisplayRewardItem(reward = reward)
                             }
                         } else {

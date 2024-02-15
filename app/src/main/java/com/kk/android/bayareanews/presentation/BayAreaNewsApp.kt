@@ -23,6 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.kk.android.bayareanews.presentation.ui.common.BackPressHandler
 import com.kk.android.bayareanews.presentation.ui.common.Screen
+import com.kk.android.bayareanews.presentation.ui.home_screen.RewardViewModel
 import com.kk.android.bayareanews.presentation.ui.home_screen.RewardsState
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +33,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BayAreaNewsApp(
-    rewardsFlow: StateFlow<RewardsState>,
+    rewardViewModel: RewardViewModel,
     tapInitState: StateFlow<Boolean>,
     widthSizeClass: WindowWidthSizeClass,
     speechFlow: MutableStateFlow<String>?,
@@ -88,7 +89,7 @@ fun BayAreaNewsApp(
                     )
                 }
                 BayAreaNewsNavHost(
-                    rewardsFlow,
+                    rewardViewModel,
                     tapInitState,
                     navigationActions = navigationActions,
                     isExpandedScreen = isExpandedScreen,
