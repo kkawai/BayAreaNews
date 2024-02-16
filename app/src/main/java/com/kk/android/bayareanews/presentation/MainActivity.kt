@@ -34,9 +34,6 @@ class MainActivity : ComponentActivity() {
         //WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
-            //val context = LocalContext.current
-            //val rewardViewModel = RewardViewModel(TRHelper(context))
-            Log.i("TTTR", "MainActivity RewardViewModel(TRHelper(context))")
             BayAreaNewsApp(widthSizeClass, speechFlow, { getSpeech.launch(Unit) })
         }
         RemoteConfig(lifecycleScope, WeakReference<Activity>(this)).fetch()

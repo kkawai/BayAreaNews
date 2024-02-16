@@ -1,7 +1,7 @@
 package com.kk.android.bayareanews.di
 
-import com.kk.android.bayareanews.data.RssApiImpl
 import com.kk.android.bayareanews.data.RssApi
+import com.kk.android.bayareanews.data.RssApiImpl
 import com.kk.android.bayareanews.data.TRApi
 import com.kk.android.bayareanews.data.TRHelper
 import com.kk.android.bayareanews.data.repository.RssRepositoryImpl

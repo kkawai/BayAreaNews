@@ -41,15 +41,15 @@ class RewardViewModel @Inject constructor(val trApi: TRApi) : ViewModel() {
             { _isSurveyWallPlacementAvailable.update { true } })
     }
 
-    private var once = false
+    private var isTRInitializing = false
 
-    fun init2() {
-        if (!once) {
-            once = true
+    fun initRewards() {
+        if (!isTRInitializing) {
+            isTRInitializing = true
             trApi.trInit(myUserIdentifier, { onTRReady() }, { rewards -> addRewards(rewards) })
-            Log.i("RewardViewModel", "init2. running.")
+            Log.i("RewardViewModel", "initRewards running.")
         } else {
-            Log.i("RewardViewModel", "init2. already ran.")
+            Log.i("RewardViewModel", "initRewards already initialized")
         }
     }
 
