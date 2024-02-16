@@ -1,5 +1,6 @@
 package com.kk.android.bayareanews.presentation
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -18,21 +19,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.kk.android.bayareanews.data.TRHelper
 import com.kk.android.bayareanews.presentation.ui.common.BackPressHandler
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RewardViewModel
+import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BayAreaNewsApp(
-    rewardViewModel: RewardViewModel,
     widthSizeClass: WindowWidthSizeClass,
     speechFlow: MutableStateFlow<String>?,
     onSpeechButtonClicked: ()->Unit
@@ -58,6 +61,10 @@ fun BayAreaNewsApp(
             })
         }
 
+        val activityContext = LocalContext.current
+        val rewardViewModel = hiltViewModel<RewardViewModel>()
+        (rewardViewModel.trApi as TRHelper).context = activityContext
+        rewardViewModel.init2()
         val showRewardScreenStateFlow = rewardViewModel.showRewardScreenStateFlow.collectAsState()
         if (showRewardScreenStateFlow.value) {
             navigationActions.navigateToRewards()

@@ -23,7 +23,9 @@ interface TRApi {
     fun showPlacement(placement: String)
 }
 
-class TRHelper(private val context: Context) : TRApi {
+class TRHelper : TRApi {
+
+    lateinit var context: Context //must be activity context
 
     private val TAG = "TRHelper"
 

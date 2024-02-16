@@ -1,13 +1,17 @@
 package com.kk.android.bayareanews.presentation.ui.home_screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.kk.android.bayareanews.data.TRApi
 import com.tapresearch.tapsdk.models.TRReward
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class RewardViewModel(private val trApi: TRApi) : ViewModel() {
+@HiltViewModel
+class RewardViewModel @Inject constructor(val trApi: TRApi) : ViewModel() {
 
     private val myUserIdentifier = "theinterviewer-1" //2,3
 
@@ -37,8 +41,20 @@ class RewardViewModel(private val trApi: TRApi) : ViewModel() {
             { _isSurveyWallPlacementAvailable.update { true } })
     }
 
+    private var once = false
+
+    fun init2() {
+        if (!once) {
+            once = true
+            trApi.trInit(myUserIdentifier, { onTRReady() }, { rewards -> addRewards(rewards) })
+            Log.i("RewardViewModel", "init2. running.")
+        } else {
+            Log.i("RewardViewModel", "init2. already ran.")
+        }
+    }
+
     init {
-        trApi.trInit(myUserIdentifier, { onTRReady() }, { rewards -> addRewards(rewards) })
+        Log.i("RewardViewModel","init")
     }
 
     fun showHomeScreenPlacement() {
