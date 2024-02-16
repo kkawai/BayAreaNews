@@ -1,7 +1,9 @@
 package com.kk.android.bayareanews.di
 
-import com.kk.android.bayareanews.data.RssApiImpl
 import com.kk.android.bayareanews.data.RssApi
+import com.kk.android.bayareanews.data.RssApiImpl
+import com.kk.android.bayareanews.data.TRApi
+import com.kk.android.bayareanews.data.TRHelper
 import com.kk.android.bayareanews.data.repository.RssRepositoryImpl
 import com.kk.android.bayareanews.domain.repository.RssRepository
 import dagger.Module
@@ -25,4 +27,12 @@ object AppModule {
     fun providesRssRepository(rssApi: RssApi): RssRepository {
         return RssRepositoryImpl(rssApi)
     }
+
+    @Provides
+    @Singleton
+    fun providesTRApi(): TRApi {
+        return TRHelper()
+    }
+
 }
+

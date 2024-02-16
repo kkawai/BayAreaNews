@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.kk.android.bayareanews.RemoteConfig
 import com.kk.android.bayareanews.common.speech.GetSpeech
@@ -35,8 +34,9 @@ class MainActivity : ComponentActivity() {
         //WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
-            BayAreaNewsApp(widthSizeClass, speechFlow, {getSpeech.launch(Unit)})
+            BayAreaNewsApp(widthSizeClass, speechFlow, { getSpeech.launch(Unit) })
         }
         RemoteConfig(lifecycleScope, WeakReference<Activity>(this)).fetch()
     }
+
 }

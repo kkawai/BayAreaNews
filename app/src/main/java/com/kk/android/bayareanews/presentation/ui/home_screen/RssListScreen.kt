@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -86,6 +87,7 @@ private fun shareArticle(context: Context, url: String) {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 private fun _RssListScreen(
+    rewardViewModel: RewardViewModel,
     onGetRss: () -> Unit,
     onRefresh: () -> Unit,
     onSaveFavorite: (rss: Rss) -> Unit,
@@ -104,9 +106,7 @@ private fun _RssListScreen(
             onRefresh()
         }
     )
-
     val context = LocalContext.current
-
     val listState = rssListState.collectAsState()
     val featuredListState = featuredState.collectAsState()
 
@@ -125,9 +125,47 @@ private fun _RssListScreen(
                 .pullRefresh(pullRefreshState)
         ) {
 
+            val isHomePlacementAvailable =
+                rewardViewModel.isHomePlacementAvailable.collectAsState()
+            val isEarnCenterPlacementAvailable =
+                rewardViewModel.isEarnCenterPlacementAvailable.collectAsState()
+            val isSurveyWallPlacementAvailable =
+                rewardViewModel.isSurveyWallPlacementAvailable.collectAsState()
+            var isHomePlacementShownOnce by rememberSaveable { mutableStateOf(false) }
+
+            if (isHomePlacementAvailable.value) {
+                if (!isHomePlacementShownOnce) {
+                    isHomePlacementShownOnce = true
+                    rewardViewModel.showHomeScreenPlacement()
+                }
+            }
+
             LazyColumn(modifier = modifier.fillMaxSize()) {
 
+                if (isEarnCenterPlacementAvailable.value) {
+                    item {
+                        Button(
+                            onClick = { rewardViewModel.showEarnCenterPlacement() },
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Text(text = "Earn Center")
+                        }
+                    }
+                }
+
+                if (isSurveyWallPlacementAvailable.value) {
+                    item {
+                        Button(
+                            onClick = { rewardViewModel.showSurveyWallPlacement() },
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Text(text = "Survey Wall")
+                        }
+                    }
+                }
+
                 if (listState.value.topRss.title?.isNotEmpty() ?: false) {
+
                     item {
                         TopStorySection(
                             listState.value.topRss,
@@ -185,7 +223,8 @@ private fun _RssListScreen(
 
                 items(listState.value.rssList) { rss ->
                     ImageCard(
-                        expandedByDefault = MainApp.app.remoteConfigMap.get(Constants.MAIN_CARDS_EXPANDED)?.asBoolean()?:true,
+                        expandedByDefault = MainApp.app.remoteConfigMap.get(Constants.MAIN_CARDS_EXPANDED)
+                            ?.asBoolean() ?: true,
                         rss = rss,
                         isFavorite = listState.value.favoritesMap.containsKey(rss.articleId),
                         onArticleShared = { shareArticle(context, rss.link) },
@@ -344,6 +383,7 @@ private fun FeaturedRssSection(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RssListScreen(
+    rewardViewModel: RewardViewModel,
     isExpandedScreen: Boolean,
     openDrawer: () -> Unit,
     onGetRss: () -> Unit,
@@ -353,13 +393,14 @@ fun RssListScreen(
     rssListState: StateFlow<RssListState>,
     featuredState: StateFlow<RssFeaturedState>,
     onPrivacyPolicyClicked: () -> Unit,
+    onRewardsClicked: () -> Unit,
     onFavoritesClicked: () -> Unit,
     onArticleClicked: (articleLink: String) -> Unit,
     modifier: Modifier = Modifier,
     speechFlow: MutableStateFlow<String>?,
-    onSpeechButtonClicked: ()->Unit,
-    onPerformSearch: (String)->Unit,
-    onPerformSearchWhileTyping: (String)->Unit,
+    onSpeechButtonClicked: () -> Unit,
+    onPerformSearch: (String) -> Unit,
+    onPerformSearchWhileTyping: (String) -> Unit,
     searchResultFlowWhileTyping: StateFlow<SearchState>,
 ) {
     Surface(
@@ -372,21 +413,24 @@ fun RssListScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 MyExpandableAppBar(
-                                   title = stringResource(id = R.string.app_name),
-                                   scrollBehavior = scrollBehavior,
-                                   speechFlow = speechFlow,
-                                   onSpeechButtonClicked = onSpeechButtonClicked,
-                                   isExpandedScreen = isExpandedScreen,
-                                   onFavoritesClicked = onFavoritesClicked,
-                                   openDrawer = openDrawer,
-                                   onPerformSearch = onPerformSearch,
-                                   onPerformSearchWhileTyping = onPerformSearchWhileTyping,
-                                   searchResultFlowWhileTyping = searchResultFlowWhileTyping,
-                                   onArticleClicked = onArticleClicked)
+                    title = stringResource(id = R.string.app_name),
+                    scrollBehavior = scrollBehavior,
+                    speechFlow = speechFlow,
+                    onSpeechButtonClicked = onSpeechButtonClicked,
+                    isExpandedScreen = isExpandedScreen,
+                    onFavoritesClicked = onFavoritesClicked,
+                    onRewardsClicked = onRewardsClicked,
+                    openDrawer = openDrawer,
+                    onPerformSearch = onPerformSearch,
+                    onPerformSearchWhileTyping = onPerformSearchWhileTyping,
+                    searchResultFlowWhileTyping = searchResultFlowWhileTyping,
+                    onArticleClicked = onArticleClicked
+                )
             }
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)
             _RssListScreen(
+                rewardViewModel,
                 onArticleClicked = onArticleClicked,
                 modifier = screenModifier,
                 onGetRss = onGetRss,

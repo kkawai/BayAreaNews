@@ -153,6 +153,15 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation(platform("com.google.firebase:firebase-config:21.6.0"))
 
+    //tap
+    implementation("com.tapresearch:tapsdk:3.2.2")
+    implementation("androidx.lifecycle:lifecycle-process:2.6.1")
+    //implementation("androidx.core:core-ktx:1.10.1")
+    //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+    implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
+
+
 }
 
 // Allow references to generated code

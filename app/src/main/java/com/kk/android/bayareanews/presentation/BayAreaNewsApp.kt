@@ -27,7 +27,6 @@ import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BayAreaNewsApp(
     widthSizeClass: WindowWidthSizeClass,
@@ -63,6 +62,7 @@ fun BayAreaNewsApp(
                     navigateToFavorites = {navigationActions.navigateToFavorites()},
                     navigateToContactInfo = {navigationActions.navigateToContactInfo()},
                     navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy()},
+                    navigateToRewards = {navigationActions.navigateToRewards()},
                     closeDrawer = { coroutineScope.launch { sizeAwareDrawerState.close() } }
                 )
             },
@@ -78,7 +78,8 @@ fun BayAreaNewsApp(
                         navigateToHome = {navigationActions.navigateToHome()},
                         navigateToFavorites = {navigationActions.navigateToFavorites()},
                         navigateToContactInfo = {navigationActions.navigateToContactInfo()},
-                        navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy}
+                        navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy},
+                        navigateToRewards = {navigationActions.navigateToRewards}
                     )
                 }
                 BayAreaNewsNavHost(

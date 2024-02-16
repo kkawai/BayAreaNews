@@ -1,9 +1,11 @@
 package com.kk.android.bayareanews.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -13,12 +15,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.Constants
+import com.kk.android.bayareanews.data.TRHelper
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.presentation.ui.common.WebViewScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.ContactInfoScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.FavoritesViewModel
 import com.kk.android.bayareanews.presentation.ui.home_screen.PrivacyPolicyScreen
+import com.kk.android.bayareanews.presentation.ui.home_screen.RewardViewModel
+import com.kk.android.bayareanews.presentation.ui.home_screen.RewardsScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssListScreen
 import com.kk.android.bayareanews.presentation.ui.home_screen.RssViewModel
 import com.kk.android.bayareanews.presentation.ui.search_screen.SearchScreen
@@ -35,20 +40,27 @@ fun BayAreaNewsNavHost(
     openDrawer: () -> Unit = {},
     startDestination: String = Screen.HomeScreen.route,
     speechFlow: MutableStateFlow<String>?,
-    onSpeechButtonClicked: ()->Unit
+    onSpeechButtonClicked: () -> Unit
 ) {
-
+    val activityContext = LocalContext.current
+    val rewardViewModel = hiltViewModel<RewardViewModel>()
+    (rewardViewModel.trApi as TRHelper).context = activityContext
+    rewardViewModel.initRewards()
+    val showRewardScreenStateFlow = rewardViewModel.showRewardScreenStateFlow.collectAsState()
+    if (showRewardScreenStateFlow.value) {
+        navigationActions.navigateToRewards()
+    }
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-
         composable(
             Screen.HomeScreen.route
         ) {
             val viewModel = hiltViewModel<RssViewModel>()
             val searchViewModel = hiltViewModel<SearchViewModel>()
             RssListScreen(
+                rewardViewModel,
                 isExpandedScreen = isExpandedScreen,
                 openDrawer = openDrawer,
                 onGetRss = { viewModel.getRssList() },
@@ -59,6 +71,9 @@ fun BayAreaNewsNavHost(
                 featuredState = viewModel.featuredState,
                 onPrivacyPolicyClicked = {
                     navigationActions.navigateToPrivacyPolicy()
+                },
+                onRewardsClicked = {
+                    navigationActions.navigateToRewards()
                 },
                 onFavoritesClicked = { navigationActions.navigateToFavorites() },
                 onArticleClicked = { link ->
@@ -71,10 +86,11 @@ fun BayAreaNewsNavHost(
                         navigationActions.navigateToSearch(searchTerm)
                     }
                 },
-                onPerformSearchWhileTyping = {searchTerm ->
+                onPerformSearchWhileTyping = { searchTerm ->
                     searchViewModel.searchRss(searchTerm)
-                                             },
-                searchResultFlowWhileTyping = searchViewModel.rssListState)
+                },
+                searchResultFlowWhileTyping = searchViewModel.rssListState
+            )
         }
 
         composable(
@@ -128,6 +144,17 @@ fun BayAreaNewsNavHost(
         }
 
         composable(
+            Screen.RewardsScreen.route
+        ) {
+            RewardsScreen(
+                rewardViewModel.getRewards(),
+                { rewardViewModel.hideRewardScreen() },
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
+                onGoBackClicked = { navController.popBackStack() })
+        }
+
+        composable(
             Screen.SearchScreen.route + "/{${Constants.SEARCH_TERM_KEY}}",
             arguments = listOf(
                 navArgument(Constants.SEARCH_TERM_KEY) {
@@ -157,12 +184,13 @@ fun BayAreaNewsNavHost(
                         viewModel.searchRss(it)
                     }
                 },
-                onPerformSearchWhileTyping = {searchTerm ->
+                onPerformSearchWhileTyping = { searchTerm ->
                     searchWhileTypingViewModel.searchRss(searchTerm)
                 },
                 searchResultFlowWhileTyping = searchWhileTypingViewModel.rssListState,
                 onGoBack = { navController.popBackStack() },
-                title = title)
+                title = title
+            )
         }
 
     }

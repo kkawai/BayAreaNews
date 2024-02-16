@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,6 +40,7 @@ fun AppDrawer(
     navigateToFavorites: () -> Unit,
     navigateToContactInfo: () -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
+    navigateToRewards: () -> Unit,
     closeDrawer: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -79,6 +81,15 @@ fun AppDrawer(
             selected = currentRoute == Screen.PrivacyPolicyScreen.route,
             onClick = { navigateToPrivacyPolicy()
                         closeDrawer() },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
+
+        NavigationDrawerItem(
+            label = { Text("Rewards") },
+            icon = { Icon(Icons.Filled.MonetizationOn, null) },
+            selected = currentRoute == Screen.RewardsScreen.route,
+            onClick = { navigateToRewards()
+                closeDrawer() },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
 
@@ -126,6 +137,7 @@ fun PreviewAppDrawer() {
             navigateToFavorites = {},
             navigateToContactInfo = {},
             navigateToPrivacyPolicy = {},
+            navigateToRewards = {},
             closeDrawer = {}
         )
     }

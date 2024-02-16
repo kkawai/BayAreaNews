@@ -39,4 +39,6 @@
     <string name="mic">Microphone</string>
     <string name="search_for">Find: </string>
     <string name="playstore_update">Playstore Update</string>
+
+    <string name="tap_api_token">f7741c8f3043d3448974709a5d7a1f71</string>
 </resources>
