@@ -47,7 +47,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
@@ -102,7 +102,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
 
     // Kotlin serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     // Retrofit with Kotlin serialization Converter
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
@@ -116,10 +116,10 @@ dependencies {
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 
     //dagger
-    implementation("com.google.dagger:hilt-android:2.48.1")
+    implementation("com.google.dagger:hilt-android:2.49")
     kapt("com.google.dagger:hilt-android-compiler:2.48.1")
 
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")  //has hiltViewModel()
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")  //has hiltViewModel()
 
 
     val nav_version = "2.7.6"
@@ -160,6 +160,6 @@ kapt {
     correctErrorTypes = true
 }
 
-kotlin {
-    jvmToolchain(8)
-}
+//kotlin {
+//    jvmToolchain(8)
+//}
