@@ -15,4 +15,7 @@ dagger/hilt dependency injection, RSS reader
 
 <img src="external/screenshot_faves_1.png"/>
 
+## <a href="https://artifactory.tools.tapresearch.io/artifactory/webapp/#/artifacts/browse/tree/General/tapresearch-android-sdk/com/tapresearch/tapsdk/3.2.7">v3.2.7</>
+- Improved sdk ready callback logic
+
 
