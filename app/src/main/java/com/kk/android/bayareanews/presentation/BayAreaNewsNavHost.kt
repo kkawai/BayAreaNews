@@ -47,6 +47,7 @@ fun BayAreaNewsNavHost(
             Screen.HomeScreen.route
         ) {
             Constants.rssUrl = Constants.HOODLINE_RSS_URL
+            Constants.currentArea = "San Francisco Top Stories"
             val viewModel = hiltViewModel<RssViewModel>()
             val searchViewModel = hiltViewModel<SearchViewModel>()
             RssListScreen(
@@ -82,6 +83,7 @@ fun BayAreaNewsNavHost(
             Screen.HomeOaklandScreen.route
         ) {
             Constants.rssUrl = Constants.HOODLINE_OAKLAND_RSS_URL
+            Constants.currentArea = "Oakland Top Stories"
             val viewModel = hiltViewModel<RssViewModel>()
             val searchViewModel = hiltViewModel<SearchViewModel>()
             RssListScreen(
@@ -117,6 +119,7 @@ fun BayAreaNewsNavHost(
             Screen.HomeSanJoseScreen.route
         ) {
             Constants.rssUrl = Constants.HOODLINE_SAN_JOSE_RSS_URL
+            Constants.currentArea = "San Jose Top Stories"
             val viewModel = hiltViewModel<RssViewModel>()
             val searchViewModel = hiltViewModel<SearchViewModel>()
             RssListScreen(
@@ -152,6 +155,7 @@ fun BayAreaNewsNavHost(
             Screen.HomeNorthBayScreen.route
         ) {
             Constants.rssUrl = Constants.HOODLINE_NORTH_BAY_RSS_URL
+            Constants.currentArea = "North Bay Top Stories"
             val viewModel = hiltViewModel<RssViewModel>()
             val searchViewModel = hiltViewModel<SearchViewModel>()
             RssListScreen(

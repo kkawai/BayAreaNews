@@ -2,7 +2,8 @@ package com.kk.android.bayareanews.common
 
 object Constants {
 
-    var rssUrl = ""
+    var rssUrl = "https://hoodline.com/news/san-francisco/rss/"
+    var currentArea = "San Francisco Stories"
 
     const val HOODLINE_RSS_URL = "https://hoodline.com/news/san-francisco/rss/"
     const val HOODLINE_OAKLAND_RSS_URL = "https://hoodline.com/news/oakland/rss/"
