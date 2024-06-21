@@ -27,7 +27,7 @@ import static com.kk.android.bayareanews.data.local.RssLocalDbHelper.RssColumns.
 public final class RssLocalDbHelper {
 
     private static final String TAG = "RssDb";
-    private static final int DB_VERSION = 8;
+    private static final int DB_VERSION = 9;
     private static RssLocalDbHelper instance;
     private static final String TABLE_RSS = "rss";
     private static final String TABLE_RSS_FAVORITES = "rss_favorites";
@@ -104,7 +104,7 @@ public final class RssLocalDbHelper {
             } catch (final Throwable t) {
                 MLog.e(TAG, "Error creating database.  Very bad: ", t);
             }
-
+            updateOrCreateTables(db, 0, 0 );
         }
 
         private void updateOrCreateTables(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
@@ -162,7 +162,7 @@ public final class RssLocalDbHelper {
 
         @Override
         public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
-            updateOrCreateTables(db, oldVersion, newVersion );
+            updateOrCreateTables(db, oldVersion, newVersion);
         }
     }
 
