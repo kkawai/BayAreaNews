@@ -61,6 +61,8 @@ fun BayAreaNewsApp(
                     currentRoute = currentRoute,
                     navigateToHome = {navigationActions.navigateToHome()},
                     navigateToOaklandHome = {navigationActions.navigateToOaklandHome()},
+                    navigateToSanJoseHome = {navigationActions.navigateToSanJoseHome()},
+                    navigateToNorthBayHome = {navigationActions.navigateToNorthBayHome()},
                     navigateToFavorites = {navigationActions.navigateToFavorites()},
                     navigateToContactInfo = {navigationActions.navigateToContactInfo()},
                     navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy()},

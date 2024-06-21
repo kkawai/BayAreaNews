@@ -114,6 +114,76 @@ fun BayAreaNewsNavHost(
         }
 
         composable(
+            Screen.HomeSanJoseScreen.route
+        ) {
+            Constants.rssUrl = Constants.HOODLINE_SAN_JOSE_RSS_URL
+            val viewModel = hiltViewModel<RssViewModel>()
+            val searchViewModel = hiltViewModel<SearchViewModel>()
+            RssListScreen(
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
+                onGetRss = { viewModel.getRssList() },
+                onRefresh = { viewModel.getRssList(true) },
+                onSaveFav = { rss -> viewModel.saveFavorite(rss) },
+                onDeleteFav = { rss -> viewModel.deleteFavorite(rss) },
+                rssListState = viewModel.rssListState,
+                featuredState = viewModel.featuredState,
+                onPrivacyPolicyClicked = {
+                    navigationActions.navigateToPrivacyPolicy()
+                },
+                onFavoritesClicked = { navigationActions.navigateToFavorites() },
+                onArticleClicked = { link ->
+                    navigationActions.navigateToWebView(link)
+                },
+                speechFlow = speechFlow,
+                onSpeechButtonClicked = onSpeechButtonClicked,
+                onPerformSearch = { searchTerm ->
+                    if (searchTerm.isNotEmpty()) {
+                        navigationActions.navigateToSearch(searchTerm)
+                    }
+                },
+                onPerformSearchWhileTyping = {searchTerm ->
+                    searchViewModel.searchRss(searchTerm)
+                },
+                searchResultFlowWhileTyping = searchViewModel.rssListState)
+        }
+
+        composable(
+            Screen.HomeNorthBayScreen.route
+        ) {
+            Constants.rssUrl = Constants.HOODLINE_NORTH_BAY_RSS_URL
+            val viewModel = hiltViewModel<RssViewModel>()
+            val searchViewModel = hiltViewModel<SearchViewModel>()
+            RssListScreen(
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
+                onGetRss = { viewModel.getRssList() },
+                onRefresh = { viewModel.getRssList(true) },
+                onSaveFav = { rss -> viewModel.saveFavorite(rss) },
+                onDeleteFav = { rss -> viewModel.deleteFavorite(rss) },
+                rssListState = viewModel.rssListState,
+                featuredState = viewModel.featuredState,
+                onPrivacyPolicyClicked = {
+                    navigationActions.navigateToPrivacyPolicy()
+                },
+                onFavoritesClicked = { navigationActions.navigateToFavorites() },
+                onArticleClicked = { link ->
+                    navigationActions.navigateToWebView(link)
+                },
+                speechFlow = speechFlow,
+                onSpeechButtonClicked = onSpeechButtonClicked,
+                onPerformSearch = { searchTerm ->
+                    if (searchTerm.isNotEmpty()) {
+                        navigationActions.navigateToSearch(searchTerm)
+                    }
+                },
+                onPerformSearchWhileTyping = {searchTerm ->
+                    searchViewModel.searchRss(searchTerm)
+                },
+                searchResultFlowWhileTyping = searchViewModel.rssListState)
+        }
+
+        composable(
             Screen.FavoritesScreen.route
         ) {
             val viewModel = hiltViewModel<FavoritesViewModel>()

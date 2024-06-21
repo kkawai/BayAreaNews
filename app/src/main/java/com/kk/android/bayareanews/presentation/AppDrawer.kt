@@ -38,6 +38,8 @@ fun AppDrawer(
     currentRoute: String,
     navigateToHome: () -> Unit,
     navigateToOaklandHome: () -> Unit,
+    navigateToSanJoseHome: () -> Unit,
+    navigateToNorthBayHome: () -> Unit,
     navigateToFavorites: () -> Unit,
     navigateToContactInfo: () -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
@@ -62,6 +64,22 @@ fun AppDrawer(
             icon = { Icon(Icons.Filled.Map, null) },
             selected = currentRoute == Screen.HomeOaklandScreen.route,
             onClick = { navigateToOaklandHome(); closeDrawer() },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
+
+        NavigationDrawerItem(
+            label = { Text(stringResource(id = R.string.home_san_jose_title)) },
+            icon = { Icon(Icons.Filled.Map, null) },
+            selected = currentRoute == Screen.HomeSanJoseScreen.route,
+            onClick = { navigateToSanJoseHome(); closeDrawer() },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
+
+        NavigationDrawerItem(
+            label = { Text(stringResource(id = R.string.home_north_bay_title)) },
+            icon = { Icon(Icons.Filled.Map, null) },
+            selected = currentRoute == Screen.HomeNorthBayScreen.route,
+            onClick = { navigateToNorthBayHome(); closeDrawer() },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
 
@@ -134,6 +152,8 @@ fun PreviewAppDrawer() {
             currentRoute = Screen.HomeScreen.route,
             navigateToHome = {},
             navigateToOaklandHome = {},
+            navigateToSanJoseHome = {},
+            navigateToNorthBayHome = {},
             navigateToFavorites = {},
             navigateToContactInfo = {},
             navigateToPrivacyPolicy = {},
