@@ -153,6 +153,13 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation(platform("com.google.firebase:firebase-config:21.6.0"))
 
+    // This dependency is downloaded from the Google’s Maven repository.
+    // Make sure you also include that repository in your project's build.gradle file.
+    implementation("com.google.android.play:feature-delivery:2.1.0")
+
+    // For Kotlin users, also import the Kotlin extensions library for Play Feature Delivery:
+    implementation("com.google.android.play:feature-delivery-ktx:2.1.0")
+
 }
 
 // Allow references to generated code

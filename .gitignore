@@ -15,3 +15,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+private_key.pepk
+my.keystore
+passwords.txt
