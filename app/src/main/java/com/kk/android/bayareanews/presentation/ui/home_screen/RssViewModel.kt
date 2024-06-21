@@ -32,6 +32,8 @@ class RssViewModel @Inject constructor(
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase
 ) : ViewModel() {
 
+    private var rssUrl: String = ""
+
     private val _rssListState = MutableStateFlow(RssListState())
     val rssListState = _rssListState.asStateFlow()
 
@@ -39,7 +41,12 @@ class RssViewModel @Inject constructor(
     val featuredState = _featuredState.asStateFlow()
 
     init {
-        getRssList(false)
+        if (rssUrl.equals(Constants.rssUrl))
+            getRssList(false)
+        else {
+            getRssList(true)
+            rssUrl = Constants.rssUrl
+        }
     }
 
     private fun getTopStory(rss: List<Rss>): Rss {
@@ -56,7 +63,7 @@ class RssViewModel @Inject constructor(
     }
 
     private fun getMainStories(refresh: Boolean = false) {
-        getRssUseCase(refresh, Constants.HOODLINE_RSS_URL, Constants.HOODLINE_CATEGORY)
+        getRssUseCase(refresh, Constants.rssUrl, Constants.HOODLINE_CATEGORY)
             .distinctUntilChanged()
             .onEach { result ->
                 when (result) {

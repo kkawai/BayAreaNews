@@ -60,6 +60,7 @@ fun BayAreaNewsApp(
                 AppDrawer(
                     currentRoute = currentRoute,
                     navigateToHome = {navigationActions.navigateToHome()},
+                    navigateToOaklandHome = {navigationActions.navigateToOaklandHome()},
                     navigateToFavorites = {navigationActions.navigateToFavorites()},
                     navigateToContactInfo = {navigationActions.navigateToContactInfo()},
                     navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy()},

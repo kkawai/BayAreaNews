@@ -46,6 +46,7 @@ fun BayAreaNewsNavHost(
         composable(
             Screen.HomeScreen.route
         ) {
+            Constants.rssUrl = Constants.HOODLINE_RSS_URL
             val viewModel = hiltViewModel<RssViewModel>()
             val searchViewModel = hiltViewModel<SearchViewModel>()
             RssListScreen(
@@ -74,6 +75,41 @@ fun BayAreaNewsNavHost(
                 onPerformSearchWhileTyping = {searchTerm ->
                     searchViewModel.searchRss(searchTerm)
                                              },
+                searchResultFlowWhileTyping = searchViewModel.rssListState)
+        }
+
+        composable(
+            Screen.HomeOaklandScreen.route
+        ) {
+            Constants.rssUrl = Constants.HOODLINE_OAKLAND_RSS_URL
+            val viewModel = hiltViewModel<RssViewModel>()
+            val searchViewModel = hiltViewModel<SearchViewModel>()
+            RssListScreen(
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
+                onGetRss = { viewModel.getRssList() },
+                onRefresh = { viewModel.getRssList(true) },
+                onSaveFav = { rss -> viewModel.saveFavorite(rss) },
+                onDeleteFav = { rss -> viewModel.deleteFavorite(rss) },
+                rssListState = viewModel.rssListState,
+                featuredState = viewModel.featuredState,
+                onPrivacyPolicyClicked = {
+                    navigationActions.navigateToPrivacyPolicy()
+                },
+                onFavoritesClicked = { navigationActions.navigateToFavorites() },
+                onArticleClicked = { link ->
+                    navigationActions.navigateToWebView(link)
+                },
+                speechFlow = speechFlow,
+                onSpeechButtonClicked = onSpeechButtonClicked,
+                onPerformSearch = { searchTerm ->
+                    if (searchTerm.isNotEmpty()) {
+                        navigationActions.navigateToSearch(searchTerm)
+                    }
+                },
+                onPerformSearchWhileTyping = {searchTerm ->
+                    searchViewModel.searchRss(searchTerm)
+                },
                 searchResultFlowWhileTyping = searchViewModel.rssListState)
         }
 

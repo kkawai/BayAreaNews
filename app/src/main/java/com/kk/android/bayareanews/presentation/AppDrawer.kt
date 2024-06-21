@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.outlined.PlayArrow
@@ -36,6 +37,7 @@ import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
 fun AppDrawer(
     currentRoute: String,
     navigateToHome: () -> Unit,
+    navigateToOaklandHome: () -> Unit,
     navigateToFavorites: () -> Unit,
     navigateToContactInfo: () -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
@@ -52,6 +54,14 @@ fun AppDrawer(
             icon = { Icon(Icons.Filled.Home, null) },
             selected = currentRoute == Screen.HomeScreen.route,
             onClick = { navigateToHome(); closeDrawer() },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
+
+        NavigationDrawerItem(
+            label = { Text(stringResource(id = R.string.home_oakland_title)) },
+            icon = { Icon(Icons.Filled.Map, null) },
+            selected = currentRoute == Screen.HomeOaklandScreen.route,
+            onClick = { navigateToOaklandHome(); closeDrawer() },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
 
@@ -123,6 +133,7 @@ fun PreviewAppDrawer() {
         AppDrawer(
             currentRoute = Screen.HomeScreen.route,
             navigateToHome = {},
+            navigateToOaklandHome = {},
             navigateToFavorites = {},
             navigateToContactInfo = {},
             navigateToPrivacyPolicy = {},
