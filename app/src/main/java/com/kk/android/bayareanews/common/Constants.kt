@@ -2,13 +2,18 @@ package com.kk.android.bayareanews.common
 
 object Constants {
 
-    var rssUrl = "https://hoodline.com/news/san-francisco/rss/"
-    var currentArea = "San Francisco Stories"
-
-    const val HOODLINE_RSS_URL = "https://hoodline.com/news/san-francisco/rss/"
+    const val HOODLINE_DEFAULT_RSS_URL = "https://hoodline.com/news/san-francisco/rss/"
     const val HOODLINE_OAKLAND_RSS_URL = "https://hoodline.com/news/oakland/rss/"
     const val HOODLINE_SAN_JOSE_RSS_URL = "https://hoodline.com/news/san-jose/rss/"
     const val HOODLINE_NORTH_BAY_RSS_URL = "https://hoodline.com/news/north-bay/rss/"
+
+    const val HOODLINE_DEFAULT_TITLE = "San Francisco Stories"
+    const val HOODLINE_OAKLAND_TITLE = "Oakland Top Stories"
+    const val HOODLINE_SAN_JOSE_TITLE = "San Jose Top Stories"
+    const val HOODLINE_NORTH_BAY_TITLE = "North Bay Top Stories"
+
+    var currentAreaTitle = HOODLINE_DEFAULT_TITLE
+    var rssUrl = HOODLINE_DEFAULT_RSS_URL
 
     const val HOODLINE_CATEGORY = "Bay Area Breaking News"
     const val SHARED_PREFS_HOODLINE_KEY = "hoodline_breaking_news"

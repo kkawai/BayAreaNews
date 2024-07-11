@@ -242,7 +242,7 @@ private fun TopStorySection(
 
     Text(
         modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-        text = Constants.currentArea,
+        text = Constants.currentAreaTitle,
         //style = MaterialTheme.typography.titleMedium
         style = MaterialTheme.typography.headlineSmall
     )

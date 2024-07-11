@@ -19,7 +19,7 @@ class RssRepositoryTest {
             val rssFeedHolder = fakeRssRepository.getFeaturedArticles(false)
             Assert.assertEquals(2, rssFeedHolder.rss.size)
             Assert.assertEquals(0, rssFeedHolder.favorites.size)
-            val rssFeedHolder2 = fakeRssRepository.getRssArticles(false, Constants.HOODLINE_RSS_URL, Constants.HOODLINE_CATEGORY)
+            val rssFeedHolder2 = fakeRssRepository.getRssArticles(false, Constants.HOODLINE_DEFAULT_RSS_URL, Constants.HOODLINE_CATEGORY)
             Assert.assertEquals(2, rssFeedHolder2.rss.size)
             Assert.assertEquals(2, rssFeedHolder2.favorites.size)
         }
