@@ -6,16 +6,24 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
+import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.common.EncodingUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +42,6 @@ fun WebViewScreen(
 
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            /*
             topBar = {
                 TopAppBar(
                     scrollBehavior = scrollBehavior,
@@ -42,23 +49,6 @@ fun WebViewScreen(
                         Text(text = stringResource(id = R.string.app_name))
                     },
                     navigationIcon = {
-                        if (!isExpandedScreen) {
-                            IconButton(onClick = openDrawer) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Menu,
-                                    contentDescription = stringResource(
-                                        R.string.cd_open_navigation_drawer
-                                    ),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    actions = {
                         IconButton(onClick = {
                             onGoBackClicked()
                         }) {
@@ -67,10 +57,13 @@ fun WebViewScreen(
                                 contentDescription = stringResource(id = R.string.go_back)
                             )
                         }
-                    }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
                 )
             } //topBar
-            */
 
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)
