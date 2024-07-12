@@ -77,19 +77,19 @@ interface RssDao {
     fun getRssFavoriteByArticleId(vararg articleId: String): RssFavoriteEntity
 
     @Query(
-        "SELECT * FROM rss WHERE title LIKE :searchTerm or " +
-        " author like :searchTerm or " +
-        " publisher like :searchTerm " +
+        "SELECT * FROM rss WHERE title LIKE '%' || :searchTerm || '%' or " +
+        " author like '%' || :searchTerm || '%' or " +
+        " publisher like '%' || :searchTerm || '%' " +
         " order by pub_date desc"
          )
     fun searchRss(searchTerm: String): List<RssEntity>
 
     @Query(
-        "SELECT * FROM rss_favorites WHERE title LIKE :searchTerm or " +
-                " author like :searchTerm or " +
-                " publisher like :searchTerm " +
-                " order by pub_date desc"
-    )
+        "SELECT * FROM rss_favorites WHERE title LIKE '%' || :searchTerm || '%' or " +
+        " author like '%' || :searchTerm || '%' or " +
+        " publisher like '%' || :searchTerm || '%' " +
+        " order by pub_date desc"
+        )
     fun searchRssFavorites(searchTerm: String): List<RssFavoriteEntity>
 
     @Query("SELECT * FROM rss WHERE original_category = :originalCategory order by pub_date desc")
