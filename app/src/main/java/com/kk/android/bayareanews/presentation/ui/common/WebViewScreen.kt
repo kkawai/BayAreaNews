@@ -4,8 +4,11 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -38,7 +42,7 @@ fun WebViewScreen(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -68,24 +72,30 @@ fun WebViewScreen(
         ) { innerPadding ->
             val screenModifier = Modifier.padding(innerPadding)
             val context = LocalContext.current
-            AndroidView(
-                modifier = screenModifier,
-                factory = {
-                WebView(context).apply {
-                    webViewClient = object : WebViewClient() {
-                        override fun onReceivedError(
-                            view: WebView,
-                            request: WebResourceRequest,
-                            error: WebResourceError
-                        ) {
-                            loadErrorPage(view)
+            Box(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                AndroidView(
+                    modifier = screenModifier,
+                    factory = {
+                        WebView(context).apply {
+                            webViewClient = object : WebViewClient() {
+                                override fun onReceivedError(
+                                    view: WebView,
+                                    request: WebResourceRequest,
+                                    error: WebResourceError
+                                ) {
+                                    loadErrorPage(view)
+                                }
+                            }
+                            settings.builtInZoomControls = true
+                            settings.displayZoomControls = false
+                            loadUrl(
+                                if (url.startsWith("http")) url else EncodingUtil.decodeUrlSafe(
+                                    url
+                                )
+                            )
                         }
-                    }
-                    settings.builtInZoomControls = true
-                    settings.displayZoomControls = false
-                    loadUrl(if (url.startsWith("http")) url else EncodingUtil.decodeUrlSafe(url))
-                }
-            })
+                    })
+            }
         }
     }
 }
