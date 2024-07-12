@@ -23,7 +23,13 @@ import static com.kk.android.bayareanews.data.local.RssLocalDbHelper.RssColumns.
 
 /**
  * @author kkawai
+ * Migrated to Room database.
+ * @see RoomDbKt
+ *
+ * After some time, this can be deleted, but for now, keep for migrating favorites from the
+ * old non-room database to the new.
  */
+@Deprecated
 public final class RssLocalDbHelper {
 
     private static final String TAG = "RssDb";
@@ -188,13 +194,13 @@ public final class RssLocalDbHelper {
         }
     }
 
-    public synchronized int deleteAll() {
+    public synchronized int deleteAllRssFavorites() {
         try {
             final SQLiteDatabase db = sqlHelper.getWritableDatabase();
-            final int rowsDeleted = db.delete(TABLE_RSS, "1", null);
+            final int rowsDeleted = db.delete(TABLE_RSS_FAVORITES, "1", null);
             return rowsDeleted;
         } catch (final Throwable t) {
-            MLog.e(TAG, "Error in deleting all rss: ", t);
+            MLog.e(TAG, "Error in deleting all rss favorites: ", t);
         }
         return 0;
     }

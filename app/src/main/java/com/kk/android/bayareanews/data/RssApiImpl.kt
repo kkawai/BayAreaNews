@@ -1,13 +1,13 @@
 package com.kk.android.bayareanews.data
 
 import com.kk.android.bayareanews.MainApp
-import com.kk.android.bayareanews.data.local.RssLocalDbHelper
+import com.kk.android.bayareanews.data.local.RssLocalDbHelper2
 import com.kk.android.bayareanews.data.remote.RssRemoteHelper
 import com.kk.android.bayareanews.domain.model.Rss
 
 class RssApiImpl: RssApi {
     override suspend fun getRssArticlesFromLocalDb(category: String): List<Rss>{
-        return RssLocalDbHelper.getInstance(MainApp.app).getRss(category)
+        return RssLocalDbHelper2.getRss(MainApp.app, category)
     }
 
     override suspend fun getRssArticlesFromUrl(rssUrl: String): List<Rss>{
@@ -15,22 +15,24 @@ class RssApiImpl: RssApi {
     }
 
     override suspend fun saveFavoriteArticle(rss: Rss): Long {
-        return RssLocalDbHelper.getInstance(MainApp.app).insertRssFavorite(rss)
+        RssLocalDbHelper2.insertRssFavorite(MainApp.app, rss)
+        return 0L // probably irrelevant
     }
 
     override suspend fun deleteFavoriteArticleByArticleId(articleId: String): Int {
-        return RssLocalDbHelper.getInstance(MainApp.app).deleteRssFavorite(articleId)
+        RssLocalDbHelper2.deleteRssFavorite(MainApp.app, articleId)
+        return 0 // probably irrelevant
     }
 
     override suspend fun getFavoriteRssArticles(): List<Rss> {
-        return RssLocalDbHelper.getInstance(MainApp.app).rssFavorites
+        return RssLocalDbHelper2.getRssFavorites(MainApp.app)
     }
 
     override suspend fun searchRssLocalDb(term: String): List<Rss> {
-        return RssLocalDbHelper.getInstance(MainApp.app).searchRss(term)
+        return RssLocalDbHelper2.searchRss(MainApp.app, term)
     }
 
     override suspend fun searchFavoriteRssLocalDb(term: String): List<Rss> {
-        return RssLocalDbHelper.getInstance(MainApp.app).searchFavoriteRss(term)
+        return RssLocalDbHelper2.searchRssFavorites(MainApp.app, term)
     }
 }

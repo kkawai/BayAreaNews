@@ -6,7 +6,7 @@ import com.kk.android.bayareanews.MainApp
 import com.kk.android.bayareanews.common.Constants
 import com.kk.android.bayareanews.common.MLog
 import com.kk.android.bayareanews.data.RssApi
-import com.kk.android.bayareanews.data.local.RssLocalDbHelper
+import com.kk.android.bayareanews.data.local.RssLocalDbHelper2
 import com.kk.android.bayareanews.domain.model.Rss
 import com.kk.android.bayareanews.domain.model.RssFeedHolder
 import com.kk.android.bayareanews.domain.repository.RssRepository
@@ -46,8 +46,8 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
 
         val remoteList = rssApi.getRssArticlesFromUrl(rssUrlFromConfig)
         if (remoteList.isNotEmpty()) {
-            RssLocalDbHelper.getInstance(MainApp.app).deleteRss(originalCategory)
-            RssLocalDbHelper.getInstance(MainApp.app).insertRss(originalCategory, remoteList)
+            RssLocalDbHelper2.deleteRss(MainApp.app, originalCategory)
+            RssLocalDbHelper2.insertRss(MainApp.app, originalCategory, remoteList)
             sharedPrefs().edit().putLong(originalCategory, Date().time).apply()
         }
         rssFeedHolder.rss = remoteList
@@ -74,8 +74,8 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
 
         val remoteList = rssApi.getRssArticlesFromUrl(rssUrl)
         if (remoteList.isNotEmpty()) {
-            RssLocalDbHelper.getInstance(MainApp.app).deleteRss(originalCategory)
-            RssLocalDbHelper.getInstance(MainApp.app).insertRss(originalCategory, remoteList)
+            RssLocalDbHelper2.deleteRss(MainApp.app, originalCategory)
+            RssLocalDbHelper2.insertRss(MainApp.app, originalCategory, remoteList)
             sharedPrefs().edit().putLong(Constants.SHARED_PREFS_HOODLINE_KEY, Date().time).apply()
         }
         rssFeedHolder.rss = remoteList
