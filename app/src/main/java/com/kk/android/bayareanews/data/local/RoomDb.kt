@@ -53,7 +53,7 @@ data class RssFavoriteEntity(
 )
 
 @Dao
-interface UserDao {
+interface RssDao {
 
     @Insert
     fun insertRss(vararg rss: RssEntity)
@@ -99,7 +99,7 @@ interface UserDao {
     fun getFavoriteRss(): List<RssFavoriteEntity>
 }
 
-private val MIGRATION_4_5 = object : Migration(4, 5) {
+private val MIGRATION_3_6 = object : Migration(3, 6) {
     override fun migrate(database: SupportSQLiteDatabase) {
         CoroutineScope(Dispatchers.IO).launch {
             delay(3000)
@@ -112,9 +112,9 @@ private val MIGRATION_4_5 = object : Migration(4, 5) {
     }
 }
 
-@Database(entities = [RssEntity::class,RssFavoriteEntity::class], version = 5)
+@Database(entities = [RssEntity::class,RssFavoriteEntity::class], version = 6)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun userDao(): UserDao
+    abstract fun getRssDao(): RssDao
 }
 
 object RssLocalDbHelper2 {
@@ -129,7 +129,7 @@ object RssLocalDbHelper2 {
                 db = Room.databaseBuilder(
                     context,
                     AppDatabase::class.java, "rss4.db"
-                ).addMigrations(MIGRATION_4_5)
+                ).addMigrations(MIGRATION_3_6)
                  .build()
                 return db
             }
@@ -207,39 +207,31 @@ object RssLocalDbHelper2 {
         val db = getDb(context)
         for (rss in rssList) {
             rss.originalCategory = originalCategory
-            db.userDao().insertRss(rssEntityFromRss(rss))
+            db.getRssDao().insertRss(rssEntityFromRss(rss))
         }
     }
 
     fun insertRssFavorite(context: Context, rss: Rss) {
         val db = getDb(context)
-        if (db.userDao().getRssFavoriteCountByArticleId(rss.articleId) > 0) {
+        if (db.getRssDao().getRssFavoriteCountByArticleId(rss.articleId) > 0) {
             return
         }
-        db.userDao().insertRssFavorite(rssFavoriteEntityFromRss(rss))
+        db.getRssDao().insertRssFavorite(rssFavoriteEntityFromRss(rss))
     }
 
     fun deleteRssFavorite(context: Context, articleId: String): Int {
         val db = getDb(context)
-        if (db.userDao().getRssFavoriteCountByArticleId(articleId) == 0) {
+        if (db.getRssDao().getRssFavoriteCountByArticleId(articleId) == 0) {
             return 0
         }
-        db.userDao().deleteRssFavorite(articleId)
+        db.getRssDao().deleteRssFavorite(articleId)
         return 1
-    }
-
-    fun getRssFavoriteByArticleId(context: Context, articleId: String): Rss {
-        val db = getDb(context)
-        if (db.userDao().getRssFavoriteCountByArticleId(articleId) == 0) {
-            return Rss()
-        }
-        return rssFromRssFavoriteEntity(db.userDao().getRssFavoriteByArticleId(articleId))
     }
 
     fun searchRss(context: Context, searchTerm: String): List<Rss> {
         val db = getDb(context)
         val searchResults = LinkedList<Rss>()
-        val rssEntities = db.userDao().searchRss(searchTerm)
+        val rssEntities = db.getRssDao().searchRss(searchTerm)
         for (rssEntity in rssEntities) {
             searchResults.add(rssFromRssEntity(rssEntity))
         }
@@ -249,7 +241,7 @@ object RssLocalDbHelper2 {
     fun searchRssFavorites(context: Context, searchTerm: String): List<Rss> {
         val db = getDb(context)
         val searchResults = LinkedList<Rss>()
-        val rssFavoriteEntities = db.userDao().searchRssFavorites(searchTerm)
+        val rssFavoriteEntities = db.getRssDao().searchRssFavorites(searchTerm)
         for (rssFavoriteEntity in rssFavoriteEntities) {
             searchResults.add(rssFromRssFavoriteEntity(rssFavoriteEntity))
         }
@@ -258,7 +250,7 @@ object RssLocalDbHelper2 {
 
     fun getRssFavorites(context: Context): List<Rss> {
         val db = getDb(context)
-        val rssFavoriteEntities = db.userDao().getFavoriteRss()
+        val rssFavoriteEntities = db.getRssDao().getFavoriteRss()
         val rssFavorites = LinkedList<Rss>()
         for (rssFavoriteEntity in rssFavoriteEntities) {
             rssFavorites.add(rssFromRssFavoriteEntity(rssFavoriteEntity))
@@ -269,7 +261,7 @@ object RssLocalDbHelper2 {
     fun getRss(context: Context, originalCategory: String): List<Rss> {
         val db = getDb(context)
         val results = LinkedList<Rss>()
-        val rssEntities = db.userDao().getRss(originalCategory)
+        val rssEntities = db.getRssDao().getRss(originalCategory)
         for (rssEntity in rssEntities) {
             results.add(rssFromRssEntity(rssEntity))
         }
@@ -278,7 +270,7 @@ object RssLocalDbHelper2 {
 
     fun deleteRss(context: Context, originalCategory: String): Int {
         val db = getDb(context)
-        db.userDao().deleteRss(originalCategory)
-        return 0 // irrelevant
+        db.getRssDao().deleteRss(originalCategory)
+        return 0 // return value irrelevant
     }
 }
