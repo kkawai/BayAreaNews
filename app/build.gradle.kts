@@ -17,8 +17,8 @@ android {
         applicationId = "com.kk.android.bayareanews"
         minSdk = 24
         targetSdk = 34
-        versionCode = 9
-        versionName = "2.2"
+        versionCode = 10
+        versionName = "2.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -176,7 +176,26 @@ dependencies {
     // To use Kotlin Symbol Processing (KSP)
     //ksp("androidx.room:room-compiler:$room_version")
 
+    // This dependency is downloaded from the Google’s Maven repository.
+    // So, make sure you also include that repository in your project's build.gradle file.
+    implementation("com.google.android.play:asset-delivery:2.2.2")
 
+    // For Kotlin users also import the Kotlin extensions library for Play Asset Delivery:
+    implementation("com.google.android.play:asset-delivery-ktx:2.2.2")
+
+    // This dependency is downloaded from the Google’s Maven repository.
+    // Make sure you also include that repository in your project's build.gradle file.
+    implementation("com.google.android.play:review:2.0.1")
+
+    // For Kotlin users, also import the Kotlin extensions library for Play In-App Review:
+    implementation("com.google.android.play:review-ktx:2.0.1")
+
+    // This dependency is downloaded from the Google’s Maven repository.
+    // Make sure you also include that repository in your project's build.gradle file.
+    implementation("com.google.android.play:app-update:2.1.0")
+
+    // For Kotlin users, also import the Kotlin extensions library for Play In-App Update:
+    implementation("com.google.android.play:app-update-ktx:2.1.0")
 }
 
 // Allow references to generated code
