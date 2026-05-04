@@ -18,21 +18,21 @@ class RssRepositoryImpl @Inject constructor(private val rssApi: RssApi) : RssRep
     override suspend fun getFeaturedArticles( refresh: Boolean): RssFeedHolder {
 
         val rssFeedHolder = RssFeedHolder()
-        MLog.i("nnnnn","getFeaturedArticles waiting for remote config..")
+        MLog.i("RssRepositoryImpl","getFeaturedArticles waiting for remote config..")
         val remoteConfigResponse = MainApp.app.remoteConfigResponse.await()
-        MLog.i("nnnnn","getFeaturedArticles after waiting for remote config. remoteConfigResponse=$remoteConfigResponse")
+        MLog.i("RssRepositoryImpl","getFeaturedArticles after waiting for remote config. remoteConfigResponse=$remoteConfigResponse")
         if (!remoteConfigResponse) {
-            MLog.w("nnnnn","getFeaturedArticles Error: Failed to get remote config ")
+            MLog.w("RssRepositoryImpl","getFeaturedArticles Error: Failed to get remote config ")
             return rssFeedHolder
         }
         val originalCategory = MainApp.app.remoteConfigMap.get(Constants.FEATURED_CATEGORIES)?.asString()?:""
         if (originalCategory.isBlank()) {
-            MLog.w("nnnnn","getFeaturedArticles Error: Failed to get featured category from remote config ")
+            MLog.w("RssRepositoryImpl","getFeaturedArticles Error: Failed to get featured category from remote config ")
             return rssFeedHolder
         }
         val rssUrlFromConfig = MainApp.app.remoteConfigMap.get(originalCategory.trim())?.asString()?:""
         if (rssUrlFromConfig.isBlank()) {
-            MLog.w("nnnnn","getFeaturedArticles Error: Failed to get featured category url from remote config ")
+            MLog.w("RssRepositoryImpl","getFeaturedArticles Error: Failed to get featured category url from remote config ")
             return rssFeedHolder
         }
 

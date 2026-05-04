@@ -24,17 +24,17 @@ class RemoteConfig(
             remoteConfig.fetchAndActivate()
                 .addOnCompleteListener(activity) { task ->
                     job?.cancel()
-                    MLog.i("nnnnn", "MainActivity received remote config from firebase: ${task.isSuccessful}")
+                    MLog.i("RemoteConfig", "MainActivity received remote config from firebase: ${task.isSuccessful}")
                     MainApp.app.remoteConfigMap = remoteConfig.all
                     MainApp.app.remoteConfigResponse.complete(task.isSuccessful)
                 }
         }
         job = lifecycleCoroutineScope.launch {
             if (!MainApp.app.remoteConfigResponse.isCompleted) {
-                MLog.i("nnnnn", "MainActivity 11 seconds max to fetch remote config")
+                MLog.i("RemoteConfig", "MainActivity 11 seconds max to fetch remote config")
                 delay(11000) //wait max seconds for config response
                 MainApp.app.remoteConfigResponse.complete(false)
-                MLog.i("nnnnn", "MainActivity. waited 11 seconds. remote config did not respond")
+                MLog.i("RemoteConfig", "MainActivity. waited 11 seconds. remote config did not respond")
             }
         }
         job?.start()
