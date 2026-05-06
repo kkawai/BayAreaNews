@@ -15,4 +15,6 @@ dagger/hilt dependency injection, RSS reader
 
 <img src="external/screenshot_faves_1.png"/>
 
-
+BayAreaNews App Contact Information:
+bayareanews933@gmail.com
+hoodline contact: contact@hoodline.com
