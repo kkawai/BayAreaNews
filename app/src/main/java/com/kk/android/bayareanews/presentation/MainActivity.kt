@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         speechFlow.update {
             speechText
         }
-        Log.i("ggggg", "ActivityResultCallback speechText $speechText")
+        Log.i("SpeechText", "ActivityResultCallback speechText $speechText")
     }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)

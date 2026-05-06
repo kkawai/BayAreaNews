@@ -159,7 +159,7 @@ private fun MySearchBar(
         active = false
         onExpandedChanged(false)
         onPerformSearch(query)
-        Log.i("vvvvv","perform search on: $query")
+        Log.i("SearchTag","perform search on: $query")
     }
 
     speechText?.let {
@@ -195,7 +195,7 @@ private fun MySearchBar(
             if (!active) {
                 onExpandedChanged(false)
             }
-            Log.i("vvvvv", "DockedSearchBar active: $active")
+            Log.i("SearchTag", "DockedSearchBar active: $active")
         },
         placeholder = {
             Text( text = stringResource(id = R.string.search))

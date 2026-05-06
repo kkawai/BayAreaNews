@@ -5,6 +5,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Search
@@ -35,6 +36,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.kk.android.bayareanews.R
 import com.kk.android.bayareanews.domain.use_case.get_rss.SearchState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -147,7 +149,7 @@ private fun MySearchBar(
         active = false
         onExpandedChanged(false)
         onPerformSearch(query)
-        Log.i("vvvvv","perform search on: $query")
+        Log.i("SearchTag","perform search on: $query")
     }
     speechText?.let {
         if (it.value.isNotEmpty()) {
@@ -169,7 +171,7 @@ private fun MySearchBar(
         query = query,
         onQueryChange = { query = it
             onPerformSearchWhileTyping(query)
-            Log.i("vvvvv", "DockedSearchBar typed: $query")},
+            Log.i("SearchTag", "DockedSearchBar typed: $query")},
         onSearch = {
             doSearch(query)
         },
@@ -179,7 +181,7 @@ private fun MySearchBar(
             if (!active) {
                 onExpandedChanged(false)
             }
-            Log.i("vvvvv", "DockedSearchBar active: $active")
+            Log.i("SearchTag", "DockedSearchBar active: $active")
         },
         placeholder = {
             Text( text = stringResource(id = R.string.search))
