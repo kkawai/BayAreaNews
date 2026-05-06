@@ -11,16 +11,19 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.kk.android.bayareanews.common.DeviceUtils.isLargeScreenDevice
 import com.kk.android.bayareanews.presentation.ui.common.BackPressHandler
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
@@ -35,6 +38,7 @@ fun BayAreaNewsApp(
     onSpeechButtonClicked: ()->Unit
 ) {
     BayAreaNewsTheme {
+        val context = LocalContext.current
         val navController = rememberNavController()
         val navigationActions = remember(navController) {
             BayAreaNewsNavigationActions(navController)
@@ -55,45 +59,78 @@ fun BayAreaNewsApp(
             })
         }
 
-        ModalNavigationDrawer(
-            drawerContent = {
-                AppDrawer(
-                    currentRoute = currentRoute,
-                    navigateToHome = {navigationActions.navigateToHome()},
-                    navigateToOaklandHome = {navigationActions.navigateToOaklandHome()},
-                    navigateToSanJoseHome = {navigationActions.navigateToSanJoseHome()},
-                    navigateToNorthBayHome = {navigationActions.navigateToNorthBayHome()},
-                    navigateToFavorites = {navigationActions.navigateToFavorites()},
-                    navigateToContactInfo = {navigationActions.navigateToContactInfo()},
-                    navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy()},
-                    closeDrawer = { coroutineScope.launch { sizeAwareDrawerState.close() } }
-                )
-            },
-            drawerState = sizeAwareDrawerState,
-            // Only enable opening the drawer via gestures if the screen is not expanded
-            gesturesEnabled = !isExpandedScreen
-                    && !currentRoute.startsWith(Screen.DetailsScreen.route)//!isExpandedScreen
-        ) {
-            Row {
-                if (isExpandedScreen) {
-                    AppNavRail(
+        if (isLargeScreenDevice(context)) {
+            PermanentNavigationDrawer(
+                drawerContent = {
+                    AppDrawer(
                         currentRoute = currentRoute,
                         navigateToHome = {navigationActions.navigateToHome()},
+                        navigateToOaklandHome = {navigationActions.navigateToOaklandHome()},
+                        navigateToSanJoseHome = {navigationActions.navigateToSanJoseHome()},
+                        navigateToNorthBayHome = {navigationActions.navigateToNorthBayHome()},
                         navigateToFavorites = {navigationActions.navigateToFavorites()},
                         navigateToContactInfo = {navigationActions.navigateToContactInfo()},
-                        navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy}
+                        navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy()},
+                        closeDrawer = { coroutineScope.launch { sizeAwareDrawerState.close() } }
+                    )
+                },
+            ) {
+                Row {
+                    BayAreaNewsNavHost(
+                        navigationActions = navigationActions,
+                        isExpandedScreen = isExpandedScreen,
+                        navController = navController,
+                        openDrawer = { coroutineScope.launch{ sizeAwareDrawerState.open() } },
+                        speechFlow = speechFlow,
+                        onSpeechButtonClicked = onSpeechButtonClicked
                     )
                 }
-                BayAreaNewsNavHost(
-                    navigationActions = navigationActions,
-                    isExpandedScreen = isExpandedScreen,
-                    navController = navController,
-                    openDrawer = { coroutineScope.launch{ sizeAwareDrawerState.open() } },
-                    speechFlow = speechFlow,
-                    onSpeechButtonClicked = onSpeechButtonClicked
-                )
+            }
+
+        } else {  // Not a large screen device
+
+            ModalNavigationDrawer(
+                drawerContent = {
+                    AppDrawer(
+                        currentRoute = currentRoute,
+                        navigateToHome = {navigationActions.navigateToHome()},
+                        navigateToOaklandHome = {navigationActions.navigateToOaklandHome()},
+                        navigateToSanJoseHome = {navigationActions.navigateToSanJoseHome()},
+                        navigateToNorthBayHome = {navigationActions.navigateToNorthBayHome()},
+                        navigateToFavorites = {navigationActions.navigateToFavorites()},
+                        navigateToContactInfo = {navigationActions.navigateToContactInfo()},
+                        navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy()},
+                        closeDrawer = { coroutineScope.launch { sizeAwareDrawerState.close() } }
+                    )
+                },
+                drawerState = sizeAwareDrawerState,
+                // Only enable opening the drawer via gestures if the screen is not expanded
+                gesturesEnabled = !isExpandedScreen
+                        && !currentRoute.startsWith(Screen.DetailsScreen.route)//!isExpandedScreen
+            ) {
+                Row {
+                    if (isExpandedScreen) {
+                        AppNavRail(
+                            currentRoute = currentRoute,
+                            navigateToHome = {navigationActions.navigateToHome()},
+                            navigateToFavorites = {navigationActions.navigateToFavorites()},
+                            navigateToContactInfo = {navigationActions.navigateToContactInfo()},
+                            navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy}
+                        )
+                    }
+                    BayAreaNewsNavHost(
+                        navigationActions = navigationActions,
+                        isExpandedScreen = isExpandedScreen,
+                        navController = navController,
+                        openDrawer = { coroutineScope.launch{ sizeAwareDrawerState.open() } },
+                        speechFlow = speechFlow,
+                        onSpeechButtonClicked = onSpeechButtonClicked
+                    )
+                }
             }
         }
+
+
     }
 }
 

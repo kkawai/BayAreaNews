@@ -1,11 +1,13 @@
 package com.kk.android.bayareanews.presentation
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
@@ -20,14 +22,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.isPopupLayout
 import com.kk.android.bayareanews.R
+import com.kk.android.bayareanews.common.DeviceUtils.isLargeScreenDevice
 import com.kk.android.bayareanews.common.PlaystoreUtil
 import com.kk.android.bayareanews.presentation.ui.common.Screen
 import com.kk.android.bayareanews.ui.theme.BayAreaNewsTheme
@@ -47,77 +53,18 @@ fun AppDrawer(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    ModalDrawerSheet(modifier.fillMaxWidth(.8f)) {
-        BayAreaNewsLogo(
-            modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp)
-        )
-        NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.home_title)) },
-            icon = { Icon(Icons.Filled.Home, null) },
-            selected = currentRoute == Screen.HomeScreen.route,
-            onClick = { navigateToHome(); closeDrawer() },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.home_oakland_title)) },
-            icon = { Icon(Icons.Filled.Map, null) },
-            selected = currentRoute == Screen.HomeOaklandScreen.route,
-            onClick = { navigateToOaklandHome(); closeDrawer() },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.home_san_jose_title)) },
-            icon = { Icon(Icons.Filled.Map, null) },
-            selected = currentRoute == Screen.HomeSanJoseScreen.route,
-            onClick = { navigateToSanJoseHome(); closeDrawer() },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.home_north_bay_title)) },
-            icon = { Icon(Icons.Filled.Map, null) },
-            selected = currentRoute == Screen.HomeNorthBayScreen.route,
-            onClick = { navigateToNorthBayHome(); closeDrawer() },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.favorites)) },
-            icon = { Icon(Icons.Filled.Favorite, null) },
-            selected = currentRoute == Screen.FavoritesScreen.route,
-            onClick = { navigateToFavorites()
-                        closeDrawer() },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.contact_info)) },
-            icon = { Icon(Icons.Filled.Email, null) },
-            selected = currentRoute == Screen.ContactInfoScreen.route,
-            onClick = { navigateToContactInfo()
-                closeDrawer() },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.privacy_policy_title)) },
-            icon = { Icon(Icons.Filled.PrivacyTip, null) },
-            selected = currentRoute == Screen.PrivacyPolicyScreen.route,
-            onClick = { navigateToPrivacyPolicy()
-                        closeDrawer() },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
-
-        NavigationDrawerItem(
-            label = { Text(stringResource(id = R.string.playstore_update)) },
-            icon = { Icon(Icons.Outlined.PlayArrow, null) },
-            selected = false,
-            onClick = { PlaystoreUtil.open(context)
-                closeDrawer() },
-            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-        )
+    if (isLargeScreenDevice(context)) {
+        PermanentDrawerSheet(modifier.width(190.dp)) {
+            navigationItems(currentRoute, navigateToHome, navigateToOaklandHome, navigateToSanJoseHome,
+                navigateToNorthBayHome, navigateToFavorites, navigateToContactInfo, navigateToPrivacyPolicy,
+                closeDrawer)
+        }
+    } else {
+        ModalDrawerSheet(modifier.fillMaxWidth(.8f)) {
+            navigationItems(currentRoute, navigateToHome, navigateToOaklandHome, navigateToSanJoseHome,
+                navigateToNorthBayHome, navigateToFavorites, navigateToContactInfo, navigateToPrivacyPolicy,
+                closeDrawer)
+        }
     }
 }
 
@@ -132,6 +79,100 @@ private fun BayAreaNewsLogo(modifier: Modifier = Modifier) {
         Spacer(Modifier.width(8.dp))
         Text(text = stringResource(R.string.app_name))
     }
+}
+
+@Composable
+private fun navigationItems(
+    currentRoute: String,
+    navigateToHome: () -> Unit,
+    navigateToOaklandHome: () -> Unit,
+    navigateToSanJoseHome: () -> Unit,
+    navigateToNorthBayHome: () -> Unit,
+    navigateToFavorites: () -> Unit,
+    navigateToContactInfo: () -> Unit,
+    navigateToPrivacyPolicy: () -> Unit,
+    closeDrawer: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    BayAreaNewsLogo(
+        modifier = Modifier.padding(horizontal = 28.dp, vertical = 24.dp)
+    )
+    NavigationDrawerItem(
+        label = { Text(stringResource(id = R.string.home_title)) },
+        icon = { Icon(Icons.Filled.Home, null) },
+        selected = currentRoute == Screen.HomeScreen.route,
+        onClick = { navigateToHome(); closeDrawer() },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
+
+    NavigationDrawerItem(
+        label = { Text(stringResource(id = R.string.home_oakland_title)) },
+        icon = { Icon(Icons.Filled.Map, null) },
+        selected = currentRoute == Screen.HomeOaklandScreen.route,
+        onClick = { navigateToOaklandHome(); closeDrawer() },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
+
+    NavigationDrawerItem(
+        label = { Text(stringResource(id = R.string.home_san_jose_title)) },
+        icon = { Icon(Icons.Filled.Map, null) },
+        selected = currentRoute == Screen.HomeSanJoseScreen.route,
+        onClick = { navigateToSanJoseHome(); closeDrawer() },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
+
+    NavigationDrawerItem(
+        label = { Text(stringResource(id = R.string.home_north_bay_title)) },
+        icon = { Icon(Icons.Filled.Map, null) },
+        selected = currentRoute == Screen.HomeNorthBayScreen.route,
+        onClick = { navigateToNorthBayHome(); closeDrawer() },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
+
+    NavigationDrawerItem(
+        label = { Text(stringResource(id = R.string.favorites)) },
+        icon = { Icon(Icons.Filled.Favorite, null) },
+        selected = currentRoute == Screen.FavoritesScreen.route,
+        onClick = {
+            navigateToFavorites()
+            closeDrawer()
+        },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
+
+    NavigationDrawerItem(
+        label = { Text(stringResource(id = R.string.contact_info)) },
+        icon = { Icon(Icons.Filled.Email, null) },
+        selected = currentRoute == Screen.ContactInfoScreen.route,
+        onClick = {
+            navigateToContactInfo()
+            closeDrawer()
+        },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
+
+    NavigationDrawerItem(
+        label = { Text(stringResource(id = R.string.privacy_policy_title)) },
+        icon = { Icon(Icons.Filled.PrivacyTip, null) },
+        selected = currentRoute == Screen.PrivacyPolicyScreen.route,
+        onClick = {
+            navigateToPrivacyPolicy()
+            closeDrawer()
+        },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
+
+    NavigationDrawerItem(
+        label = { Text(stringResource(id = R.string.playstore_update)) },
+        icon = { Icon(Icons.Outlined.PlayArrow, null) },
+        selected = false,
+        onClick = {
+            PlaystoreUtil.open(context)
+            closeDrawer()
+        },
+        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+    )
 }
 
 @Preview("Drawer contents")
