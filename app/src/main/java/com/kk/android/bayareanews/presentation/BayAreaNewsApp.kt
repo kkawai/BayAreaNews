@@ -109,15 +109,6 @@ fun BayAreaNewsApp(
                         && !currentRoute.startsWith(Screen.DetailsScreen.route)//!isExpandedScreen
             ) {
                 Row {
-                    if (isExpandedScreen) {
-                        AppNavRail(
-                            currentRoute = currentRoute,
-                            navigateToHome = {navigationActions.navigateToHome()},
-                            navigateToFavorites = {navigationActions.navigateToFavorites()},
-                            navigateToContactInfo = {navigationActions.navigateToContactInfo()},
-                            navigateToPrivacyPolicy = {navigationActions.navigateToPrivacyPolicy}
-                        )
-                    }
                     BayAreaNewsNavHost(
                         navigationActions = navigationActions,
                         isExpandedScreen = isExpandedScreen,
@@ -129,8 +120,6 @@ fun BayAreaNewsApp(
                 }
             }
         }
-
-
     }
 }
 
